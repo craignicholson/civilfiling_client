@@ -112,9 +112,10 @@ namespace CivilFilingClient
             CivilFilingServiceReference.party[] plantiffs = new CivilFilingServiceReference.party[numberOfPlantiffs];
             plantiffs[0] = plantiff;
             packet.plaintiffList = plantiffs;
+            
 
-            CivilFilingServiceReference.civilFilingRequest fillingRequest = new CivilFilingServiceReference.civilFilingRequest();
-            fillingRequest.bulkFilingPacket= packet;
+            CivilFilingServiceReference.civilFilingRequest filingRequest = new CivilFilingServiceReference.civilFilingRequest();
+            filingRequest.bulkFilingPacket= packet;
             
             // Create the proxy
             // Set the correct endpoint... this is working differnt than expected... old soap stuff...
@@ -123,9 +124,45 @@ namespace CivilFilingClient
             // Wait for the reponse
             // parse out the responses
             CivilFilingServiceReference.CivilFilingWSClient proxy = new CivilFilingServiceReference.CivilFilingWSClient();
-            Debug.Print(proxy.Endpoint.ToString());
-            CivilFilingServiceReference.civilFilingResponse fillingReponse =  proxy.submitCivilFiling(fillingRequest);
+            // Add the special security header
+            //<s:Security soapenv:mustUnderstand="1" xmlns:s="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+            //  <s:UsernameToken u:Id="unt_20">
+            //      <s:Username>XXXXXXXXX</s:Username>
+            //      <s:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">XXXXXXXXX</s:Password>
+            //  </s:UsernameToken>
+            //</s:Security>
+            
 
+            Debug.Print(proxy.Endpoint.ToString());
+            //TODO: Put error checking around the web service call
+            try
+            {
+                CivilFilingServiceReference.civilFilingResponse filingReponse = proxy.submitCivilFiling(filingRequest);
+
+                foreach (var msg in filingReponse.messages)
+                {
+                    Debug.Print("Code: " + msg.code + " Description: " + msg.description);
+                }
+                if (filingReponse.efilingNumber != null)
+                {
+                    Debug.Print("eFiling seq number:");
+                    Debug.Print(filingReponse.efilingNumber.efilingCourtDiv.ToString());
+                    Debug.Print(filingReponse.efilingNumber.efilingCourtYr.ToString());
+                    Debug.Print(filingReponse.efilingNumber.efilingSeqNo.ToString());
+                }
+                if (filingReponse.docketNumber != null)
+                {
+                    Debug.Print("Docket number:");
+                    Debug.Print(filingReponse.docketNumber.docketVenue.ToString());
+                    Debug.Print(filingReponse.docketNumber.docketTypeCode.ToString());
+                    Debug.Print(filingReponse.docketNumber.docketCourtYear.ToString());
+                    Debug.Print(filingReponse.docketNumber.docketSeqNum.ToString());
+                }
+            }
+            catch (Exception ex)
+            {
+                Debug.Print(ex.Message);
+            }
         }
     }
 }
