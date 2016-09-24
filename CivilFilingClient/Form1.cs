@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
+using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -17,6 +18,7 @@ namespace CivilFilingClient
         public Form1()
         {
             InitializeComponent();
+            InitializeOpenFileDialog();
         }
 
         private void btnAttach_Click(object sender, EventArgs e)
@@ -25,7 +27,46 @@ namespace CivilFilingClient
             // Use Case - we will file one case at a time.
             // Use Case, One xml file and multiple pdfs? I think this is how it should be.
             // xml file can have many plantiff and defendants?
-            // 
+            DialogResult dr = this.openFileDialog1.ShowDialog();
+            if (dr == System.Windows.Forms.DialogResult.OK)
+            {
+                // Read the files
+                foreach (String file in openFileDialog1.FileNames)
+                {
+                    // Create a PictureBox.
+                    try
+                    {
+                        richTextBox1.AppendText(file);
+                    }
+                    catch (SecurityException ex)
+                    {
+                        // The user lacks appropriate permissions to read files, discover paths, etc.
+                        MessageBox.Show("Security error. Please contact your administrator for details.\n\n" +
+                            "Error message: " + ex.Message + "\n\n" +
+                            "Details (send to Support):\n\n" + ex.StackTrace
+                        );
+                    }
+                    catch (Exception ex)
+                    {
+                        // Could not load the image - probably related to Windows file system permissions.
+                        MessageBox.Show("Cannot display the image: " + file.Substring(file.LastIndexOf('\\'))
+                            + ". You may not have permission to read the file, or " +
+                            "it may be corrupt.\n\nReported error: " + ex.Message);
+                    }
+                }
+            }
+        }
+
+        private void InitializeOpenFileDialog()
+        {
+            // Set the file dialog to filter for graphics files.
+            openFileDialog1.Filter =
+                "Files (*.PDF;*.XML)|*.PDF;*.XML|" +
+                "All files (*.*)|*.*";
+
+            // Allow the user to select multiple images.
+            openFileDialog1.Multiselect = true;
+            openFileDialog1.Title = "Civil Filing Client (Accepts xml and pdfs files)";
         }
 
         private void btnSend_Click(object sender, EventArgs e)
@@ -163,6 +204,11 @@ namespace CivilFilingClient
             {
                 Debug.Print(ex.Message);
             }
+        }
+
+        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+
         }
     }
 }
