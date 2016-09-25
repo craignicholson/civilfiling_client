@@ -1,4 +1,5 @@
-﻿using System;
+﻿using NLog;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -15,6 +16,8 @@ namespace CivilFilingClient
 {
     public partial class Form1 : Form
     {
+        private static Logger logger = LogManager.GetCurrentClassLogger();
+
         public Form1()
         {
             InitializeComponent();
@@ -27,8 +30,8 @@ namespace CivilFilingClient
             // Use Case - we will file one case at a time.
             // Use Case, One xml file and multiple pdfs? I think this is how it should be.
             // xml file can have many plantiff and defendants?
-            DialogResult dr = this.openFileDialog1.ShowDialog();
-            if (dr == System.Windows.Forms.DialogResult.OK)
+            DialogResult dr = openFileDialog1.ShowDialog();
+            if (dr == DialogResult.OK)
             {
                 // Read the files
                 foreach (String file in openFileDialog1.FileNames)
@@ -71,6 +74,7 @@ namespace CivilFilingClient
 
         private void btnSend_Click(object sender, EventArgs e)
         {
+            richTextBox1.AppendText("Send btn clicked");
             CivilFilingServiceReference.@case caseData = new CivilFilingServiceReference.@case();
             caseData.caseAction="028";
             caseData.courtSection = "SCP";
@@ -95,7 +99,7 @@ namespace CivilFilingClient
             att.documentCode = "CMPL";
             att.documentDescription = "Complaint";
             att.documentName = "Test";
-            att.extention = "pdf";
+            att.extention = ".pdf";
 
             CivilFilingServiceReference.fee fee = new CivilFilingServiceReference.fee();
             fee.accountNumber = "12345";
@@ -125,36 +129,39 @@ namespace CivilFilingClient
             CivilFilingServiceReference.party defendant = new CivilFilingServiceReference.party();
             defendant.adaAccommodationInd = "N";
             defendant.address = pAddress;
-            defendant.corporationName = "ABC Corp";
+            defendant.corporationName = "XYZ Corp";
             defendant.corporationType = "CO";
             defendant.interpreterInd = "N";
             defendant.partyAffiliation = "ADM";
             defendant.partyDescription = "BUS";
-            defendant.accommodationType = "a";
+            //defendant.accommodationType = "a";
 
             CivilFilingServiceReference.bulkFilingPacket packet = new CivilFilingServiceReference.bulkFilingPacket();
             //takes and array of attachment[] we just have attachment
             CivilFilingServiceReference.attachment[] attachments = new CivilFilingServiceReference.attachment[1];
             attachments[0] = att;
             packet.attachmentList = attachments;
-            packet.attorneyId = "000000000";
-            packet.attorneyId = "000000000";
+            packet.attorneyId = "888888005";
+            packet.attorneyFirmId = "888888005";
 
             packet.civilCase = caseData;
             int numberOfDefendants = 1;
             CivilFilingServiceReference.party[] defendants = new CivilFilingServiceReference.party[numberOfDefendants];
             defendants[0] = defendant;
             packet.defendantList = defendants;
-
             packet.documentRedactionInd = "Y";
             packet.fee = fee;
+
+            //What is this for?
+            //Attribute attr = new Attribute();
+            //attr.Name = "name";
+            //attr.Value = "TestName";
 
             int numberOfPlantiffs = 1;
             CivilFilingServiceReference.party[] plantiffs = new CivilFilingServiceReference.party[numberOfPlantiffs];
             plantiffs[0] = plantiff;
             packet.plaintiffList = plantiffs;
             
-
             CivilFilingServiceReference.civilFilingRequest filingRequest = new CivilFilingServiceReference.civilFilingRequest();
             filingRequest.bulkFilingPacket= packet;
             
@@ -172,38 +179,47 @@ namespace CivilFilingClient
             //      <s:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">XXXXXXXXX</s:Password>
             //  </s:UsernameToken>
             //</s:Security>
-            
 
-            Debug.Print(proxy.Endpoint.ToString());
+            richTextBox1.AppendText(Environment.NewLine + proxy.Endpoint.ToString());
             //TODO: Put error checking around the web service call
             try
             {
+                richTextBox1.AppendText(Environment.NewLine + "Attempting to send the web request");
                 CivilFilingServiceReference.civilFilingResponse filingReponse = proxy.submitCivilFiling(filingRequest);
 
                 foreach (var msg in filingReponse.messages)
                 {
-                    Debug.Print("Code: " + msg.code + " Description: " + msg.description);
+                    richTextBox1.AppendText(Environment.NewLine + "Code: " + msg.code + " Description: " + msg.description);
                 }
                 if (filingReponse.efilingNumber != null)
                 {
-                    Debug.Print("eFiling seq number:");
-                    Debug.Print(filingReponse.efilingNumber.efilingCourtDiv.ToString());
-                    Debug.Print(filingReponse.efilingNumber.efilingCourtYr.ToString());
-                    Debug.Print(filingReponse.efilingNumber.efilingSeqNo.ToString());
+                    //TODO: Color these blue
+                    richTextBox1.AppendText(Environment.NewLine + "eFiling seq number:");
+                    richTextBox1.AppendText(Environment.NewLine + filingReponse.efilingNumber.efilingCourtDiv.ToString());
+                    richTextBox1.AppendText(Environment.NewLine + filingReponse.efilingNumber.efilingCourtYr.ToString());
+                    richTextBox1.AppendText(Environment.NewLine + filingReponse.efilingNumber.efilingSeqNo.ToString());
                 }
                 if (filingReponse.docketNumber != null)
                 {
-                    Debug.Print("Docket number:");
-                    Debug.Print(filingReponse.docketNumber.docketVenue.ToString());
-                    Debug.Print(filingReponse.docketNumber.docketTypeCode.ToString());
-                    Debug.Print(filingReponse.docketNumber.docketCourtYear.ToString());
-                    Debug.Print(filingReponse.docketNumber.docketSeqNum.ToString());
+                    //TODO: Color these blue
+                    richTextBox1.AppendText(Environment.NewLine + "Docket number:");
+                    richTextBox1.AppendText(Environment.NewLine + filingReponse.docketNumber.docketVenue.ToString());
+                    richTextBox1.AppendText(Environment.NewLine + filingReponse.docketNumber.docketTypeCode.ToString());
+                    richTextBox1.AppendText(Environment.NewLine + filingReponse.docketNumber.docketCourtYear.ToString());
+                    richTextBox1.AppendText(Environment.NewLine + filingReponse.docketNumber.docketSeqNum.ToString());
                 }
             }
             catch (Exception ex)
             {
+                // TODO: Colors these red
+                richTextBox1.AppendText(Environment.NewLine + ex.Message);
                 Debug.Print(ex.Message);
             }
+            //TODO: If we have any error codes and the transaction fails... we
+            //Should let the user have different message so they can correct the
+            //issue and try again... using Done.  Have a good day... is best when
+            //the entire process is a success.
+            richTextBox1.AppendText(Environment.NewLine + "Done.  Have a good day.");
         }
 
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
