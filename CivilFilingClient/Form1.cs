@@ -28,6 +28,7 @@ namespace CivilFilingClient
         /// submission.
         /// </summary>
         List<string> filePaths = new List<string>();
+        string rootDirectory = string.Empty;
 
         /// <summary>
         /// responses will contain all of the messages returned from the web service
@@ -65,9 +66,10 @@ namespace CivilFilingClient
                     {
                         richTextBox1.AppendText(Environment.NewLine + Path.GetFullPath(file));
                         richTextBox1.AppendText(Environment.NewLine + Path.GetFileName(file));
-                        richTextBox1.AppendText(Environment.NewLine + Path.GetDirectoryName(file));
+                        rootDirectory = Path.GetDirectoryName(file);
                         logger.Info(file);
                         filePaths.Add(file);
+                        responses.Add("Attachment: " + file);
                     }
                     catch (SecurityException ex)
                     {
@@ -114,8 +116,10 @@ namespace CivilFilingClient
         {
             // Disable the btn until the request has finished or error's out
             btnSend.Enabled = false;
-            richTextBox1.AppendText("Send btn clicked");
+            richTextBox1.AppendText("Send button clicked");
+            responses.Add("Send button clicked");
 
+            /// Begining of Test Code
             CivilFilingServiceReference.@case caseData = new CivilFilingServiceReference.@case();
             caseData.caseAction="028";
             caseData.courtSection = "SCP";
@@ -207,6 +211,8 @@ namespace CivilFilingClient
                 new CivilFilingServiceReference.civilFilingRequest();
 
             filingRequest.bulkFilingPacket= packet;
+
+            /// End of Test Code
             
             // Create the proxy
             // Set the correct endpoint... this is working differnt than expected... old soap stuff...
@@ -218,19 +224,20 @@ namespace CivilFilingClient
                 new CivilFilingServiceReference.CivilFilingWSClient();
             
             richTextBox1.AppendText(Environment.NewLine + proxy.Endpoint.Address.ToString());
-            
+            responses.Add(proxy.Endpoint.Address.ToString());
             try
             {
-                string message = Environment.NewLine + "Attempting to send the web request";
-                richTextBox1.AppendText(message);
+                string message = "Attempting to send the web request to:" 
+                    + proxy.Endpoint.Address.ToString();
+                richTextBox1.AppendText(Environment.NewLine + message);
                 responses.Add(message);
                 CivilFilingServiceReference.civilFilingResponse filingReponse = 
                     proxy.submitCivilFiling(filingRequest);
 
                 foreach (var msg in filingReponse.messages)
                 {
-                    string filingMsg = Environment.NewLine + "Code: " + msg.code + " Description: " + msg.description;
-                    responses.Add(filingMsg);
+                    string filingMsg = "Code: " + msg.code + " Description: " + msg.description;
+                    responses.Add(Environment.NewLine + filingMsg);
                     richTextBox1.AppendText(filingMsg);
                 }
                 if (filingReponse.efilingNumber != null)
@@ -269,7 +276,11 @@ namespace CivilFilingClient
             // issue and try again... using Done.  Have a good day... is best when
             // the entire process is a success.
             richTextBox1.AppendText(Environment.NewLine + "Done.  Have a good day.");
-            
+
+            // Write out the responses
+            // TODO: rootDirectory is global so we need to tidy this up.
+            saveResponseToFile(rootDirectory, responses);
+
             // Disable the btn until the request has finished or error's out
             btnSend.Enabled = true;
         }
@@ -279,20 +290,25 @@ namespace CivilFilingClient
 
         }
 
-        private CivilFilingServiceReference.civilFilingRequest readXMLFile()
+        /// <summary>
+        /// readXMLFile - reads the user submitted xml file which should contain all
+        /// the fields required to post a submission to the New Jeresy Courts web
+        /// service.  We will let the web service validate the data being sent as 
+        /// noted in the documentation they provide.
+        /// </summary>
+        /// <returns></returns>
+        private CivilFilingServiceReference.civilFilingRequest readXMLFile(string filePathXml)
         {
-            CivilFilingServiceReference.civilFilingRequest filingRequest = 
-                new CivilFilingServiceReference.civilFilingRequest();
-
-            string filePathXml = @"C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\Message1.xml";
+            // TODO: Remove hard code for later... 
+            filePathXml = @"C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\Message1.xml";
             // define the object we are going to populate
-            CivilFilingServiceReference.ECourtsCivilServiceException caseData;
+            CivilFilingServiceReference.civilFilingRequest filingRequest = null;
             try
             {
-                var serializer = new XmlSerializer(typeof(CivilFilingServiceReference.ECourtsCivilServiceException));
+                var serializer = new XmlSerializer(typeof(CivilFilingServiceReference.civilFilingRequest));
                 using(FileStream fileStrem = new FileStream(filePathXml, FileMode.Open))
                 {
-                    caseData = (CivilFilingServiceReference.ECourtsCivilServiceException)serializer.Deserialize(fileStrem);
+                    filingRequest = (CivilFilingServiceReference.civilFilingRequest)serializer.Deserialize(fileStrem);
                 }
             }
             catch(System.Exception ex)
@@ -300,18 +316,32 @@ namespace CivilFilingClient
                 richTextBox1.AppendText(Environment.NewLine + ex.Message);
                 logger.Error(ex.Message);
             }
+            //TODO: we might return a null, throw error if this happens....
             return filingRequest;
         }
 
-        private void saveResponseToFile(string filePathOfOrigin, string[] responses)
+        private void saveResponseToFile(string filePathOfOrigin, List<string> responses)
         {
             // TODO: Timestamp the file name
             // TODO: Put name in config
-            using (StreamWriter outputFile = new StreamWriter(filePathOfOrigin + @"\Responses.txt"))
+            try
             {
-                foreach (string response in responses)
-                    outputFile.WriteLine(response);
-            }       
+                using (StreamWriter outputFile = new StreamWriter(filePathOfOrigin + @"\Responses.txt"))
+                {
+                    foreach (string response in responses)
+                        outputFile.WriteLine(response);
+                }
+            }
+            catch (IOException ex)
+            {
+                richTextBox1.AppendText(Environment.NewLine + ex.Message);
+                logger.Error(ex.Message);
+            }
+            catch(System.Exception ex)
+            {
+                richTextBox1.AppendText(Environment.NewLine + ex.Message);
+                logger.Error(ex.Message);
+            }
         }
     }
 }

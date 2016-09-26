@@ -32,6 +32,7 @@
             this.btnSend = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.richTextBox1 = new System.Windows.Forms.RichTextBox();
+            this.label1 = new System.Windows.Forms.Label();
             this.SuspendLayout();
             // 
             // btnAttach
@@ -73,15 +74,26 @@
             this.richTextBox1.TabIndex = 2;
             this.richTextBox1.Text = "";
             // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(13, 12);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(342, 20);
+            this.label1.TabIndex = 3;
+            this.label1.Text = "Maybe some instructions here would be helpful.";
+            // 
             // Form1
             // 
             this.ClientSize = new System.Drawing.Size(714, 262);
+            this.Controls.Add(this.label1);
             this.Controls.Add(this.richTextBox1);
             this.Controls.Add(this.btnSend);
             this.Controls.Add(this.btnAttach);
             this.Name = "Form1";
             this.Text = "Civil Filing Client (for New Jersey Courts)";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
@@ -91,6 +103,7 @@
         private System.Windows.Forms.Button btnSend;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.RichTextBox richTextBox1;
+        private System.Windows.Forms.Label label1;
     }
 }
 
