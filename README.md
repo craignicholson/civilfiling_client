@@ -73,6 +73,25 @@ Setting the web service username and password is done in the security header.
 
 ```
 
+Test Files
+--------------
+There is a folder named TestFiles which contains 3 files.
+* MessageSample1.XML
+* some.pdf
+* Responses.txt
+
+MessageSample1.xml should be what the law firm will try and upload.  This is my guess for now.
+The pdf is just a sample pdf.
+Responses.txt contains the output of the processing as required by the scope or this work.
+
+Currently I keep getting this error message:
+
+```txt
+Code: ECCV200 Description: Branch Id cannot be null or empty
+```
+
+And I'm not seeing the branch Id in the xml objects to send.  :-(
+
 
 Sample Soap Message
 --------------
