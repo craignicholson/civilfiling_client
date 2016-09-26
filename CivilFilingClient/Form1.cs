@@ -29,13 +29,11 @@ namespace CivilFilingClient
         /// </summary>
         List<string> filePaths = new List<string>();
 
-
         /// <summary>
         /// responses will contain all of the messages returned from the web service
         /// and any errors.  These messages will be written to a file for the users.
         /// </summary>
         List<string> responses = new List<string>();
-
 
         public Form1()
         {
@@ -195,7 +193,6 @@ namespace CivilFilingClient
             packet.documentRedactionInd = "Y";
             packet.fee = fee;
 
-            // What is this for?
             // Lots of object have attributes...
             CivilFilingServiceReference.attribute attr = new CivilFilingServiceReference.attribute();
             attr.name = "name";
