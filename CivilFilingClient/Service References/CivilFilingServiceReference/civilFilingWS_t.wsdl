@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:wsp200607="http://www.w3.org/2006/07/ws-policy" xmlns:soap12="http://schemas.xmlsoap.org/wsdl/soap12/" xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" xmlns:ns0="http://webservice.civilfiling.ecourts.ito.aoc.nj/" xmlns:wsp200409="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap11="http://schemas.xmlsoap.org/wsdl/soap/" targetNamespace="http://webservice.civilfiling.ecourts.ito.aoc.nj/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="policy0" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
+    <wsp:ExactlyOne>
+      <wsp:All>
+        <ns1:OptimizedMimeSerialization wsp:Optional="true" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:tns="http://webservice.civilfiling.ecourts.ito.aoc.nj/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:wsp1_2="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:ns1="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization" xmlns="http://schemas.xmlsoap.org/wsdl/" />
+      </wsp:All>
+      <wsp:All />
+    </wsp:ExactlyOne>
+  </wsp:Policy>
+  <wsdl:types xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+    <xsd:schema>
+      <xsd:import schemaLocation="civilFilingWS_t.xsd2.xsd" namespace="http://webservice.civilfiling.ecourts.ito.aoc.nj/" />
+    </xsd:schema>
+  </wsdl:types>
+  <wsdl:message name="ECourtsCivilServiceException">
+    <wsdl:part xmlns:xsns="http://webservice.civilfiling.ecourts.ito.aoc.nj/" name="fault" element="xsns:ECourtsCivilServiceException" />
+  </wsdl:message>
+  <wsdl:message name="Exception">
+    <wsdl:part xmlns:xsns="http://webservice.civilfiling.ecourts.ito.aoc.nj/" name="fault" element="xsns:Exception" />
+  </wsdl:message>
+  <wsdl:message name="getCivilFilingStatus">
+    <wsdl:part xmlns:xsns="http://webservice.civilfiling.ecourts.ito.aoc.nj/" name="parameters" element="xsns:getCivilFilingStatus" />
+  </wsdl:message>
+  <wsdl:message name="getCivilFilingStatusResponse">
+    <wsdl:part xmlns:xsns="http://webservice.civilfiling.ecourts.ito.aoc.nj/" name="parameters" element="xsns:getCivilFilingStatusResponse" />
+  </wsdl:message>
+  <wsdl:message name="submitCivilFiling">
+    <wsdl:part xmlns:xsns="http://webservice.civilfiling.ecourts.ito.aoc.nj/" name="parameters" element="xsns:submitCivilFiling" />
+  </wsdl:message>
+  <wsdl:message name="submitCivilFilingResponse">
+    <wsdl:part xmlns:xsns="http://webservice.civilfiling.ecourts.ito.aoc.nj/" name="parameters" element="xsns:submitCivilFilingResponse" />
+  </wsdl:message>
+  <wsdl:portType name="CivilFilingWS">
+    <wsdl:operation name="getCivilFilingStatus">
+      <wsdl:input name="getCivilFilingStatusRequest" message="ns0:getCivilFilingStatus" />
+      <wsdl:output name="getCivilFilingStatusResponse" message="ns0:getCivilFilingStatusResponse" />
+      <wsdl:fault name="ECourtsCivilServiceException" message="ns0:ECourtsCivilServiceException" />
+      <wsdl:fault name="Exception" message="ns0:Exception" />
+    </wsdl:operation>
+    <wsdl:operation name="submitCivilFiling">
+      <wsdl:input name="submitCivilFilingRequest" message="ns0:submitCivilFiling" />
+      <wsdl:output name="submitCivilFilingResponse" message="ns0:submitCivilFilingResponse" />
+      <wsdl:fault name="ECourtsCivilServiceException" message="ns0:ECourtsCivilServiceException" />
+      <wsdl:fault name="Exception" message="ns0:Exception" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="CivilFilingWSPortBinding" type="ns0:CivilFilingWS">
+    <soap11:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <wsdl:operation name="getCivilFilingStatus">
+      <soap11:operation soapAction="" style="document" />
+      <wsdl:input name="getCivilFilingStatusRequest">
+        <soap11:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="getCivilFilingStatusResponse">
+        <soap11:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ECourtsCivilServiceException">
+        <soap11:fault use="literal" name="ECourtsCivilServiceException" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="Exception">
+        <soap11:fault use="literal" name="Exception" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+    <wsdl:operation name="submitCivilFiling">
+      <soap11:operation soapAction="" style="document" />
+      <wsdl:input name="submitCivilFilingRequest">
+        <soap11:body use="literal" />
+      </wsdl:input>
+      <wsdl:output name="submitCivilFilingResponse">
+        <soap11:body use="literal" />
+      </wsdl:output>
+      <wsdl:fault name="ECourtsCivilServiceException">
+        <soap11:fault use="literal" name="ECourtsCivilServiceException" namespace="" />
+      </wsdl:fault>
+      <wsdl:fault name="Exception">
+        <soap11:fault use="literal" name="Exception" namespace="" />
+      </wsdl:fault>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="CivilFilingWSService">
+    <wsdl:port name="CivilFilingWSPort" binding="ns0:CivilFilingWSPortBinding">
+      <wsp:PolicyReference URI="#policy0" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" />
+      <soap11:address location="https://172.16.248.34:2045/civilFilingWS_t" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
