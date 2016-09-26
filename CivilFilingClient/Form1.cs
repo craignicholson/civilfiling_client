@@ -11,12 +11,31 @@ using System.Security;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Serialization;
 
 namespace CivilFilingClient
 {
     public partial class Form1 : Form
     {
+        /// <summary>
+        /// Initiatlize the NLog logger
+        /// </summary>
         private static Logger logger = LogManager.GetCurrentClassLogger();
+
+        /// <summary>
+        /// filePaths will contain the full filePath and fileName for the files
+        /// we need to load.  This will be one xml file and one pdf file per
+        /// submission.
+        /// </summary>
+        List<string> filePaths = new List<string>();
+
+
+        /// <summary>
+        /// responses will contain all of the messages returned from the web service
+        /// and any errors.  These messages will be written to a file for the users.
+        /// </summary>
+        List<string> responses = new List<string>();
+
 
         public Form1()
         {
@@ -24,6 +43,13 @@ namespace CivilFilingClient
             InitializeOpenFileDialog();
         }
 
+        /// <summary>
+        /// btnAttach_Click will allow the user to select multiple files which will
+        /// be processed.  We exepect one xml and one pdf file.  If we have more files
+        /// we should error out and write the output to the directory.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnAttach_Click(object sender, EventArgs e)
         {
             // We will only attach the pdf... but we can have many pdf's
@@ -36,10 +62,14 @@ namespace CivilFilingClient
                 // Read the files
                 foreach (String file in openFileDialog1.FileNames)
                 {
-                    // Create a PictureBox.
+                    // Load the files into the List for processing.
                     try
                     {
-                        richTextBox1.AppendText(file);
+                        richTextBox1.AppendText(Environment.NewLine + Path.GetFullPath(file));
+                        richTextBox1.AppendText(Environment.NewLine + Path.GetFileName(file));
+                        richTextBox1.AppendText(Environment.NewLine + Path.GetDirectoryName(file));
+                        logger.Info(file);
+                        filePaths.Add(file);
                     }
                     catch (SecurityException ex)
                     {
@@ -49,7 +79,7 @@ namespace CivilFilingClient
                             "Details (send to Support):\n\n" + ex.StackTrace
                         );
                     }
-                    catch (Exception ex)
+                    catch (System.Exception ex)
                     {
                         // Could not load the image - probably related to Windows file system permissions.
                         MessageBox.Show("Cannot display the image: " + file.Substring(file.LastIndexOf('\\'))
@@ -60,6 +90,9 @@ namespace CivilFilingClient
             }
         }
 
+        /// <summary>
+        /// InitializeOpenFileDialog so by default we only see pdf and xml files.
+        /// </summary>
         private void InitializeOpenFileDialog()
         {
             // Set the file dialog to filter for graphics files.
@@ -72,9 +105,19 @@ namespace CivilFilingClient
             openFileDialog1.Title = "Civil Filing Client (Accepts xml and pdfs files)";
         }
 
+
+        /// <summary>
+        /// btnSend_Click processes the data in the xml file and attaches the pdf if we 
+        /// have one to the web service request.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnSend_Click(object sender, EventArgs e)
         {
+            // Disable the btn until the request has finished or error's out
+            btnSend.Enabled = false;
             richTextBox1.AppendText("Send btn clicked");
+
             CivilFilingServiceReference.@case caseData = new CivilFilingServiceReference.@case();
             caseData.caseAction="028";
             caseData.courtSection = "SCP";
@@ -141,8 +184,8 @@ namespace CivilFilingClient
             CivilFilingServiceReference.attachment[] attachments = new CivilFilingServiceReference.attachment[1];
             attachments[0] = att;
             packet.attachmentList = attachments;
-            packet.attorneyId = "888888005";
-            packet.attorneyFirmId = "888888005";
+            packet.attorneyId = "288551973";
+            packet.attorneyFirmId = "9735384700";
 
             packet.civilCase = caseData;
             int numberOfDefendants = 1;
@@ -152,17 +195,20 @@ namespace CivilFilingClient
             packet.documentRedactionInd = "Y";
             packet.fee = fee;
 
-            //What is this for?
-            //Attribute attr = new Attribute();
-            //attr.Name = "name";
-            //attr.Value = "TestName";
+            // What is this for?
+            // Lots of object have attributes...
+            CivilFilingServiceReference.attribute attr = new CivilFilingServiceReference.attribute();
+            attr.name = "name";
+            attr.value = "TestName";
 
             int numberOfPlantiffs = 1;
             CivilFilingServiceReference.party[] plantiffs = new CivilFilingServiceReference.party[numberOfPlantiffs];
             plantiffs[0] = plantiff;
             packet.plaintiffList = plantiffs;
             
-            CivilFilingServiceReference.civilFilingRequest filingRequest = new CivilFilingServiceReference.civilFilingRequest();
+            CivilFilingServiceReference.civilFilingRequest filingRequest = 
+                new CivilFilingServiceReference.civilFilingRequest();
+
             filingRequest.bulkFilingPacket= packet;
             
             // Create the proxy
@@ -171,60 +217,104 @@ namespace CivilFilingClient
             // Send the Request
             // Wait for the reponse
             // parse out the responses
-            CivilFilingServiceReference.CivilFilingWSClient proxy = new CivilFilingServiceReference.CivilFilingWSClient();
-            // Add the special security header
-            //<s:Security soapenv:mustUnderstand="1" xmlns:s="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd" xmlns:u="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd">
-            //  <s:UsernameToken u:Id="unt_20">
-            //      <s:Username>XXXXXXXXX</s:Username>
-            //      <s:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">XXXXXXXXX</s:Password>
-            //  </s:UsernameToken>
-            //</s:Security>
-
-            richTextBox1.AppendText(Environment.NewLine + proxy.Endpoint.ToString());
-            //TODO: Put error checking around the web service call
+            CivilFilingServiceReference.CivilFilingWSClient proxy = 
+                new CivilFilingServiceReference.CivilFilingWSClient();
+            
+            richTextBox1.AppendText(Environment.NewLine + proxy.Endpoint.Address.ToString());
+            
             try
             {
-                richTextBox1.AppendText(Environment.NewLine + "Attempting to send the web request");
-                CivilFilingServiceReference.civilFilingResponse filingReponse = proxy.submitCivilFiling(filingRequest);
+                string message = Environment.NewLine + "Attempting to send the web request";
+                richTextBox1.AppendText(message);
+                responses.Add(message);
+                CivilFilingServiceReference.civilFilingResponse filingReponse = 
+                    proxy.submitCivilFiling(filingRequest);
 
                 foreach (var msg in filingReponse.messages)
                 {
-                    richTextBox1.AppendText(Environment.NewLine + "Code: " + msg.code + " Description: " + msg.description);
+                    string filingMsg = Environment.NewLine + "Code: " + msg.code + " Description: " + msg.description;
+                    responses.Add(filingMsg);
+                    richTextBox1.AppendText(filingMsg);
                 }
                 if (filingReponse.efilingNumber != null)
                 {
                     //TODO: Color these blue
-                    richTextBox1.AppendText(Environment.NewLine + "eFiling seq number:");
-                    richTextBox1.AppendText(Environment.NewLine + filingReponse.efilingNumber.efilingCourtDiv.ToString());
-                    richTextBox1.AppendText(Environment.NewLine + filingReponse.efilingNumber.efilingCourtYr.ToString());
-                    richTextBox1.AppendText(Environment.NewLine + filingReponse.efilingNumber.efilingSeqNo.ToString());
+                    string eFilingNumberMsg = "eFiling seq number:" +
+                        filingReponse.efilingNumber.efilingCourtDiv.ToString() +
+                        filingReponse.efilingNumber.efilingCourtYr.ToString() +
+                        filingReponse.efilingNumber.efilingSeqNo.ToString();
+
+                    richTextBox1.AppendText(Environment.NewLine + eFilingNumberMsg);
+                    responses.Add(eFilingNumberMsg);
                 }
                 if (filingReponse.docketNumber != null)
                 {
+                    string dockerNumberMsg = "Docker number:" +
+                        filingReponse.docketNumber.docketVenue
+                        + "-" + filingReponse.docketNumber.docketTypeCode
+                        + "-" + filingReponse.docketNumber.docketCourtYear
+                        + "-" + filingReponse.docketNumber.docketSeqNum;
+
                     //TODO: Color these blue
                     richTextBox1.AppendText(Environment.NewLine + "Docket number:");
-                    richTextBox1.AppendText(Environment.NewLine + filingReponse.docketNumber.docketVenue.ToString());
-                    richTextBox1.AppendText(Environment.NewLine + filingReponse.docketNumber.docketTypeCode.ToString());
-                    richTextBox1.AppendText(Environment.NewLine + filingReponse.docketNumber.docketCourtYear.ToString());
-                    richTextBox1.AppendText(Environment.NewLine + filingReponse.docketNumber.docketSeqNum.ToString());
+                    responses.Add(dockerNumberMsg);
                 }
             }
-            catch (Exception ex)
+            catch (System.Exception ex)
             {
                 // TODO: Colors these red
                 richTextBox1.AppendText(Environment.NewLine + ex.Message);
-                Debug.Print(ex.Message);
+                responses.Add(ex.Message);
+                logger.Error(ex.Message);
             }
-            //TODO: If we have any error codes and the transaction fails... we
-            //Should let the user have different message so they can correct the
-            //issue and try again... using Done.  Have a good day... is best when
-            //the entire process is a success.
+            // TODO: If we have any error codes and the transaction fails... we
+            // Should let the user have different message so they can correct the
+            // issue and try again... using Done.  Have a good day... is best when
+            // the entire process is a success.
             richTextBox1.AppendText(Environment.NewLine + "Done.  Have a good day.");
+            
+            // Disable the btn until the request has finished or error's out
+            btnSend.Enabled = true;
         }
 
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
 
+        }
+
+        private CivilFilingServiceReference.civilFilingRequest readXMLFile()
+        {
+            CivilFilingServiceReference.civilFilingRequest filingRequest = 
+                new CivilFilingServiceReference.civilFilingRequest();
+
+            string filePathXml = @"C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\Message1.xml";
+            // define the object we are going to populate
+            CivilFilingServiceReference.ECourtsCivilServiceException caseData;
+            try
+            {
+                var serializer = new XmlSerializer(typeof(CivilFilingServiceReference.ECourtsCivilServiceException));
+                using(FileStream fileStrem = new FileStream(filePathXml, FileMode.Open))
+                {
+                    caseData = (CivilFilingServiceReference.ECourtsCivilServiceException)serializer.Deserialize(fileStrem);
+                }
+            }
+            catch(System.Exception ex)
+            {
+                richTextBox1.AppendText(Environment.NewLine + ex.Message);
+                logger.Error(ex.Message);
+            }
+            return filingRequest;
+        }
+
+        private void saveResponseToFile(string filePathOfOrigin, string[] responses)
+        {
+            // TODO: Timestamp the file name
+            // TODO: Put name in config
+            using (StreamWriter outputFile = new StreamWriter(filePathOfOrigin + @"\Responses.txt"))
+            {
+                foreach (string response in responses)
+                    outputFile.WriteLine(response);
+            }       
         }
     }
 }
