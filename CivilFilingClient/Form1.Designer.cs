@@ -68,6 +68,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.richTextBox1.Location = new System.Drawing.Point(12, 121);
             this.richTextBox1.Name = "richTextBox1";
+            this.richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
             this.richTextBox1.Size = new System.Drawing.Size(690, 111);
             this.richTextBox1.TabIndex = 2;
             this.richTextBox1.Text = "";
@@ -79,7 +80,7 @@
             this.Controls.Add(this.btnSend);
             this.Controls.Add(this.btnAttach);
             this.Name = "Form1";
-            this.Text = "Civil Filing Client (New Jersey Courts)";
+            this.Text = "Civil Filing Client (for New Jersey Courts)";
             this.ResumeLayout(false);
 
         }
