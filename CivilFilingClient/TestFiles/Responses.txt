@@ -1,0 +1,7 @@
+Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\MessageSample.xml
+Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\some.pdf
+Send button clicked
+https://dptng.njcourts.gov:2045/civilFilingWS_t
+Attempting to send the web request to:https://dptng.njcourts.gov:2045/civilFilingWS_t
+
+Code: ECCV200 Description: Branch Id cannot be null or empty
