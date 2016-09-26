@@ -341,6 +341,8 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         
         private bool attorneyFeeFieldSpecified;
         
+        private attribute[] attributesField;
+        
         private string exemptionReasonField;
         
         private string feeExemptField;
@@ -396,7 +398,19 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute("attributes", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true, Order=3)]
+        public attribute[] attributes {
+            get {
+                return this.attributesField;
+            }
+            set {
+                this.attributesField = value;
+                this.RaisePropertyChanged("attributes");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
         public string exemptionReason {
             get {
                 return this.exemptionReasonField;
@@ -408,7 +422,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
         public string feeExempt {
             get {
                 return this.feeExemptField;
@@ -420,7 +434,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
         public string paymentType {
             get {
                 return this.paymentTypeField;
@@ -447,11 +461,59 @@ namespace CivilFilingClient.CivilFilingServiceReference {
     [System.Diagnostics.DebuggerStepThroughAttribute()]
     [System.ComponentModel.DesignerCategoryAttribute("code")]
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://webservice.civilfiling.ecourts.ito.aoc.nj/")]
+    public partial class attribute : object, System.ComponentModel.INotifyPropertyChanged {
+        
+        private string nameField;
+        
+        private string valueField;
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        public string name {
+            get {
+                return this.nameField;
+            }
+            set {
+                this.nameField = value;
+                this.RaisePropertyChanged("name");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        public string value {
+            get {
+                return this.valueField;
+            }
+            set {
+                this.valueField = value;
+                this.RaisePropertyChanged("value");
+            }
+        }
+        
+        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        
+        protected void RaisePropertyChanged(string propertyName) {
+            System.ComponentModel.PropertyChangedEventHandler propertyChanged = this.PropertyChanged;
+            if ((propertyChanged != null)) {
+                propertyChanged(this, new System.ComponentModel.PropertyChangedEventArgs(propertyName));
+            }
+        }
+    }
+    
+    /// <remarks/>
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.Xml", "4.6.1064.2")]
+    [System.SerializableAttribute()]
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.ComponentModel.DesignerCategoryAttribute("code")]
+    [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://webservice.civilfiling.ecourts.ito.aoc.nj/")]
     public partial class partyAlias : object, System.ComponentModel.INotifyPropertyChanged {
         
         private string alternateNameField;
         
         private string alternateTypeCodeField;
+        
+        private attribute[] attributesField;
         
         /// <remarks/>
         [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
@@ -474,6 +536,18 @@ namespace CivilFilingClient.CivilFilingServiceReference {
             set {
                 this.alternateTypeCodeField = value;
                 this.RaisePropertyChanged("alternateTypeCode");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute("attributes", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true, Order=2)]
+        public attribute[] attributes {
+            get {
+                return this.attributesField;
+            }
+            set {
+                this.attributesField = value;
+                this.RaisePropertyChanged("attributes");
             }
         }
         
@@ -559,6 +633,8 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         
         private string addressLine2Field;
         
+        private attribute[] attributesField;
+        
         private string cityField;
         
         private string stateCodeField;
@@ -592,7 +668,19 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute("attributes", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true, Order=2)]
+        public attribute[] attributes {
+            get {
+                return this.attributesField;
+            }
+            set {
+                this.attributesField = value;
+                this.RaisePropertyChanged("attributes");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
         public string city {
             get {
                 return this.cityField;
@@ -604,7 +692,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
         public string stateCode {
             get {
                 return this.stateCodeField;
@@ -616,7 +704,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
         public string zipCode {
             get {
                 return this.zipCodeField;
@@ -628,7 +716,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
         public string zipCodeExt {
             get {
                 return this.zipCodeExtField;
@@ -664,6 +752,8 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         private string additionalAccommodationDetailsField;
         
         private address addressField;
+        
+        private attribute[] attributesField;
         
         private string corporationNameField;
         
@@ -732,7 +822,19 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute("attributes", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true, Order=4)]
+        public attribute[] attributes {
+            get {
+                return this.attributesField;
+            }
+            set {
+                this.attributesField = value;
+                this.RaisePropertyChanged("attributes");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
         public string corporationName {
             get {
                 return this.corporationNameField;
@@ -744,7 +846,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
         public string corporationType {
             get {
                 return this.corporationTypeField;
@@ -756,7 +858,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
         public string interpreterInd {
             get {
                 return this.interpreterIndField;
@@ -768,7 +870,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=8)]
         public string language {
             get {
                 return this.languageField;
@@ -780,7 +882,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=8)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=9)]
         public name name {
             get {
                 return this.nameField;
@@ -792,7 +894,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=9)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=10)]
         public string partyAffiliation {
             get {
                 return this.partyAffiliationField;
@@ -804,7 +906,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("partyAliasList", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true, Order=10)]
+        [System.Xml.Serialization.XmlElementAttribute("partyAliasList", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true, Order=11)]
         public partyAlias[] partyAliasList {
             get {
                 return this.partyAliasListField;
@@ -816,7 +918,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=11)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=12)]
         public string partyDescription {
             get {
                 return this.partyDescriptionField;
@@ -828,7 +930,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=12)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=13)]
         public string phoneNumber {
             get {
                 return this.phoneNumberField;
@@ -857,6 +959,8 @@ namespace CivilFilingClient.CivilFilingServiceReference {
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://webservice.civilfiling.ecourts.ito.aoc.nj/")]
     public partial class @case : object, System.ComponentModel.INotifyPropertyChanged {
         
+        private attribute[] attributesField;
+        
         private string caseActionField;
         
         private string courtSectionField;
@@ -884,7 +988,19 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         private string venueOfIncidentField;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute("attributes", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true, Order=0)]
+        public attribute[] attributes {
+            get {
+                return this.attributesField;
+            }
+            set {
+                this.attributesField = value;
+                this.RaisePropertyChanged("attributes");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
         public string caseAction {
             get {
                 return this.caseActionField;
@@ -896,7 +1012,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
         public string courtSection {
             get {
                 return this.courtSectionField;
@@ -908,7 +1024,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
         public string defendantCaption {
             get {
                 return this.defendantCaptionField;
@@ -920,7 +1036,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
         public decimal demandAmount {
             get {
                 return this.demandAmountField;
@@ -944,7 +1060,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
         public string docketDetailsForOtherCourt {
             get {
                 return this.docketDetailsForOtherCourtField;
@@ -956,7 +1072,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
         public string juryDemand {
             get {
                 return this.juryDemandField;
@@ -968,7 +1084,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
         public string lawFirmCaseId {
             get {
                 return this.lawFirmCaseIdField;
@@ -980,7 +1096,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=8)]
         public string otherCourtActions {
             get {
                 return this.otherCourtActionsField;
@@ -992,7 +1108,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=8)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=9)]
         public string plaintiffCaption {
             get {
                 return this.plaintiffCaptionField;
@@ -1004,7 +1120,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=9)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=10)]
         public string serviceMethod {
             get {
                 return this.serviceMethodField;
@@ -1016,7 +1132,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=10)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=11)]
         public string venue {
             get {
                 return this.venueField;
@@ -1028,7 +1144,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=11)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=12)]
         public string venueOfIncident {
             get {
                 return this.venueOfIncidentField;
@@ -1057,6 +1173,8 @@ namespace CivilFilingClient.CivilFilingServiceReference {
     [System.Xml.Serialization.XmlTypeAttribute(Namespace="http://webservice.civilfiling.ecourts.ito.aoc.nj/")]
     public partial class attachment : object, System.ComponentModel.INotifyPropertyChanged {
         
+        private attribute[] attributesField;
+        
         private byte[] bytesField;
         
         private string contentTypeField;
@@ -1072,7 +1190,19 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         private string extentionField;
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="base64Binary", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute("attributes", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true, Order=0)]
+        public attribute[] attributes {
+            get {
+                return this.attributesField;
+            }
+            set {
+                this.attributesField = value;
+                this.RaisePropertyChanged("attributes");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, DataType="base64Binary", Order=1)]
         public byte[] bytes {
             get {
                 return this.bytesField;
@@ -1084,7 +1214,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=1)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
         public string contentType {
             get {
                 return this.contentTypeField;
@@ -1096,7 +1226,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=2)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
         public string docType {
             get {
                 return this.docTypeField;
@@ -1108,7 +1238,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
         public string documentCode {
             get {
                 return this.documentCodeField;
@@ -1120,7 +1250,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
         public string documentDescription {
             get {
                 return this.documentDescriptionField;
@@ -1132,7 +1262,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
         public string documentName {
             get {
                 return this.documentNameField;
@@ -1144,7 +1274,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
         public string extention {
             get {
                 return this.extentionField;
@@ -1178,6 +1308,8 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         private string attorneyFirmIdField;
         
         private string attorneyIdField;
+        
+        private attribute[] attributesField;
         
         private @case civilCaseField;
         
@@ -1228,7 +1360,19 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=3)]
+        [System.Xml.Serialization.XmlElementAttribute("attributes", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true, Order=3)]
+        public attribute[] attributes {
+            get {
+                return this.attributesField;
+            }
+            set {
+                this.attributesField = value;
+                this.RaisePropertyChanged("attributes");
+            }
+        }
+        
+        /// <remarks/>
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=4)]
         public @case civilCase {
             get {
                 return this.civilCaseField;
@@ -1240,7 +1384,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("defendantList", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true, Order=4)]
+        [System.Xml.Serialization.XmlElementAttribute("defendantList", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true, Order=5)]
         public party[] defendantList {
             get {
                 return this.defendantListField;
@@ -1252,7 +1396,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=5)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
         public string documentRedactionInd {
             get {
                 return this.documentRedactionIndField;
@@ -1264,7 +1408,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=6)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
         public efilingNumber efilingNumber {
             get {
                 return this.efilingNumberField;
@@ -1276,7 +1420,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=7)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified, Order=8)]
         public fee fee {
             get {
                 return this.feeField;
@@ -1288,7 +1432,7 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         /// <remarks/>
-        [System.Xml.Serialization.XmlElementAttribute("plaintiffList", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true, Order=8)]
+        [System.Xml.Serialization.XmlElementAttribute("plaintiffList", Form=System.Xml.Schema.XmlSchemaForm.Unqualified, IsNullable=true, Order=9)]
         public party[] plaintiffList {
             get {
                 return this.plaintiffListField;
