@@ -67,9 +67,9 @@ namespace CivilFilingClient
                         richTextBox1.AppendText(Environment.NewLine + Path.GetFullPath(file));
                         richTextBox1.AppendText(Environment.NewLine + Path.GetFileName(file));
                         rootDirectory = Path.GetDirectoryName(file);
-                        logger.Info(file);
                         filePaths.Add(file);
                         responses.Add("Attachment: " + file);
+                        logger.Info(file);
                     }
                     catch (SecurityException ex)
                     {
@@ -116,10 +116,14 @@ namespace CivilFilingClient
         {
             // Disable the btn until the request has finished or error's out
             btnSend.Enabled = false;
-            richTextBox1.AppendText("Send button clicked");
+            richTextBox1.AppendText(Environment.NewLine + "Send button clicked");
             responses.Add("Send button clicked");
+            logger.Info("Send button clicked");
 
-            /// Begining of Test Code
+            //PARSE XML FILE
+            //CivilFilingServiceReference.civilFilingRequest test = readXMLFile(rootDirectory + @"MessageSample1.xml");
+
+            // Begining of Test Code
             CivilFilingServiceReference.@case caseData = new CivilFilingServiceReference.@case();
             caseData.caseAction="028";
             caseData.courtSection = "SCP";
@@ -134,7 +138,7 @@ namespace CivilFilingClient
             caseData.venueOfIncident = "ATL";
 
             CivilFilingServiceReference.attachment att = new CivilFilingServiceReference.attachment();
-            string filePath = @"C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\some.pdf";
+            string filePath = rootDirectory + @"\some.pdf";
             //TODO: how large are the files?
             byte[] bytes = File.ReadAllBytes(filePath);
 
@@ -214,31 +218,27 @@ namespace CivilFilingClient
 
             /// End of Test Code
             
-            // Create the proxy
-            // Set the correct endpoint... this is working differnt than expected... old soap stuff...
-            // Add the security in the header
-            // Send the Request
-            // Wait for the reponse
-            // parse out the responses
+            // Create the proxy > Send Request > Wait for Response > Parse Response
             CivilFilingServiceReference.CivilFilingWSClient proxy = 
                 new CivilFilingServiceReference.CivilFilingWSClient();
             
-            richTextBox1.AppendText(Environment.NewLine + proxy.Endpoint.Address.ToString());
-            responses.Add(proxy.Endpoint.Address.ToString());
             try
             {
                 string message = "Attempting to send the web request to:" 
                     + proxy.Endpoint.Address.ToString();
                 richTextBox1.AppendText(Environment.NewLine + message);
                 responses.Add(message);
+                logger.Info(message);
+
                 CivilFilingServiceReference.civilFilingResponse filingReponse = 
                     proxy.submitCivilFiling(filingRequest);
 
                 foreach (var msg in filingReponse.messages)
                 {
                     string filingMsg = "Code: " + msg.code + " Description: " + msg.description;
-                    responses.Add(Environment.NewLine + filingMsg);
-                    richTextBox1.AppendText(filingMsg);
+                    richTextBox1.AppendText(Environment.NewLine + filingMsg);
+                    responses.Add(filingMsg);
+                    logger.Warn(filingMsg);
                 }
                 if (filingReponse.efilingNumber != null)
                 {
@@ -250,6 +250,7 @@ namespace CivilFilingClient
 
                     richTextBox1.AppendText(Environment.NewLine + eFilingNumberMsg);
                     responses.Add(eFilingNumberMsg);
+                    logger.Info(eFilingNumberMsg);
                 }
                 if (filingReponse.docketNumber != null)
                 {
@@ -262,6 +263,7 @@ namespace CivilFilingClient
                     //TODO: Color these blue
                     richTextBox1.AppendText(Environment.NewLine + "Docket number:");
                     responses.Add(dockerNumberMsg);
+                    logger.Info(dockerNumberMsg);
                 }
             }
             catch (System.Exception ex)
@@ -275,7 +277,8 @@ namespace CivilFilingClient
             // Should let the user have different message so they can correct the
             // issue and try again... using Done.  Have a good day... is best when
             // the entire process is a success.
-            richTextBox1.AppendText(Environment.NewLine + "Done.  Have a good day.");
+            richTextBox1.AppendText(Environment.NewLine + "Sumbmission complete.  If you received any errors please review and try the submission again.");
+            logger.Info("End of Submission");
 
             // Write out the responses
             // TODO: rootDirectory is global so we need to tidy this up.
