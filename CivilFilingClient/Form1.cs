@@ -273,7 +273,7 @@ namespace CivilFilingClient
             XmlSerializer ser = new XmlSerializer(typeof(CivilFilingServiceReference.bulkFilingPacket));
             var deser = (CivilFilingServiceReference.bulkFilingPacket)ser.Deserialize(new StringReader(node.OuterXml));
 
-            string filePath = rootDirectory + deser.attachmentList[0].documentName + deser.attachmentList[0].extention;
+            string filePath = rootDirectory + @"\" + deser.attachmentList[0].documentName + deser.attachmentList[0].extention;
             //TODO: how large are the files?
             byte[] bytes = File.ReadAllBytes(filePath);
             deser.attachmentList[0].bytes = bytes;
@@ -284,7 +284,7 @@ namespace CivilFilingClient
         private void saveResponseToFile(string filePathOfOrigin, List<string> responses)
         {
             // TODO: Put name in config
-            string filename = "\responses_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt";
+            string filename = @"\responses_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt";
             try
             {
                 using (StreamWriter outputFile = new StreamWriter(filePathOfOrigin + filename))
