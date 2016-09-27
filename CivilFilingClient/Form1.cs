@@ -15,21 +15,58 @@ using System.Xml;
 using System.Xml.Linq;
 using System.Xml.Serialization;
 
+/// <summary>
+/// Authors: Brian Ketelsen, Craig Nicholson
+/// CivilFilingClient sends data to the New Jeresy Courts - eCourt Filing System
+/// All rights reserved.
+/// </summary>
 namespace CivilFilingClient
 {
     public partial class Form1 : Form
     {
         /// <summary>
-        /// Initiatlize the NLog logger
+        /// CourtCaseFiles will maintain a list of all files selected during submission process.
+        /// We will process each of the XML files and search for the corresponding PDF files inside
+        /// of the soapenvelope.  We will use the PDF in the soap envelope to find the file path
+        /// for the PDF.  If the PDF is not found we will assume the XML directory will also have
+        /// the PDF file located in the same directory as the PDF file.
+        /// </summary>
+        private class CourtCaseFiles
+        {
+            public string FileName { get; set; }
+            public string FullFilePath { get; set; }
+            public string FileExtension { get; set; }
+            public string DirectoryName { get; set; }
+            public bool IsSubmitted { get; set; }
+            public CourtCaseFiles(
+                string fileName,
+                string fullFilePath,
+                string fileExtension,
+                string directoryName,
+                bool isSubmitted)
+            {
+                FileName = fileName;
+                FullFilePath = fullFilePath;
+                FileExtension = fileExtension;
+                DirectoryName = directoryName;
+                IsSubmitted = isSubmitted;
+            }
+        }
+        /// <summary>
+        /// Initiatlize NLog logger
         /// </summary>
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
         /// <summary>
-        /// filePaths will contain the full filePath and fileName for the files
+        /// files will contain the full filePath and fileName for the files
         /// we need to load.  This will be one xml file and one pdf file per
         /// submission.
         /// </summary>
-        List<string> filePaths = new List<string>();
+        List<CourtCaseFiles> files = new List<CourtCaseFiles>();
+
+        /// <summary>
+        /// Legacy clean this up later...
+        /// </summary>
         string rootDirectory = string.Empty;
 
         /// <summary>
@@ -69,7 +106,11 @@ namespace CivilFilingClient
                         richTextBox1.AppendText(Environment.NewLine + Path.GetFullPath(file));
                         richTextBox1.AppendText(Environment.NewLine + Path.GetFileName(file));
                         rootDirectory = Path.GetDirectoryName(file);
-                        filePaths.Add(file);
+                        files.Add(new CourtCaseFiles(Path.GetFileName(file),
+                                                       file, 
+                                                       Path.GetExtension(file).ToString(),
+                                                       Path.GetDirectoryName(file),
+                                                       false));
                         responses.Add("Attachment: " + file);
                         logger.Info(file);
                     }
@@ -121,70 +162,74 @@ namespace CivilFilingClient
             richTextBox1.AppendText(Environment.NewLine + "Send button clicked");
             responses.Add("Send button clicked");
             logger.Info("Send button clicked");
-            
+
             // Create the proxy > Send Request > Wait for Response > Parse Response
-            CivilFilingServiceReference.CivilFilingWSClient proxy = 
+            CivilFilingServiceReference.CivilFilingWSClient proxy =
                 new CivilFilingServiceReference.CivilFilingWSClient();
-            
+
             try
             {
-                string fileMsg = "Reading File:" + filePaths[0].ToString();
-                richTextBox1.AppendText(Environment.NewLine + fileMsg);
-                responses.Add(fileMsg);
-                logger.Info(fileMsg);
-
-                //PARSE XML FILE
-                var bfp =
-                    readXmlFileBFP(rootDirectory + @"\CMP2_TESTDAN.xml");
-
-                CivilFilingServiceReference.civilFilingRequest filingRequest =
-                    new CivilFilingServiceReference.civilFilingRequest();
-
-                filingRequest.bulkFilingPacket = bfp;
-                
-                //var filingRequest = SampleMessage();
-
-                string message = "Attempting to send the web request to:"
-                    + proxy.Endpoint.Address.ToString();
-                richTextBox1.AppendText(Environment.NewLine + message);
-                responses.Add(message);
-                logger.Info(message);
-
-
-                CivilFilingServiceReference.civilFilingResponse filingReponse = 
-                    proxy.submitCivilFiling(filingRequest);
-
-                foreach (var msg in filingReponse.messages)
+                foreach (var item in files)
                 {
-                    string filingMsg = "Code: " + msg.code + " Description: " + msg.description;
-                    richTextBox1.AppendText(Environment.NewLine + filingMsg);
-                    responses.Add(filingMsg);
-                    logger.Warn(filingMsg);
-                }
-                if (filingReponse.efilingNumber != null)
-                {
-                    //TODO: Color these blue
-                    string eFilingNumberMsg = "eFiling seq number:" +
-                        filingReponse.efilingNumber.efilingCourtDiv.ToString() +
-                        filingReponse.efilingNumber.efilingCourtYr.ToString() +
-                        filingReponse.efilingNumber.efilingSeqNo.ToString();
+                    if (item.FileExtension.ToUpper() == ".XML")
+                    {
+                        string fileMsg = "Reading File:" + item.FullFilePath;
+                        richTextBox1.AppendText(Environment.NewLine + fileMsg);
+                        responses.Add(fileMsg);
+                        logger.Info(fileMsg);
 
-                    richTextBox1.AppendText(Environment.NewLine + eFilingNumberMsg);
-                    responses.Add(eFilingNumberMsg);
-                    logger.Info(eFilingNumberMsg);
-                }
-                if (filingReponse.docketNumber != null)
-                {
-                    string dockerNumberMsg = "Docker number:" +
-                        filingReponse.docketNumber.docketVenue
-                        + "-" + filingReponse.docketNumber.docketTypeCode
-                        + "-" + filingReponse.docketNumber.docketCourtYear
-                        + "-" + filingReponse.docketNumber.docketSeqNum;
+                        //Parse XML file
+                        var bfp = readXmlFileBFP(item.FullFilePath);
 
-                    //TODO: Color these blue
-                    richTextBox1.AppendText(Environment.NewLine + "Docket number:");
-                    responses.Add(dockerNumberMsg);
-                    logger.Info(dockerNumberMsg);
+                        // Create the request and then assign the request a bulkFilingPacket
+                        // var filingRequest = SampleMessage();  //Test Stub
+                        CivilFilingServiceReference.civilFilingRequest filingRequest =
+                            new CivilFilingServiceReference.civilFilingRequest();
+
+                        filingRequest.bulkFilingPacket = bfp;
+                 
+                        string message = "Attempting to send the web request to:"
+                            + proxy.Endpoint.Address.ToString();
+                        richTextBox1.AppendText(Environment.NewLine + message);
+                        responses.Add(message);
+                        logger.Info(message);
+
+                        CivilFilingServiceReference.civilFilingResponse filingReponse =
+                            proxy.submitCivilFiling(filingRequest);
+
+                        foreach (var msg in filingReponse.messages)
+                        {
+                            string filingMsg = "Code: " + msg.code + " Description: " + msg.description;
+                            richTextBox1.AppendText(Environment.NewLine + filingMsg);
+                            responses.Add(filingMsg);
+                            logger.Warn(filingMsg);
+                        }
+                        if (filingReponse.efilingNumber != null)
+                        {
+                            //TODO: Color these blue
+                            string eFilingNumberMsg = "eFiling seq number:" +
+                                filingReponse.efilingNumber.efilingCourtDiv.ToString() +
+                                filingReponse.efilingNumber.efilingCourtYr.ToString() +
+                                filingReponse.efilingNumber.efilingSeqNo.ToString();
+
+                            richTextBox1.AppendText(Environment.NewLine + eFilingNumberMsg);
+                            responses.Add(eFilingNumberMsg);
+                            logger.Info(eFilingNumberMsg);
+                        }
+                        if (filingReponse.docketNumber != null)
+                        {
+                            string dockerNumberMsg = "Docker number:" +
+                                filingReponse.docketNumber.docketVenue
+                                + "-" + filingReponse.docketNumber.docketTypeCode
+                                + "-" + filingReponse.docketNumber.docketCourtYear
+                                + "-" + filingReponse.docketNumber.docketSeqNum;
+
+                            //TODO: Color these blue
+                            richTextBox1.AppendText(Environment.NewLine + "Docket number:");
+                            responses.Add(dockerNumberMsg);
+                            logger.Info(dockerNumberMsg);
+                        }
+                    }
                 }
             }
             catch (System.Exception ex)
@@ -204,64 +249,20 @@ namespace CivilFilingClient
             // Write out the responses
             // TODO: rootDirectory is global so we need to tidy this up.
             saveResponseToFile(rootDirectory, responses);
-
             // Disable the btn until the request has finished or error's out
             btnSend.Enabled = true;
         }
 
-        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
-        {
-
-        }
-
         /// <summary>
-        /// readXMLFile - reads the user submitted xml file which should contain all
-        /// the fields required to post a submission to the New Jeresy Courts web
-        /// service.  We will let the web service validate the data being sent as 
-        /// noted in the documentation they provide.
+        /// readXmlFileBFP parses the xml soap file and creates the bulk filing packet.
+        /// If an attachment is avaiable the attachment will be created.
         /// </summary>
+        /// <param name="filePathXml"></param>
         /// <returns></returns>
-        private CivilFilingServiceReference.getCivilFilingStatusResponse readXMLFile(string filePathXml)
+        private CivilFilingServiceReference.bulkFilingPacket readXmlFileBFP(string filePathXml)
         {
-            // TODO: Skip this crap and just unpack it and pack it back into the bulkFilingPacket
-            // with all the extra stuff I need to add attachements etc... 
-            // TODO: Remove hard code for later... 
-            // filePathXml = @"C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\Message1.xml";
-            // define the object we are going to populate
-            // http://stackoverflow.com/questions/12201822/read-soap-message-using-c-sharp
-            // http://pragmaticparag.blogspot.com/2012/07/soap-parser-utility-using-xml.html
-            // https://msdn.microsoft.com/en-us/library/wkyt1t1f(v=vs.110).aspx
-            // CivilFilingServiceReference.civilFilingRequest filingRequest = null;
-            //create a FileStream to open the .dat file
-            FileStream fileStream = new FileStream(filePathXml, FileMode.Open);
+            responses.Add("Reading file: " + Path.GetFileName(filePathXml));
 
-            //create a SoapFormatter to deserialize the object
-            System.Runtime.Serialization.Formatters.Soap.SoapFormatter formatter = 
-                new System.Runtime.Serialization.Formatters.Soap.SoapFormatter();
-
-            //serialize the object to the .dat file
-            CivilFilingServiceReference.getCivilFilingStatusResponse filingRequest = 
-                (CivilFilingServiceReference.getCivilFilingStatusResponse)formatter.Deserialize(fileStream);
-
-            //try
-            //{
-            //    var serializer = new XmlSerializer(typeof(CivilFilingServiceReference.civilFilingRequest));
-            //    using(FileStream fileStrem = new FileStream(filePathXml, FileMode.Open))
-            //    {
-            //        filingRequest = (CivilFilingServiceReference.civilFilingRequest)serializer.Deserialize(fileStrem);
-            //    }
-            //}
-            //catch(System.Exception ex)
-            //{
-            //    richTextBox1.AppendText(Environment.NewLine + ex.Message);
-            //    logger.Error(ex.Message);
-            //}
-            //TODO: we might return a null, throw error if this happens....
-            return filingRequest;
-        }
-
-        private  CivilFilingServiceReference.bulkFilingPacket readXmlFileBFP(string filePathXml)
-        {
             var xmldoc = new XmlDocument();
             xmldoc.Load(filePathXml);
             var names = new XmlNamespaceManager(xmldoc.NameTable);
@@ -271,16 +272,40 @@ namespace CivilFilingClient
 
             var node = xmldoc.SelectSingleNode("/soapenv:Envelope/soapenv:Body/tns2:submitCivilFiling/arg0/bulkFilingPacket", names);
             XmlSerializer ser = new XmlSerializer(typeof(CivilFilingServiceReference.bulkFilingPacket));
-            var deser = (CivilFilingServiceReference.bulkFilingPacket)ser.Deserialize(new StringReader(node.OuterXml));
+            var bfp = (CivilFilingServiceReference.bulkFilingPacket)ser.Deserialize(new StringReader(node.OuterXml));
 
-            string filePath = rootDirectory + @"\" + deser.attachmentList[0].documentName + deser.attachmentList[0].extention;
-            //TODO: how large are the files?
-            byte[] bytes = File.ReadAllBytes(filePath);
-            deser.attachmentList[0].bytes = bytes;
-            
-            return deser;
+            try
+            {
+                string fileName = bfp.attachmentList[0].documentName + bfp.attachmentList[0].extention;
+                responses.Add("Creating Attachment file: " + fileName);
+                
+                // PDF file might not be in same directory so we should check to 
+                // to see is we have the PDF in our list of files
+                CourtCaseFiles pdfFile = files.Find(item => item.FileName.ToUpper() == fileName.ToUpper());
+                string filePath = pdfFile.FullFilePath;
+                
+                //If users does not attach any file assume the pdf is in same directory as XML file.
+                if (filePath == null)
+                    filePath = Path.GetFullPath(filePathXml) + @"\" + fileName;
+                
+                byte[] bytes = File.ReadAllBytes(filePath);
+                bfp.attachmentList[0].bytes = bytes;
+            }
+            catch(System.Exception ex)
+            {
+                richTextBox1.AppendText(Environment.NewLine + ex.Message);
+                responses.Add("ERROR Attaching file: " + ex.Message);
+                logger.Error(ex.Message);
+            }
+            return bfp;
         }
 
+        /// <summary>
+        /// saveResponseToFile writes out the log history to the same directory the xml
+        /// file is located.
+        /// </summary>
+        /// <param name="filePathOfOrigin"></param>
+        /// <param name="responses"></param>
         private void saveResponseToFile(string filePathOfOrigin, List<string> responses)
         {
             // TODO: Put name in config
@@ -401,10 +426,14 @@ namespace CivilFilingClient
 
             CivilFilingServiceReference.civilFilingRequest filingRequest =
                 new CivilFilingServiceReference.civilFilingRequest();
-
             filingRequest.bulkFilingPacket = packet;
 
             return filingRequest;
+        }
+
+        private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
+        {
+
         }
     }
 }
