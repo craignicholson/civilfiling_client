@@ -297,9 +297,12 @@ https://ecourtstraining.judiciary.state.nj.us/webe19/CIVILCaseJacketWeb/pages/ci
 
 http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd
 
+Testing
+-------------
+http://localhost:8081/soapserver
 
 Notes
------------
+-------------
 
 Step 1 Registration
 Test: https://ecourtstraining.judiciary.state.nj.us/webe19/ecourtsweb/pages/home/home.faces 
@@ -318,3 +321,14 @@ There is no branch in the schema?
 
 Firm id = 9735384700
 Atty id = 288551973
+
+
+Please use the following for attorney, firm and branch id. Attached is the updated documentation. Branch id is a required field and it can be in the attributes list under BulkFilingpacket
+ 
+
+Firm Id - F88888003
+Attorney ID – 888888005/ 888888006     
+Branch Id – 0001
+ 
+
+Account number for fee processing - 143055       

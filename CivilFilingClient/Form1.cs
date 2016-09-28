@@ -182,12 +182,12 @@ namespace CivilFilingClient
                         var bfp = readXmlFileBFP(item.FullFilePath);
 
                         // Create the request and then assign the request a bulkFilingPacket
-                        // var filingRequest = SampleMessage();  //Test Stub
-                        CivilFilingServiceReference.civilFilingRequest filingRequest =
-                            new CivilFilingServiceReference.civilFilingRequest();
+                        //CivilFilingServiceReference.civilFilingRequest filingRequest =
+                        //    new CivilFilingServiceReference.civilFilingRequest();
+                        //filingRequest.bulkFilingPacket = bfp;
 
-                        filingRequest.bulkFilingPacket = bfp;
-                 
+                        var filingRequest = SampleMessage();  //Test Stub
+
                         string message = "Attempting to send the web request to:"
                             + proxy.Endpoint.Address.ToString();
                         richTextBox1.AppendText(Environment.NewLine + message);
@@ -276,18 +276,22 @@ namespace CivilFilingClient
 
             try
             {
+                string filePath = null;
                 string fileName = bfp.attachmentList[0].documentName + bfp.attachmentList[0].extention;
                 responses.Add("Creating Attachment file: " + fileName);
                 
                 // PDF file might not be in same directory so we should check to 
                 // to see is we have the PDF in our list of files
                 CourtCaseFiles pdfFile = files.Find(item => item.FileName.ToUpper() == fileName.ToUpper());
-                string filePath = pdfFile.FullFilePath;
-                
-                //If users does not attach any file assume the pdf is in same directory as XML file.
-                if (filePath == null)
-                    filePath = Path.GetFullPath(filePathXml) + @"\" + fileName;
-                
+                if (pdfFile != null)
+                {
+                    filePath = pdfFile.FullFilePath;
+                }
+                else //If users does not attach any file assume the pdf is in same directory as XML file.
+                {
+                    filePath = Path.GetDirectoryName(filePathXml) + @"\" + fileName;
+                }
+
                 byte[] bytes = File.ReadAllBytes(filePath);
                 bfp.attachmentList[0].bytes = bytes;
             }
@@ -340,18 +344,20 @@ namespace CivilFilingClient
             CivilFilingServiceReference.@case caseData = new CivilFilingServiceReference.@case();
             caseData.caseAction = "028";
             caseData.courtSection = "SCP";
-            caseData.defendantCaption = "test Def caption";
-            caseData.demandAmount = new decimal(1000);
-            caseData.plaintiffCaption = "test plantiff caption";
+            caseData.defendantCaption = "Defendant Caption";
+            caseData.demandAmount = (decimal)5400.00;
+            //caseData.demandAmount
+            caseData.docketDetailsForOtherCourt = "docketDetailsForOtherCourt";
             caseData.juryDemand = "N";
-            caseData.lawFirmCaseId = "100";
+            caseData.lawFirmCaseId = "TESTDAN";
             caseData.otherCourtActions = "N";
+            caseData.plaintiffCaption = "test plantiff caption";
             caseData.serviceMethod = "03";
             caseData.venue = "ATL";
-            caseData.venueOfIncident = "ATL";
+            caseData.venueOfIncident = "CPM";
 
             CivilFilingServiceReference.attachment att = new CivilFilingServiceReference.attachment();
-            string filePath = rootDirectory + @"\some.pdf";
+            string filePath = @"C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\some.pdf";
             //TODO: how large are the files?
             byte[] bytes = File.ReadAllBytes(filePath);
 
@@ -364,34 +370,39 @@ namespace CivilFilingClient
             att.extention = ".pdf";
 
             CivilFilingServiceReference.fee fee = new CivilFilingServiceReference.fee();
-            fee.accountNumber = "12345";
-            fee.attorneyClientRefNumber = "12345";
-            fee.attorneyFee = new decimal(1000);
-            fee.feeExempt = "N";
+            fee.accountNumber = "141375";
+            fee.attorneyClientRefNumber = "1"; //numeric
+            fee.attorneyFee = (decimal)0.0;
+            fee.feeExempt = "Y";
             fee.paymentType = "CG";
 
             CivilFilingServiceReference.address pAddress = new CivilFilingServiceReference.address();
-            pAddress.addressLine1 = "25, market street";
-            pAddress.addressLine2 = "Trenton";
+            pAddress.addressLine1 = "123 Main Street";
+            pAddress.city = "Parsippany";
             pAddress.stateCode = "NJ";
-            pAddress.zipCode = "12345";
+            pAddress.zipCode = "07054";
 
             CivilFilingServiceReference.party plantiff = new CivilFilingServiceReference.party();
             plantiff.adaAccommodationInd = "N";
             plantiff.address = pAddress;
-            plantiff.corporationName = "ABC Corp";
+            plantiff.corporationName = "Test Creditor";
             plantiff.corporationType = "CO";
             plantiff.interpreterInd = "N";
             plantiff.partyAffiliation = "ADM";
             plantiff.partyDescription = "BUS";
-            plantiff.interpreterInd = "N";
-            plantiff.language = "SPA";
-            plantiff.accommodationType = "a";
+            //plantiff.language = "SPA";
+            //plantiff.accommodationType = "a";
+
+            CivilFilingServiceReference.address dAddress = new CivilFilingServiceReference.address();
+            dAddress.addressLine1 = "123 Main Street";
+            dAddress.city = "Parsippany";
+            dAddress.stateCode = "NJ";
+            dAddress.zipCode = "07054";
 
             CivilFilingServiceReference.party defendant = new CivilFilingServiceReference.party();
             defendant.adaAccommodationInd = "N";
-            defendant.address = pAddress;
-            defendant.corporationName = "XYZ Corp";
+            defendant.address = dAddress;
+            defendant.corporationName = "Trump Corp";
             defendant.corporationType = "CO";
             defendant.interpreterInd = "N";
             defendant.partyAffiliation = "ADM";
@@ -403,8 +414,8 @@ namespace CivilFilingClient
             CivilFilingServiceReference.attachment[] attachments = new CivilFilingServiceReference.attachment[1];
             attachments[0] = att;
             packet.attachmentList = attachments;
-            packet.attorneyId = "288551973";
-            packet.attorneyFirmId = "9735384700";
+            packet.attorneyId = "888888005";
+            packet.attorneyFirmId = "F88888003";
 
             packet.civilCase = caseData;
             int numberOfDefendants = 1;
@@ -414,10 +425,13 @@ namespace CivilFilingClient
             packet.documentRedactionInd = "Y";
             packet.fee = fee;
 
-            // Lots of object have attributes...
+            // Branch Id - need the 
             CivilFilingServiceReference.attribute attr = new CivilFilingServiceReference.attribute();
-            attr.name = "name";
-            attr.value = "TestName";
+            attr.name = "branchId";
+            attr.value = "0001";
+            CivilFilingServiceReference.attribute[] attrs = new CivilFilingServiceReference.attribute[1];
+            attrs[0] = attr;
+            packet.attributes = attrs; 
 
             int numberOfPlantiffs = 1;
             CivilFilingServiceReference.party[] plantiffs = new CivilFilingServiceReference.party[numberOfPlantiffs];
