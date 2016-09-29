@@ -114,8 +114,8 @@
     <WCFMetadataStorage Include="Service References\CivilFilingServiceReference\" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Service References\CivilFilingServiceReference\civilFilingWS_t.wsdl" />
-    <None Include="Service References\CivilFilingServiceReference\civilFilingWS_t1.xsd">
+    <None Include="Service References\CivilFilingServiceReference\CivilFilingWSService.wsdl" />
+    <None Include="Service References\CivilFilingServiceReference\CivilFilingWSService_schema1.xsd">
       <SubType>Designer</SubType>
     </None>
     <None Include="Service References\CivilFilingServiceReference\configuration91.svcinfo" />
