@@ -19,11 +19,11 @@
     <ServiceContractMappings />
   </ClientOptions>
   <MetadataSources>
-    <MetadataSource Address="https://dptng.njcourts.gov:2045/civilFilingWS_t?wsdl" Protocol="http" SourceId="1" />
+    <MetadataSource Address="C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\CivilfilingWSService.wsdl" Protocol="file" SourceId="1" />
   </MetadataSources>
   <Metadata>
-    <MetadataFile FileName="civilFilingWS_t1.xsd" MetadataType="Schema" ID="3d5bd1f3-e8d8-4d0f-ab29-0d1889b946a9" SourceId="1" SourceUrl="https://dptng.njcourts.gov:2045/civilFilingWS_t.xsd2.xsd" />
-    <MetadataFile FileName="civilFilingWS_t.wsdl" MetadataType="Wsdl" ID="9b6d9ee1-2511-4cab-8321-9c38d45b2915" SourceId="1" SourceUrl="https://dptng.njcourts.gov:2045/civilFilingWS_t?wsdl" />
+    <MetadataFile FileName="CivilFilingWSService_schema1.xsd" MetadataType="Schema" ID="27233e15-567d-473e-aa5e-701ab990c837" SourceId="1" SourceUrl="file:///C:/Users/Craig Nicholson/Documents/Visual Studio 2015/Projects/CivilFilingClient/CivilFilingClient/CivilFilingWSService_schema1.xsd" />
+    <MetadataFile FileName="CivilFilingWSService.wsdl" MetadataType="Wsdl" ID="f09c7544-a4da-4d44-8c6c-53278acd5645" SourceId="1" SourceUrl="file:///C:/Users/Craig Nicholson/Documents/Visual Studio 2015/Projects/CivilFilingClient/CivilFilingClient/CivilfilingWSService.wsdl" />
   </Metadata>
   <Extensions>
     <ExtensionFile FileName="configuration91.svcinfo" Name="configuration91.svcinfo" />

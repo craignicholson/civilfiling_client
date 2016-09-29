@@ -1522,62 +1522,38 @@ namespace CivilFilingClient.CivilFilingServiceReference {
     public interface CivilFilingWS {
         
         // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(CivilFilingClient.CivilFilingServiceReference.ECourtsCivilServiceException), Action="", Name="ECourtsCivilServiceException")]
-        [System.ServiceModel.FaultContractAttribute(typeof(CivilFilingClient.CivilFilingServiceReference.Exception), Action="", Name="Exception")]
-        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
-        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
-        CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusResponse getCivilFilingStatus(CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusRequest request);
-        
-        [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
-        System.Threading.Tasks.Task<CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusResponse> getCivilFilingStatusAsync(CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusRequest request);
-        
-        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
-        [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
-        [System.ServiceModel.FaultContractAttribute(typeof(CivilFilingClient.CivilFilingServiceReference.ECourtsCivilServiceException), Action="", Name="ECourtsCivilServiceException")]
-        [System.ServiceModel.FaultContractAttribute(typeof(CivilFilingClient.CivilFilingServiceReference.Exception), Action="", Name="Exception")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/submitCivilFilingR" +
+            "equest", ReplyAction="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/submitCivilFilingR" +
+            "esponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(CivilFilingClient.CivilFilingServiceReference.ECourtsCivilServiceException), Action="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/submitCivilFiling/" +
+            "Fault/ECourtsCivilServiceException", Name="ECourtsCivilServiceException")]
+        [System.ServiceModel.FaultContractAttribute(typeof(CivilFilingClient.CivilFilingServiceReference.Exception), Action="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/submitCivilFiling/" +
+            "Fault/Exception", Name="Exception")]
         [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
         [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
         CivilFilingClient.CivilFilingServiceReference.submitCivilFilingResponse submitCivilFiling(CivilFilingClient.CivilFilingServiceReference.submitCivilFilingRequest request);
         
-        [System.ServiceModel.OperationContractAttribute(Action="", ReplyAction="*")]
+        [System.ServiceModel.OperationContractAttribute(Action="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/submitCivilFilingR" +
+            "equest", ReplyAction="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/submitCivilFilingR" +
+            "esponse")]
         System.Threading.Tasks.Task<CivilFilingClient.CivilFilingServiceReference.submitCivilFilingResponse> submitCivilFilingAsync(CivilFilingClient.CivilFilingServiceReference.submitCivilFilingRequest request);
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getCivilFilingStatus", WrapperNamespace="http://webservice.civilfiling.ecourts.ito.aoc.nj/", IsWrapped=true)]
-    public partial class getCivilFilingStatusRequest {
         
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://webservice.civilfiling.ecourts.ito.aoc.nj/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public CivilFilingClient.CivilFilingServiceReference.civilFilingRequest arg0;
+        // CODEGEN: Parameter 'return' requires additional schema information that cannot be captured using the parameter mode. The specific attribute is 'System.Xml.Serialization.XmlElementAttribute'.
+        [System.ServiceModel.OperationContractAttribute(Action="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/getCivilFilingStat" +
+            "usRequest", ReplyAction="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/getCivilFilingStat" +
+            "usResponse")]
+        [System.ServiceModel.FaultContractAttribute(typeof(CivilFilingClient.CivilFilingServiceReference.ECourtsCivilServiceException), Action="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/getCivilFilingStat" +
+            "us/Fault/ECourtsCivilServiceException", Name="ECourtsCivilServiceException")]
+        [System.ServiceModel.FaultContractAttribute(typeof(CivilFilingClient.CivilFilingServiceReference.Exception), Action="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/getCivilFilingStat" +
+            "us/Fault/Exception", Name="Exception")]
+        [System.ServiceModel.XmlSerializerFormatAttribute(SupportFaults=true)]
+        [return: System.ServiceModel.MessageParameterAttribute(Name="return")]
+        CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusResponse getCivilFilingStatus(CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusRequest request);
         
-        public getCivilFilingStatusRequest() {
-        }
-        
-        public getCivilFilingStatusRequest(CivilFilingClient.CivilFilingServiceReference.civilFilingRequest arg0) {
-            this.arg0 = arg0;
-        }
-    }
-    
-    [System.Diagnostics.DebuggerStepThroughAttribute()]
-    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
-    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-    [System.ServiceModel.MessageContractAttribute(WrapperName="getCivilFilingStatusResponse", WrapperNamespace="http://webservice.civilfiling.ecourts.ito.aoc.nj/", IsWrapped=true)]
-    public partial class getCivilFilingStatusResponse {
-        
-        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://webservice.civilfiling.ecourts.ito.aoc.nj/", Order=0)]
-        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
-        public CivilFilingClient.CivilFilingServiceReference.civilFilingResponse @return;
-        
-        public getCivilFilingStatusResponse() {
-        }
-        
-        public getCivilFilingStatusResponse(CivilFilingClient.CivilFilingServiceReference.civilFilingResponse @return) {
-            this.@return = @return;
-        }
+        [System.ServiceModel.OperationContractAttribute(Action="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/getCivilFilingStat" +
+            "usRequest", ReplyAction="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/getCivilFilingStat" +
+            "usResponse")]
+        System.Threading.Tasks.Task<CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusResponse> getCivilFilingStatusAsync(CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusRequest request);
     }
     
     [System.Diagnostics.DebuggerStepThroughAttribute()]
@@ -1616,6 +1592,42 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
     }
     
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getCivilFilingStatus", WrapperNamespace="http://webservice.civilfiling.ecourts.ito.aoc.nj/", IsWrapped=true)]
+    public partial class getCivilFilingStatusRequest {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://webservice.civilfiling.ecourts.ito.aoc.nj/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public CivilFilingClient.CivilFilingServiceReference.civilFilingRequest arg0;
+        
+        public getCivilFilingStatusRequest() {
+        }
+        
+        public getCivilFilingStatusRequest(CivilFilingClient.CivilFilingServiceReference.civilFilingRequest arg0) {
+            this.arg0 = arg0;
+        }
+    }
+    
+    [System.Diagnostics.DebuggerStepThroughAttribute()]
+    [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
+    [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+    [System.ServiceModel.MessageContractAttribute(WrapperName="getCivilFilingStatusResponse", WrapperNamespace="http://webservice.civilfiling.ecourts.ito.aoc.nj/", IsWrapped=true)]
+    public partial class getCivilFilingStatusResponse {
+        
+        [System.ServiceModel.MessageBodyMemberAttribute(Namespace="http://webservice.civilfiling.ecourts.ito.aoc.nj/", Order=0)]
+        [System.Xml.Serialization.XmlElementAttribute(Form=System.Xml.Schema.XmlSchemaForm.Unqualified)]
+        public CivilFilingClient.CivilFilingServiceReference.civilFilingResponse @return;
+        
+        public getCivilFilingStatusResponse() {
+        }
+        
+        public getCivilFilingStatusResponse(CivilFilingClient.CivilFilingServiceReference.civilFilingResponse @return) {
+            this.@return = @return;
+        }
+    }
+    
     [System.CodeDom.Compiler.GeneratedCodeAttribute("System.ServiceModel", "4.0.0.0")]
     public interface CivilFilingWSChannel : CivilFilingClient.CivilFilingServiceReference.CivilFilingWS, System.ServiceModel.IClientChannel {
     }
@@ -1644,29 +1656,6 @@ namespace CivilFilingClient.CivilFilingServiceReference {
         }
         
         [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusResponse CivilFilingClient.CivilFilingServiceReference.CivilFilingWS.getCivilFilingStatus(CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusRequest request) {
-            return base.Channel.getCivilFilingStatus(request);
-        }
-        
-        public CivilFilingClient.CivilFilingServiceReference.civilFilingResponse getCivilFilingStatus(CivilFilingClient.CivilFilingServiceReference.civilFilingRequest arg0) {
-            CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusRequest inValue = new CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusRequest();
-            inValue.arg0 = arg0;
-            CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusResponse retVal = ((CivilFilingClient.CivilFilingServiceReference.CivilFilingWS)(this)).getCivilFilingStatus(inValue);
-            return retVal.@return;
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
-        System.Threading.Tasks.Task<CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusResponse> CivilFilingClient.CivilFilingServiceReference.CivilFilingWS.getCivilFilingStatusAsync(CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusRequest request) {
-            return base.Channel.getCivilFilingStatusAsync(request);
-        }
-        
-        public System.Threading.Tasks.Task<CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusResponse> getCivilFilingStatusAsync(CivilFilingClient.CivilFilingServiceReference.civilFilingRequest arg0) {
-            CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusRequest inValue = new CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusRequest();
-            inValue.arg0 = arg0;
-            return ((CivilFilingClient.CivilFilingServiceReference.CivilFilingWS)(this)).getCivilFilingStatusAsync(inValue);
-        }
-        
-        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
         CivilFilingClient.CivilFilingServiceReference.submitCivilFilingResponse CivilFilingClient.CivilFilingServiceReference.CivilFilingWS.submitCivilFiling(CivilFilingClient.CivilFilingServiceReference.submitCivilFilingRequest request) {
             return base.Channel.submitCivilFiling(request);
         }
@@ -1687,6 +1676,29 @@ namespace CivilFilingClient.CivilFilingServiceReference {
             CivilFilingClient.CivilFilingServiceReference.submitCivilFilingRequest inValue = new CivilFilingClient.CivilFilingServiceReference.submitCivilFilingRequest();
             inValue.arg0 = arg0;
             return ((CivilFilingClient.CivilFilingServiceReference.CivilFilingWS)(this)).submitCivilFilingAsync(inValue);
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusResponse CivilFilingClient.CivilFilingServiceReference.CivilFilingWS.getCivilFilingStatus(CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusRequest request) {
+            return base.Channel.getCivilFilingStatus(request);
+        }
+        
+        public CivilFilingClient.CivilFilingServiceReference.civilFilingResponse getCivilFilingStatus(CivilFilingClient.CivilFilingServiceReference.civilFilingRequest arg0) {
+            CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusRequest inValue = new CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusRequest();
+            inValue.arg0 = arg0;
+            CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusResponse retVal = ((CivilFilingClient.CivilFilingServiceReference.CivilFilingWS)(this)).getCivilFilingStatus(inValue);
+            return retVal.@return;
+        }
+        
+        [System.ComponentModel.EditorBrowsableAttribute(System.ComponentModel.EditorBrowsableState.Advanced)]
+        System.Threading.Tasks.Task<CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusResponse> CivilFilingClient.CivilFilingServiceReference.CivilFilingWS.getCivilFilingStatusAsync(CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusRequest request) {
+            return base.Channel.getCivilFilingStatusAsync(request);
+        }
+        
+        public System.Threading.Tasks.Task<CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusResponse> getCivilFilingStatusAsync(CivilFilingClient.CivilFilingServiceReference.civilFilingRequest arg0) {
+            CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusRequest inValue = new CivilFilingClient.CivilFilingServiceReference.getCivilFilingStatusRequest();
+            inValue.arg0 = arg0;
+            return ((CivilFilingClient.CivilFilingServiceReference.CivilFilingWS)(this)).getCivilFilingStatusAsync(inValue);
         }
     }
 }
