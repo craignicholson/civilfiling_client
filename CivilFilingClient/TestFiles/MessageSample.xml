@@ -4,7 +4,7 @@
       <wsse:UsernameToken Id="unt_20">
         <wsse:Username>888888005</wsse:Username>
         <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">P@ssword</wsse:Password>
-      </wsse:UsernameToken>&#xD;
+      </wsse:UsernameToken>
     </wsse:Security>
   </s:Header>
   <s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
@@ -13,38 +13,44 @@
         <bulkFilingPacket>
           <attachmentList>
             <bytes>
-              <xop:Include href="cid:http://tempuri.org/1/636103044045015185" xmlns:xop="http://www.w3.org/2004/08/xop/include"/>
+              <xop:Include href="cid:http://tempuri.org/1/636106992861751232" xmlns:xop="http://www.w3.org/2004/08/xop/include"/>
             </bytes>
             <contentType>application/pdf</contentType>
             <docType>pdf</docType>
             <documentCode>CMPL</documentCode>
             <documentDescription>Complaint</documentDescription>
             <documentName>Test</documentName>
-            <extention>pdf</extention>
+            <extention>.pdf</extention>
           </attachmentList>
-          <attorneyId>000000000</attorneyId>
+          <attorneyFirmId>F88888003</attorneyFirmId>
+          <attorneyId>888888005</attorneyId>
+          <attributes>
+            <name>branchId</name>
+            <value>0001</value>
+          </attributes>
           <civilCase>
             <caseAction>028</caseAction>
             <courtSection>SCP</courtSection>
-            <defendantCaption>test Def caption</defendantCaption>
+            <defendantCaption>Defendant Caption</defendantCaption>
+            <demandAmount>5400</demandAmount>
+            <docketDetailsForOtherCourt>docketDetailsForOtherCourt</docketDetailsForOtherCourt>
             <juryDemand>N</juryDemand>
-            <lawFirmCaseId>100</lawFirmCaseId>
+            <lawFirmCaseId>TESTDAN</lawFirmCaseId>
             <otherCourtActions>N</otherCourtActions>
             <plaintiffCaption>test plantiff caption</plaintiffCaption>
             <serviceMethod>03</serviceMethod>
             <venue>ATL</venue>
-            <venueOfIncident>ATL</venueOfIncident>
+            <venueOfIncident>CPM</venueOfIncident>
           </civilCase>
           <defendantList>
-            <accommodationType>a</accommodationType>
             <adaAccommodationInd>N</adaAccommodationInd>
             <address>
-              <addressLine1>25, market street</addressLine1>
-              <addressLine2>Trenton</addressLine2>
+              <addressLine1>123 Main Street</addressLine1>
+              <city>Parsippany</city>
               <stateCode>NJ</stateCode>
-              <zipCode>12345</zipCode>
+              <zipCode>07054</zipCode>
             </address>
-            <corporationName>ABC Corp</corporationName>
+            <corporationName>Trump Corp</corporationName>
             <corporationType>CO</corporationType>
             <interpreterInd>N</interpreterInd>
             <partyAffiliation>ADM</partyAffiliation>
@@ -52,24 +58,23 @@
           </defendantList>
           <documentRedactionInd>Y</documentRedactionInd>
           <fee>
-            <accountNumber>12345</accountNumber>
-            <attorneyClientRefNumber>12345</attorneyClientRefNumber>
-            <feeExempt>N</feeExempt>
+            <accountNumber>141375</accountNumber>
+            <attorneyClientRefNumber>1</attorneyClientRefNumber>
+            <attorneyFee>0</attorneyFee>
+            <feeExempt>Y</feeExempt>
             <paymentType>CG</paymentType>
           </fee>
           <plaintiffList>
-            <accommodationType>a</accommodationType>
             <adaAccommodationInd>N</adaAccommodationInd>
             <address>
-              <addressLine1>25, market street</addressLine1>
-              <addressLine2>Trenton</addressLine2>
+              <addressLine1>123 Main Street</addressLine1>
+              <city>Parsippany</city>
               <stateCode>NJ</stateCode>
-              <zipCode>12345</zipCode>
+              <zipCode>07054</zipCode>
             </address>
-            <corporationName>ABC Corp</corporationName>
+            <corporationName>Test Creditor</corporationName>
             <corporationType>CO</corporationType>
             <interpreterInd>N</interpreterInd>
-            <language>SPA</language>
             <partyAffiliation>ADM</partyAffiliation>
             <partyDescription>BUS</partyDescription>
           </plaintiffList>
