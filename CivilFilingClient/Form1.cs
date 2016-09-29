@@ -112,7 +112,7 @@ namespace CivilFilingClient
                                                        Path.GetDirectoryName(file),
                                                        false));
                         responses.Add("Attachment: " + file);
-                        logger.Info(file);
+                        logger.Info("Attachment: " + file);
                     }
                     catch (SecurityException ex)
                     {
@@ -197,17 +197,20 @@ namespace CivilFilingClient
                         CivilFilingServiceReference.civilFilingResponse filingReponse =
                             proxy.submitCivilFiling(filingRequest);
 
-                        foreach (var msg in filingReponse.messages)
+                        if (filingReponse.messages != null)
                         {
-                            string filingMsg = "Code: " + msg.code + " Description: " + msg.description;
-                            richTextBox1.AppendText(Environment.NewLine + filingMsg);
-                            responses.Add(filingMsg);
-                            logger.Warn(filingMsg);
+                            foreach (var msg in filingReponse.messages)
+                            {
+                                string filingMsg = "Code: " + msg.code + " Description: " + msg.description;
+                                richTextBox1.AppendText(Environment.NewLine + filingMsg);
+                                responses.Add(filingMsg);
+                                logger.Warn(filingMsg);
+                            }
                         }
                         if (filingReponse.efilingNumber != null)
                         {
                             //TODO: Color these blue
-                            string eFilingNumberMsg = "eFiling seq number:" +
+                            string eFilingNumberMsg = "Efiling Sequence Number :" +
                                 filingReponse.efilingNumber.efilingCourtDiv.ToString() +
                                 filingReponse.efilingNumber.efilingCourtYr.ToString() +
                                 filingReponse.efilingNumber.efilingSeqNo.ToString();
@@ -218,7 +221,7 @@ namespace CivilFilingClient
                         }
                         if (filingReponse.docketNumber != null)
                         {
-                            string dockerNumberMsg = "Docker number:" +
+                            string dockerNumberMsg = "Docker Number :" +
                                 filingReponse.docketNumber.docketVenue
                                 + "-" + filingReponse.docketNumber.docketTypeCode
                                 + "-" + filingReponse.docketNumber.docketCourtYear
@@ -345,8 +348,8 @@ namespace CivilFilingClient
             caseData.caseAction = "028";
             caseData.courtSection = "SCP";
             caseData.defendantCaption = "Defendant Caption";
-            caseData.demandAmount = (decimal)5400.00;
-            //caseData.demandAmount
+            caseData.demandAmount = Convert.ToDecimal(5400);
+            caseData.demandAmountSpecified = true;
             caseData.docketDetailsForOtherCourt = "docketDetailsForOtherCourt";
             caseData.juryDemand = "N";
             caseData.lawFirmCaseId = "TESTDAN";
@@ -372,7 +375,8 @@ namespace CivilFilingClient
             CivilFilingServiceReference.fee fee = new CivilFilingServiceReference.fee();
             fee.accountNumber = "141375";
             fee.attorneyClientRefNumber = "1"; //numeric
-            fee.attorneyFee = (decimal)0.0;
+            fee.attorneyFee = Convert.ToDecimal(0);
+            fee.attorneyFeeSpecified = false;
             fee.feeExempt = "Y";
             fee.paymentType = "CG";
 
