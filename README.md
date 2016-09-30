@@ -325,10 +325,8 @@ Atty id = 288551973
 
 Please use the following for attorney, firm and branch id. Attached is the updated documentation. Branch id is a required field and it can be in the attributes list under BulkFilingpacket
  
-
+Testing Account		
 Firm Id - F88888003
 Attorney ID – 888888005/ 888888006     
 Branch Id – 0001
- 
-
 Account number for fee processing - 143055       
