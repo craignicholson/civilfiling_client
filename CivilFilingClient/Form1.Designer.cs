@@ -79,9 +79,9 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(13, 12);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(342, 20);
+            this.label1.Size = new System.Drawing.Size(326, 20);
             this.label1.TabIndex = 3;
-            this.label1.Text = "Maybe some instructions here would be helpful.";
+            this.label1.Text = "eCourts web service availability (2AM to 8PM)";
             // 
             // Form1
             // 
