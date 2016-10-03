@@ -213,7 +213,7 @@ namespace CivilFilingClient
                         {
                             foreach (var msg in filingReponse.messages)
                             {
-                                string filingMsg = "Code: " + msg.code + " Description: " + msg.description;
+                                string filingMsg = "eCourts | Code: " + msg.code + " Description: " + msg.description;
                                 richTextBox1.AppendText(Environment.NewLine + filingMsg);
                                 responses.Add(filingMsg);
                                 logger.Warn(filingMsg);
@@ -222,7 +222,7 @@ namespace CivilFilingClient
                         if (filingReponse.efilingNumber != null)
                         {
                             //TODO: Color these blue
-                            string eFilingNumberMsg = "Efiling Sequence Number :" +
+                            string eFilingNumberMsg = "eCourts | Efiling Sequence Number :" +
                                 filingReponse.efilingNumber.efilingCourtDiv.ToString() +
                                 filingReponse.efilingNumber.efilingCourtYr.ToString() +
                                 filingReponse.efilingNumber.efilingSeqNo.ToString();
@@ -233,16 +233,16 @@ namespace CivilFilingClient
                         }
                         if (filingReponse.docketNumber != null)
                         {
-                            string dockerNumberMsg = "Docker Number :" +
+                            string docketNumberMsg = "eCourts | Docket Number :" +
                                 filingReponse.docketNumber.docketVenue
                                 + "-" + filingReponse.docketNumber.docketTypeCode
-                                + "-" + filingReponse.docketNumber.docketCourtYear
-                                + "-" + filingReponse.docketNumber.docketSeqNum;
-
+                                + "-" + filingReponse.docketNumber.docketSeqNum
+                                + "-" + filingReponse.docketNumber.docketCourtYear;
+                                
                             //TODO: Color these blue
-                            richTextBox1.AppendText(Environment.NewLine + "Docket number: " + dockerNumberMsg);
-                            responses.Add(dockerNumberMsg);
-                            logger.Info(dockerNumberMsg);
+                            richTextBox1.AppendText(Environment.NewLine + docketNumberMsg);
+                            responses.Add(docketNumberMsg);
+                            logger.Info(docketNumberMsg);
                         }
                     }
                 }
