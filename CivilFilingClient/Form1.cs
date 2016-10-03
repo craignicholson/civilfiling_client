@@ -52,8 +52,9 @@ namespace CivilFilingClient
                 IsSubmitted = isSubmitted;
             }
         }
+
         /// <summary>
-        /// Initiatlize NLog logger
+        /// Initialize NLog logger
         /// </summary>
         private static Logger logger = LogManager.GetCurrentClassLogger();
 
@@ -92,12 +93,11 @@ namespace CivilFilingClient
         {
             // We will only attach the pdf... but we can have many pdf's
             // Use Case - we will file one case at a time.
-            // Use Case, One xml file and multiple pdfs? I think this is how it should be.
-            // xml file can have many plantiff and defendants?
+            // xml file can have many plantiff and defendants
             DialogResult dr = openFileDialog1.ShowDialog();
             if (dr == DialogResult.OK)
             {
-                // Read the files
+                // Read all the files
                 foreach (String file in openFileDialog1.FileNames)
                 {
                     // Load the files into the List for processing.
@@ -159,9 +159,9 @@ namespace CivilFilingClient
         {
             // Disable the btn until the request has finished or error's out
             btnSend.Enabled = false;
-            richTextBox1.AppendText(Environment.NewLine + "Send button clicked");
-            responses.Add("Send button clicked");
-            logger.Info("Send button clicked");
+            richTextBox1.AppendText(Environment.NewLine + "Attemping to send  request");
+            responses.Add("Attemping to send  request");
+            logger.Info("Attemping to send  request");
 
             // Create the proxy > Send Request > Wait for Response > Parse Response
             CivilFilingServiceReference.CivilFilingWSClient proxy =
@@ -180,13 +180,25 @@ namespace CivilFilingClient
 
                         //Parse XML file
                         var bfp = readXmlFileBFP(item.FullFilePath);
-
+                        // If the deserialzation of the file fails we will get a null back
+                        // and need to stop the processing
+                        if (bfp == null)
+                        {
+                            richTextBox1.AppendText(Environment.NewLine + "Invalid formated file :" + item.FileName);
+                            responses.Add("Invalid formated file:" + item.FileName);
+                            logger.Info("Invalid formated file:" + item.FileName);
+                            btnSend.Enabled = true;
+                            return;
+                        }
                         // Create the request and then assign the request a bulkFilingPacket
-                        //CivilFilingServiceReference.civilFilingRequest filingRequest =
-                        //    new CivilFilingServiceReference.civilFilingRequest();
-                        //filingRequest.bulkFilingPacket = bfp;
+                        CivilFilingServiceReference.civilFilingRequest filingRequest =
+                            new CivilFilingServiceReference.civilFilingRequest();
+                        filingRequest.bulkFilingPacket = bfp;
 
-                        var filingRequest = TestIndividual2Corp();  //Test Stub
+                        //var filingRequest = TestCorp2Corp();  //Test Stub
+                        //var filingRequest = TestCorp2Individual();  //Test Stub
+                        //var filingRequest = TestIndividual2Corp();  //Test Stub
+                        //var filingRequest = TestIndividual2Individual();  //Test Stub
 
                         string message = "Attempting to send the web request to:"
                             + proxy.Endpoint.Address.ToString();
@@ -241,6 +253,14 @@ namespace CivilFilingClient
                 richTextBox1.AppendText(Environment.NewLine + ex.Message);
                 responses.Add(ex.Message);
                 logger.Error(ex.Message);
+
+                if (ex.InnerException != null)
+                {
+                    richTextBox1.AppendText(Environment.NewLine + ex.InnerException.Message);
+                    responses.Add(ex.InnerException.Message);
+                    logger.Error(ex.InnerException.Message);
+
+                }
             }
             // TODO: If we have any error codes and the transaction fails... we
             // Should let the user have different message so they can correct the
@@ -264,6 +284,7 @@ namespace CivilFilingClient
         /// <returns></returns>
         private CivilFilingServiceReference.bulkFilingPacket readXmlFileBFP(string filePathXml)
         {
+            CivilFilingServiceReference.bulkFilingPacket bfp = null;
             responses.Add("Reading file: " + Path.GetFileName(filePathXml));
 
             var xmldoc = new XmlDocument();
@@ -275,10 +296,22 @@ namespace CivilFilingClient
 
             var node = xmldoc.SelectSingleNode("/soapenv:Envelope/soapenv:Body/tns2:submitCivilFiling/arg0/bulkFilingPacket", names);
             XmlSerializer ser = new XmlSerializer(typeof(CivilFilingServiceReference.bulkFilingPacket));
-            var bfp = (CivilFilingServiceReference.bulkFilingPacket)ser.Deserialize(new StringReader(node.OuterXml));
 
+            // If the xml doc is not formatted with the correct namespaces the node will 
+            // be returned null
+            if (node == null)
+            {
+                var soapmsg = "/soapenv:Envelope/soapenv:Body/tns2:submitCivilFiling/arg0/bulkFilingPacket";
+                var message = "File soap format is incorrect.  Review the namespaces to make sure they contain: " + Environment.NewLine +
+                    soapmsg;
+                richTextBox1.AppendText(Environment.NewLine + message);
+                responses.Add("ERROR xml nodes should contain: " + message);
+                logger.Error("ERROR xml nodes should contain" + message);
+                return null;
+            }
             try
             {
+                bfp = (CivilFilingServiceReference.bulkFilingPacket)ser.Deserialize(new StringReader(node.OuterXml));
                 string filePath = null;
                 string fileName = bfp.attachmentList[0].documentName + bfp.attachmentList[0].extention;
                 responses.Add("Creating Attachment file: " + fileName);
@@ -309,9 +342,14 @@ namespace CivilFilingClient
             }
             catch(System.Exception ex)
             {
-                richTextBox1.AppendText(Environment.NewLine + ex.Message);
-                responses.Add("ERROR Attaching file: " + ex.Message);
-                logger.Error(ex.Message);
+                var message = "Error reading file : " + ex.Message;
+                if (ex.InnerException != null)
+                    message = Environment.NewLine + ex.InnerException.Message;
+                richTextBox1.AppendText(Environment.NewLine + message);
+                responses.Add("ERROR Attaching file: " + message);
+                logger.Error(message);
+                // Stop all processing
+                return null;
             }
             return bfp;
         }
@@ -398,7 +436,7 @@ namespace CivilFilingClient
             CivilFilingServiceReference.party plantiff = new CivilFilingServiceReference.party();
             plantiff.adaAccommodationInd = "N";
             plantiff.address = pAddress;
-            plantiff.corporationName = "Test Creditor";
+            plantiff.corporationName = "Weyland-Yutani Corp.";
             plantiff.corporationType = "CO";
             plantiff.interpreterInd = "N";
             plantiff.partyAffiliation = "ADM";
@@ -415,7 +453,7 @@ namespace CivilFilingClient
             CivilFilingServiceReference.party defendant = new CivilFilingServiceReference.party();
             defendant.adaAccommodationInd = "N";
             defendant.address = dAddress;
-            defendant.corporationName = "T Corp";
+            defendant.corporationName = "Initech";
             defendant.corporationType = "CO";
             defendant.interpreterInd = "N";
             defendant.partyAffiliation = "ADM";
@@ -620,6 +658,10 @@ namespace CivilFilingClient
             return filingRequest;
         }
 
+        /// <summary>
+        /// TestIndividual2Corp
+        /// </summary>
+        /// <returns></returns>
         private CivilFilingServiceReference.civilFilingRequest TestIndividual2Corp()
         {
             // bulkFilingPacket REQ
@@ -778,6 +820,168 @@ namespace CivilFilingClient
             return filingRequest;
         }
 
+        /// <summary>
+        /// TestIndividual2Individual
+        /// </summary>
+        /// <returns></returns>
+        private CivilFilingServiceReference.civilFilingRequest TestIndividual2Individual()
+        {
+            // bulkFilingPacket REQ
+            CivilFilingServiceReference.bulkFilingPacket packet = new CivilFilingServiceReference.bulkFilingPacket();
+            packet.attorneyId = "888888005";            //Required
+            packet.attorneyFirmId = "F88888003";        //Required
+
+            // REQUIRED Branch Id - need the 
+            CivilFilingServiceReference.attribute attr = new CivilFilingServiceReference.attribute();
+            attr.name = "branchId";
+            attr.value = "0001";
+            CivilFilingServiceReference.attribute[] attrs = new CivilFilingServiceReference.attribute[1];
+            attrs[0] = attr;
+            packet.attributes = attrs;
+
+            // Begining of Test Code
+            CivilFilingServiceReference.@case caseData = new CivilFilingServiceReference.@case();
+            caseData.courtSection = "SCP";       //REQ
+            caseData.venue = "ATL";              //REQ
+            caseData.otherCourtActions = "Y";    //REQ
+            caseData.caseAction = "028";         //REQ
+            caseData.demandAmount = Convert.ToDecimal(5400);  //REQ
+            caseData.demandAmountSpecified = true;
+            caseData.juryDemand = "N";           //REQ
+            caseData.serviceMethod = "03";       //REQ
+            caseData.lawFirmCaseId = "IndvsInd"; //Code: ECCV110 Description: Law Firm Case Id should be alphanumeric 
+            caseData.venueOfIncident = "CPM";    //REQ
+            caseData.plaintiffCaption = "plaintiffCaption not required";
+            caseData.defendantCaption = "defendantCaption not required";
+            caseData.docketDetailsForOtherCourt = "docketDetailsForOtherCourt";
+
+            // PLANTIFF LIST
+            CivilFilingServiceReference.party plaintiff = new CivilFilingServiceReference.party();
+            plaintiff.partyDescription = "IND";      //REQ
+            //plaintiff.partyAffiliation = "ADM";      //not required
+            //plaintiff.corporationType = "CO";        //REQ if plantiff.partyDescription = "BUS";
+            //plaintiff.corporationName = "Massive Dynamic";//REQ if plantiff.partyDescription = "BUS";
+            //plantiff.phoneNumber = "1112223333";  // not required
+            plaintiff.interpreterInd = "N";          //REQ
+            //plantiff.language = "";                //REQ if interpreterInd = "Y", see code tables
+            plaintiff.adaAccommodationInd = "N";     //REQ
+            //plantiff.accommodationType = "";      //REQ if accomodationInd = "Y", see code tables
+            //plaintiff.additionalAccommodationDetails = "";//MAX 50 Chars
+
+            // REQ if plantiff.partyDescription = "IND";
+            CivilFilingServiceReference.name plaintiffName = new CivilFilingServiceReference.name();
+            plaintiffName.firstName = "Kanye";
+            plaintiffName.middleName = "Omari";
+            plaintiffName.lastName = "West";
+            plaintiff.name = plaintiffName;
+
+            // PLAINTIFF ADDRESS REQ
+            CivilFilingServiceReference.address pAddress = new CivilFilingServiceReference.address();
+            pAddress.addressLine1 = "123 Main Street";
+            pAddress.addressLine2 = "Unit 24"; // not required
+            pAddress.city = "Memphis";
+            pAddress.stateCode = "TN";
+            pAddress.zipCode = "37501";
+            //pAddress.zipCodeExt = ""; // not required
+            plaintiff.address = pAddress;
+
+            // PLAINTIFF ALIAS LIST - NOT REQUIRED
+            //CivilFilingServiceReference.partyAlias partyAliasList = new CivilFilingServiceReference.partyAlias();
+            //partyAliasList.alternateTypeCode = "No";
+            //partyAliasList.alternateName = "Max 65 Characters only text";
+
+            // DEFENDANT
+            CivilFilingServiceReference.party defendant = new CivilFilingServiceReference.party();
+            defendant.partyDescription = "IND";     //REQ
+            defendant.partyAffiliation = "USA";     // not required, heir
+            //defendant.corporationType = "CO";       //REQ if defendant.partyDescription = "BUS";
+            //defendant.corporationName = "T Corp";   //REQ if defendant.partyDescription = "BUS";
+            //defendant.phoneNumber = "1112223333";   // Max 10 digits
+
+            // DEFENDANT
+            // defendant.name REQ if defendant.partyDescription = "IND" 
+            CivilFilingServiceReference.name defendantName = new CivilFilingServiceReference.name();
+            defendantName.firstName = "Taylor";
+            defendantName.middleName = "Alison";
+            defendantName.lastName = "Swift";
+            defendant.name = defendantName;         //REQ if defendant.partyDescription = "IND";
+
+            // defendant address is not REQ
+            //CivilFilingServiceReference.address dAddress = new CivilFilingServiceReference.address();
+            //dAddress.addressLine1 = "123 Main Street";
+            //dAddress.addressLine1 = "Unit 42";
+            //dAddress.city = "Parsippany";
+            //dAddress.stateCode = "NJ";
+            //dAddress.zipCode = "07054";
+            //dAddress.zipCodeExt = "01";
+            //defendant.address = dAddress;
+
+            // DEFENDANT ALIAS LIST - NOT REQUIRED
+            // CivilFilingServiceReference.partyAlias partyAliasList = new CivilFilingServiceReference.partyAlias();
+            // partyAliasList is already used above just reusing the code for this test stub
+            //partyAliasList.alternateTypeCode = "No";
+            //partyAliasList.alternateName = "Max 65 Characters only text";
+
+
+            // ATTACHMENT
+            CivilFilingServiceReference.attachment att = new CivilFilingServiceReference.attachment();
+            string filePath = @"C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\Test.pdf";
+            //TODO: how large are the files?
+            byte[] bytes = File.ReadAllBytes(filePath);
+
+            att.documentCode = "CMPL";          //REQ this is really the documentType
+            att.docType = "pdf";                //REQ
+            att.contentType = "application/pdf";//REQ
+            att.documentName = "Test";          //REQ
+            att.documentDescription = "Complaint"; //REQ
+            att.extention = ".pdf";             //REQ
+            att.bytes = bytes;                  //REQ and referenced as document bytes
+
+            //FEE
+            CivilFilingServiceReference.fee fee = new CivilFilingServiceReference.fee();
+            fee.attorneyFee = Convert.ToDecimal(0); //not required
+            fee.paymentType = "CG";         //REQ is feeExempt is No
+            fee.accountNumber = "141375";   //REQ is feeExempt is No
+            fee.attorneyClientRefNumber = "1"; //numeric, not required
+            fee.feeExempt = "Y";            //REQ
+            fee.exemptionReason = "CO";     //REQ is feeExempt is Yes, see code tables
+
+            // Add everything we just created to the packet (bulkFilingPacket)
+            // takes and array of attachment[] we just have attachment
+
+            //caseData
+            packet.civilCase = caseData;
+
+            // plantiffs
+            int numberOfPlantiffs = 1;
+            CivilFilingServiceReference.party[] plantiffs = new CivilFilingServiceReference.party[numberOfPlantiffs];
+            plantiffs[0] = plaintiff;
+            packet.plaintiffList = plantiffs;
+
+            //defendants
+            int numberOfDefendants = 1;
+            CivilFilingServiceReference.party[] defendants = new CivilFilingServiceReference.party[numberOfDefendants];
+            defendants[0] = defendant;
+            packet.defendantList = defendants;
+
+            //attachments
+            CivilFilingServiceReference.attachment[] attachments = new CivilFilingServiceReference.attachment[1];
+            attachments[0] = att;
+            packet.attachmentList = attachments;
+
+            //fees
+            packet.fee = fee;
+
+            // misc
+            packet.documentRedactionInd = "Y"; //Code: ECCV100 Description: Document Redaction Indicator should be Y
+
+            // create a request to send ... and assign the packet we just created
+            CivilFilingServiceReference.civilFilingRequest filingRequest =
+                new CivilFilingServiceReference.civilFilingRequest();
+            filingRequest.bulkFilingPacket = packet;
+
+            return filingRequest;
+        }
 
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
