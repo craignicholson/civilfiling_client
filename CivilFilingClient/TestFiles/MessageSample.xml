@@ -13,7 +13,7 @@
         <bulkFilingPacket>
           <attachmentList>
             <bytes>
-              <xop:Include href="cid:http://tempuri.org/1/636106992861751232" xmlns:xop="http://www.w3.org/2004/08/xop/include"/>
+              <xop:Include href="cid:http://tempuri.org/1/636108366687084143" xmlns:xop="http://www.w3.org/2004/08/xop/include"/>
             </bytes>
             <contentType>application/pdf</contentType>
             <docType>pdf</docType>
@@ -35,9 +35,9 @@
             <demandAmount>5400</demandAmount>
             <docketDetailsForOtherCourt>docketDetailsForOtherCourt</docketDetailsForOtherCourt>
             <juryDemand>N</juryDemand>
-            <lawFirmCaseId>TESTDAN</lawFirmCaseId>
+            <lawFirmCaseId>TESTDAN 2</lawFirmCaseId>
             <otherCourtActions>N</otherCourtActions>
-            <plaintiffCaption>test plantiff caption</plaintiffCaption>
+            <plaintiffCaption>test plantiff caption 2 from file</plaintiffCaption>
             <serviceMethod>03</serviceMethod>
             <venue>ATL</venue>
             <venueOfIncident>CPM</venueOfIncident>
@@ -50,7 +50,7 @@
               <stateCode>NJ</stateCode>
               <zipCode>07054</zipCode>
             </address>
-            <corporationName>Trump Corp</corporationName>
+            <corporationName>T Corp</corporationName>
             <corporationType>CO</corporationType>
             <interpreterInd>N</interpreterInd>
             <partyAffiliation>ADM</partyAffiliation>
@@ -60,7 +60,6 @@
           <fee>
             <accountNumber>141375</accountNumber>
             <attorneyClientRefNumber>1</attorneyClientRefNumber>
-            <attorneyFee>0</attorneyFee>
             <feeExempt>Y</feeExempt>
             <paymentType>CG</paymentType>
           </fee>
