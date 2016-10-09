@@ -1,22 +1,17 @@
 ﻿using NLog;
 using System;
+using System.Configuration;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Data;
-using System.Diagnostics;
-using System.Drawing;
 using System.IO;
-using System.Linq;
 using System.Security;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml;
-using System.Xml.Linq;
 using System.Xml.Serialization;
+using System.ServiceModel;
 
 /// <summary>
-/// Authors: Brian Ketelsen, Craig Nicholson
+/// Authors: Craig Nicholson
 /// CivilFilingClient sends data to the New Jeresy Courts - eCourt Filing System
 /// All rights reserved.
 /// </summary>
@@ -31,7 +26,7 @@ namespace CivilFilingClient
         /// for the PDF.  If the PDF is not found we will assume the XML directory will also have
         /// the PDF file located in the same directory as the PDF file.
         /// </summary>
-        private class CourtCaseFiles
+        public class CourtCaseFiles
         {
             public string FileName { get; set; }
             public string FullFilePath { get; set; }
@@ -80,6 +75,31 @@ namespace CivilFilingClient
         {
             InitializeComponent();
             InitializeOpenFileDialog();
+            InitializeConfigurations();
+        }
+
+        private void InitializeConfigurations()
+        {
+            // Attempt to load all the configs.
+
+            string productionEndPoint = ConfigurationManager.AppSettings["productionEndPoint"];
+            string productionUsername = ConfigurationManager.AppSettings["productionUsername"];
+            string productionPwd = ConfigurationManager.AppSettings["productionPwd"];
+            string testEndPoint = ConfigurationManager.AppSettings["testEndPoint"];
+            string testUsername = ConfigurationManager.AppSettings["testUsername"];
+            string testPwd = ConfigurationManager.AppSettings["testPwd"];
+            string mode = ConfigurationManager.AppSettings["mode"];
+            //string filePathFailures = ConfigurationManager.AppSettings["filePathFailures"];
+            //string filePathSuccesses = ConfigurationManager.AppSettings["filePathSuccesses"];
+            lblMode.Text = mode;
+            if (mode == "Test")
+            {
+                testToolStripMenuItem_Click(null, null);
+            }
+            else
+            {
+                productionToolStripMenuItem_Click(null, null);
+            }
         }
 
         /// <summary>
@@ -146,6 +166,7 @@ namespace CivilFilingClient
             // Allow the user to select multiple images.
             openFileDialog1.Multiselect = true;
             openFileDialog1.Title = "Civil Filing Client (Accepts xml and pdfs files)";
+            openFileDialog1.FileName = string.Empty;
         }
 
 
@@ -157,15 +178,27 @@ namespace CivilFilingClient
         /// <param name="e"></param>
         private void btnSend_Click(object sender, EventArgs e)
         {
+            // 6 chars with leading zeros when response is a success
+            // set to Error when not a success
+            string strDocketNumber = string.Empty;
+
             // Disable the btn until the request has finished or error's out
             btnSend.Enabled = false;
             richTextBox1.AppendText(Environment.NewLine + "Attemping to send  request");
             responses.Add("Attemping to send  request");
             logger.Info("Attemping to send  request");
 
+            // change the EndPoint
+            string testEndPoint = ConfigurationManager.AppSettings["testEndPoint"];
+            var address = new EndpointAddress(testEndPoint);
+
             // Create the proxy > Send Request > Wait for Response > Parse Response
             CivilFilingServiceReference.CivilFilingWSClient proxy =
-                new CivilFilingServiceReference.CivilFilingWSClient();
+                new CivilFilingServiceReference.CivilFilingWSClient("CivilFilingWSPort", address);
+
+            proxy.ClientCredentials.UserName.UserName = "Fake";
+            proxy.ClientCredentials.UserName.Password = "test";
+
 
             try
             {
@@ -233,18 +266,27 @@ namespace CivilFilingClient
                         }
                         if (filingReponse.docketNumber != null)
                         {
-                            string docketNumberMsg = "eCourts | Docket Number :" +
-                                filingReponse.docketNumber.docketVenue
+                            string dockerSeqNum = filingReponse.docketNumber.docketSeqNum.ToString().PadLeft(6, '0');
+
+                            string strDocketCode = filingReponse.docketNumber.docketVenue
                                 + "-" + filingReponse.docketNumber.docketTypeCode
-                                + "-" + filingReponse.docketNumber.docketSeqNum
+                                + "-" + dockerSeqNum
                                 + "-" + filingReponse.docketNumber.docketCourtYear;
-                                
+
+                            strDocketNumber = strDocketCode;
+
+                            // docketSeqNum padded front with zero, max of 6 chars
+                            string docketNumberMsg = "eCourts | Docket Number :" +
+                                strDocketCode;
+
                             //TODO: Color these blue
                             richTextBox1.AppendText(Environment.NewLine + docketNumberMsg);
                             responses.Add(docketNumberMsg);
                             logger.Info(docketNumberMsg);
                         }
                     }
+                    //End of for each
+                    item.IsSubmitted = true;
                 }
             }
             catch (System.Exception ex)
@@ -271,7 +313,10 @@ namespace CivilFilingClient
 
             // Write out the responses
             // TODO: rootDirectory is global so we need to tidy this up.
-            saveResponseToFile(rootDirectory, responses);
+            if (strDocketNumber.Length == 0)
+                strDocketNumber = "Failed";
+
+            saveResponseToFile(rootDirectory, responses, strDocketNumber);
             // Disable the btn until the request has finished or error's out
             btnSend.Enabled = true;
         }
@@ -330,15 +375,6 @@ namespace CivilFilingClient
 
                 byte[] bytes = File.ReadAllBytes(filePath);
                 bfp.attachmentList[0].bytes = bytes;
-
-                // Add the Branch Id
-                // Branch Id - need the 
-                //CivilFilingServiceReference.attribute attr = new CivilFilingServiceReference.attribute();
-                //attr.name = "branchId";
-                //attr.value = "0001";
-                //CivilFilingServiceReference.attribute[] attrs = new CivilFilingServiceReference.attribute[1];
-                //attrs[0] = attr;
-                //bfp.attributes = attrs;
             }
             catch(System.Exception ex)
             {
@@ -360,16 +396,27 @@ namespace CivilFilingClient
         /// </summary>
         /// <param name="filePathOfOrigin"></param>
         /// <param name="responses"></param>
-        private void saveResponseToFile(string filePathOfOrigin, List<string> responses)
+        private void saveResponseToFile(string filePathOfOrigin, List<string> responses, string docketNumber)
         {
-            // TODO: Put name in config
-            string filename = @"\responses_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt";
+            string newDirectory = DateTime.Now.ToString("yyyyMMdd");
+            Directory.CreateDirectory(filePathOfOrigin + @"\" + newDirectory);
+            string filename = @"\" + docketNumber + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt";
             try
             {
                 using (StreamWriter outputFile = new StreamWriter(filePathOfOrigin + filename))
                 {
                     foreach (string response in responses)
                         outputFile.WriteLine(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.ffff") + " | " + response);
+                }
+                // Move the files we processed into the archive folder
+                // when the process is successful.  Else leave the files in the current folder.
+                if (docketNumber != "Failed")
+                {
+                    foreach (var item in files)
+                    {
+                        File.Move(item.DirectoryName + @"\" + item.FileName,
+                            filePathOfOrigin + @"\" + newDirectory + @"\" + item.FileName);
+                    }
                 }
             }
             catch (IOException ex)
@@ -381,6 +428,22 @@ namespace CivilFilingClient
             {
                 richTextBox1.AppendText(Environment.NewLine + ex.Message);
                 logger.Error(ex.Message);
+            }
+
+        }
+
+        /// <summary>
+        /// clearIsSubmitted Items clears out the response log and removes
+        /// all files which were submitted.  A submitted item can be
+        /// a failed or successful submission.
+        /// </summary>
+        private void clearIsSubmittedItems()
+        {
+            responses.Clear();
+            foreach(var item in files)
+            {
+                if (item.IsSubmitted)
+                    files.Remove(item);
             }
         }
 
@@ -986,6 +1049,27 @@ namespace CivilFilingClient
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
 
+        }
+
+        // productionToolStripMenuItem_Click - sets the mode to production
+        // which means we will use the productionEndPoint
+        private void productionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            
+            productionToolStripMenuItem.Checked = true;
+            testToolStripMenuItem.Checked = false ;
+            lblMode.Text = "Production";
+            lblMode.ForeColor = System.Drawing.Color.Red;
+        }
+
+        // testToolStripMenuItem_Click - sets the mode to production
+        // which means we will use the testEndPoint
+        private void testToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            testToolStripMenuItem.Checked = true;
+            productionToolStripMenuItem.Checked = false;
+            lblMode.Text = "Test";
+            lblMode.ForeColor = System.Drawing.Color.Green;
         }
     }
 }

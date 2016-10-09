@@ -2,7 +2,7 @@
 
 Requirements
 ------------
-Law firm in NJ uses some old system written in some BASIC variant to interact with NJ Legal system.
+Law firm in NJ uses a system in some BASIC variant to interact with NJ Legal system.
 NJ Courts moving to E-Filing over SOAP.
 
 Write a simple windows form app that loads XML files and corresponding pdf attachments 
@@ -327,6 +327,8 @@ Please use the following for attorney, firm and branch id. Attached is the updat
  
 Testing Account		
 Firm Id - F88888003
-Attorney ID – 888888005/ 888888006     
+Attorney ID – 888888005     
 Branch Id – 0001
-Account number for fee processing - 143055       
+Account number for fee processing - 143055  
+WebService User - F00000495
+password - P@ssword
