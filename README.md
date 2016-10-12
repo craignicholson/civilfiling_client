@@ -332,3 +332,10 @@ Branch Id – 0001
 Account number for fee processing - 143055  
 WebService User - F00000495
 password - P@ssword
+
+Tests 
+C:\> cd "C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\bin\Debug\"
+C:\...Debug> CivilFilingClient.exe "888888005" "P@ssword" "https://dptng.njcourts.gov:2045/civilFilingWS_t" "C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp_MissingBranchID.xml" 
+
+
+CivilFilingClient.exe "888888005" "P@ssword" "https://dptng.njcourts.gov:2045/civilFilingWS_t" "C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestIndivid2Individ.xml" 
