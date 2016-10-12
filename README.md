@@ -13,7 +13,7 @@ Save output of SOAP service into a text file in the same directory.
 Features
 ------------
 * Attach multiple xml and pdf files for batch processing.
-* Swtich Production and Test EndPoints using the Settings on the menu.
+* Switch Production and Test EndPoints using the Settings on the menu.
 * Application expects one packet per xml file.
 * Each xml file processed will output results into a separate file.
 * The response from the web service will be written to the same directory the xml and pdf originate.
@@ -43,7 +43,7 @@ Run the CivilFilingClient.msi or Setup.exe
 
 Dependencies
 ------------
-* New Jeresy Courts Web Service Endpoints
+* New Jersey Courts Web Service Endpoints
 * NLog
 
 
@@ -106,7 +106,7 @@ communication is over https so the credentials are encrypted.
     </client>
 
 ```
-### Secruity Header Example
+### Security Header Example
 ```xml
 
 <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
@@ -323,6 +323,17 @@ Rejected by policy. (from client)
 
 ```
 
+#### http timeout
+```txt
+
+The HTTP request to 'https://dptng.njcourts.gov:2045/civilFilingWS_t' has exceeded the allotted timeout of 00:00:59.9680000. 
+The time allotted to this operation may have been a portion of a longer timeout.
+
+```
+When you see this error communication with the webservice was disconnected before
+the submission could be created or the web service (eCourts) could respond back to the client (CivilFilingClient).
+
+TODO: We can set the timeout to be longer if needed in the future.
 
 ### Missing Branch Id
 ```txt
