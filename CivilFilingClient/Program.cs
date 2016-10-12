@@ -37,6 +37,7 @@ namespace CivilFilingClient
                 var password = args[2];
                 var endpoint = args[3];
                 var xmlfilepath = args[4];
+                //var pdffilepath = args[5]; //Should pdf file path be here?  I think so... the more restrictive the more success
                 FileSuitEngine suit = new FileSuitEngine(username, password, endpoint, xmlfilepath, responses);
                 suit.FileSuit();
                 foreach(var log in responses)

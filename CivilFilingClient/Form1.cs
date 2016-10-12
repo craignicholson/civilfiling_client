@@ -188,6 +188,14 @@ namespace CivilFilingClient
             }
         }
 
+        private void TestLoad()
+        {
+            foreach(var file in _files)
+            {
+
+            }
+        }
+
         /// <summary>
         /// InitializeOpenFileDialog so by default we only see pdf and xml files.
         /// </summary>
@@ -226,15 +234,16 @@ namespace CivilFilingClient
                         _logger.Info("Attempting to send request");
                         FileSuitEngine suit = new FileSuitEngine(_CurrentUsername, _CurrentPwd, _CurrentEndPoint, item.FullFilePath, _responses);
                         item.IsSubmitted = suit.FileSuit();
+
+                        //Write responses to RichTextBox... I know this is a hack... not real time
+                        foreach (var log in _responses)
+                        {
+                            richTextBox1.AppendText(Environment.NewLine + log);
+                        }
+                        //clean up - data was submitted, and log file has been written
+                        //_files.Remove(item);
+                        _responses.Clear();
                     }
-                    //Write responses to RichTextBox... I know this is a hack... not real time
-                    foreach(var log in _responses)
-                    {
-                        richTextBox1.AppendText(Environment.NewLine + log);
-                    }
-                    //clean up
-                    _files.Remove(item);
-                    _responses.Clear();
                 }
             }
             catch (System.Exception ex)
@@ -251,6 +260,8 @@ namespace CivilFilingClient
             }
             richTextBox1.AppendText(Environment.NewLine + "Processes has completed.  Please review logs for results.");
             btnSend.Enabled = true;
+            //If we have made it this far it is ok to clear out all the files (pdfs) which i have no way to remove
+            _files.Clear();
         }
 
         /// <summary>
@@ -281,6 +292,8 @@ namespace CivilFilingClient
             _CurrentUsername = _productionUsername;
             _CurrentPwd = _productionPwd;
 
+            richTextBox1.AppendText( Environment.NewLine + "Mode set to Production :" +_CurrentEndPoint);
+            _logger.Info("Mode set to Production :" + _CurrentEndPoint);
         }
 
         // testToolStripMenuItem_Click - sets the mode to production
@@ -295,6 +308,9 @@ namespace CivilFilingClient
             _CurrentEndPoint = _testEndPoint;
             _CurrentUsername = _testUsername;
             _CurrentPwd = _testPwd;
+
+            richTextBox1.AppendText(Environment.NewLine + "Mode set to Test :" + _CurrentEndPoint);
+            _logger.Info("Mode set to Test :" + _CurrentEndPoint);
         }
 
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
