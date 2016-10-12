@@ -146,12 +146,14 @@ namespace CivilFilingClient
         /// <param name="e"></param>
         private void btnAttach_Click(object sender, EventArgs e)
         {
+            _logger.Info("BEGINING NEW RUN");
             // We will only attach the pdf... but we can have many pdf's
             // Use Case - we will file one case at a time.
             // xml file can have many plantiff and defendants
             DialogResult dr = openFileDialog1.ShowDialog();
             if (dr == DialogResult.OK)
             {
+                _logger.Info("Attachments loaded");
                 // Read all the files
                 foreach (String file in openFileDialog1.FileNames)
                 {
@@ -166,7 +168,6 @@ namespace CivilFilingClient
                                                        Path.GetExtension(file).ToString(),
                                                        Path.GetDirectoryName(file),
                                                        false));
-                        _responses.Add("Attachment: " + file);
                         _logger.Info("Attachment: " + file);
                     }
                     catch (SecurityException ex)
@@ -229,7 +230,7 @@ namespace CivilFilingClient
                 {
                     if (item.FileExtension.ToUpper() == ".XML")
                     {
-                        richTextBox1.AppendText(Environment.NewLine + "Process started...");
+                        richTextBox1.AppendText(Environment.NewLine + Environment.NewLine + "Process started...");
                         _responses.Add("Attempting to send request");
                         _logger.Info("Attempting to send request");
                         FileSuitEngine suit = new FileSuitEngine(_CurrentUsername, _CurrentPwd, _CurrentEndPoint, item.FullFilePath, _responses);
