@@ -83,11 +83,29 @@ namespace CivilFilingClient
             CivilFilingServiceReference.civilFilingResponse filingReponse = null;
             using (new OperationContextScope(client.InnerChannel))
             {
-                OperationContext.Current.OutgoingMessageHeaders.Add(new SecurityHeader("feinsuch-craig", Username, Password));
+                OperationContext.Current.OutgoingMessageHeaders.Add(new SecurityHeader("feinsuch", Username, Password));
                 string message = "Attempting to send the web request to:" + client.Endpoint.Address.ToString();
                 Responses.Add(message);
                 _logger.Warn(message);
-                filingReponse = client.submitCivilFiling(filingRequest);
+                try
+                {
+                    // Web Service Can timeout.  We should still write a log file of Automation tracking.
+                    filingReponse = client.submitCivilFiling(filingRequest);
+                }
+                catch(System.Exception ex)
+                {
+                    // TODO: Colors these red
+                    _logger.Error(ex.Message);
+
+                    if (ex.InnerException != null)
+                    {
+                        _logger.Error(ex.InnerException.Message);
+                    }
+                    Util.SaveResponseToFile(Responses, "Failed", XmlFilePath,  pdfFilepath);
+                    // throw the error back to the UI so they know the timeout occured
+                    // note this will be logged 2x because we are throwing it up the stack
+                    throw ex;
+                }
             }
             if (filingReponse.messages != null)
             {
@@ -144,9 +162,6 @@ namespace CivilFilingClient
             // with the PDF name tagged onto the directory...  Need to clean this up
             Util.SaveResponseToFile(Responses, strDocketNumber, XmlFilePath,  pdfFilepath);
 
-            // Clear out the files we just loaded
-            //var itemToRemove = resultlist.Single(r => r.Id == 2);
-            //resultList.Remove(itemToRemove);
             return IsSuccess;
         }
     }
