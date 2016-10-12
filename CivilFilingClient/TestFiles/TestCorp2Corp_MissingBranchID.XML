@@ -1,33 +1,22 @@
-<s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/">
-  <s:Header>
-    <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
-      <wsse:UsernameToken Id="unt_20">
-        <wsse:Username>888888005</wsse:Username>
-        <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">P@ssword</wsse:Password>
-      </wsse:UsernameToken>
-    </wsse:Security>
-  </s:Header>
-  <s:Body xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
-    <submitCivilFiling xmlns="http://webservice.civilfiling.ecourts.ito.aoc.nj/">
-      <arg0 xmlns="">
+<?xml version="1.0"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:tns2="http://webservice.civilfiling.ecourts.ito.aoc.nj/">
+  <soapenv:Body>
+    <tns2:submitCivilFiling>
+      <arg0>
         <bulkFilingPacket>
           <attachmentList>
-            <bytes>
-              <xop:Include href="cid:http://tempuri.org/1/636108366687084143" xmlns:xop="http://www.w3.org/2004/08/xop/include"/>
-            </bytes>
             <contentType>application/pdf</contentType>
             <docType>pdf</docType>
             <documentCode>CMPL</documentCode>
             <documentDescription>Complaint</documentDescription>
-            <documentName>Test</documentName>
+            <documentName>TestCorp2Corp_MissingBranchID</documentName>
             <extention>.pdf</extention>
           </attachmentList>
           <attorneyFirmId>F88888003</attorneyFirmId>
           <attorneyId>888888005</attorneyId>
-          <attributes>
-            <name>branchId</name>
-            <value>0001</value>
-          </attributes>
           <civilCase>
             <caseAction>028</caseAction>
             <courtSection>SCP</courtSection>
@@ -35,9 +24,9 @@
             <demandAmount>5400</demandAmount>
             <docketDetailsForOtherCourt>docketDetailsForOtherCourt</docketDetailsForOtherCourt>
             <juryDemand>N</juryDemand>
-            <lawFirmCaseId>TESTDAN 2</lawFirmCaseId>
+            <lawFirmCaseId>corp2corp</lawFirmCaseId>
             <otherCourtActions>N</otherCourtActions>
-            <plaintiffCaption>test plantiff caption 2 from file</plaintiffCaption>
+            <plaintiffCaption>test plantiff caption</plaintiffCaption>
             <serviceMethod>03</serviceMethod>
             <venue>ATL</venue>
             <venueOfIncident>CPM</venueOfIncident>
@@ -50,7 +39,7 @@
               <stateCode>NJ</stateCode>
               <zipCode>07054</zipCode>
             </address>
-            <corporationName>T Corp</corporationName>
+            <corporationName>Initech</corporationName>
             <corporationType>CO</corporationType>
             <interpreterInd>N</interpreterInd>
             <partyAffiliation>ADM</partyAffiliation>
@@ -71,7 +60,7 @@
               <stateCode>NJ</stateCode>
               <zipCode>07054</zipCode>
             </address>
-            <corporationName>Test Creditor</corporationName>
+            <corporationName>Weyland Yutani Corp</corporationName>
             <corporationType>CO</corporationType>
             <interpreterInd>N</interpreterInd>
             <partyAffiliation>ADM</partyAffiliation>
@@ -79,6 +68,6 @@
           </plaintiffList>
         </bulkFilingPacket>
       </arg0>
-    </submitCivilFiling>
-  </s:Body>
-</s:Envelope>
+    </tns2:submitCivilFiling>
+  </soapenv:Body>
+</soapenv:Envelope>

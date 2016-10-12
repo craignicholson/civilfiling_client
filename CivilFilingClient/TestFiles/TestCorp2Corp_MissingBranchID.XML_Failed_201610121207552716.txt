@@ -1,0 +1,10 @@
+2016-10-12 12:07:55.2716 | Attempting to send request
+2016-10-12 12:07:55.2716 | Reading File:C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp_MissingBranchID.XML
+2016-10-12 12:07:55.2716 | Reading file: TestCorp2Corp_MissingBranchID.XML
+2016-10-12 12:07:55.2716 | Creating Attachment file: TestCorp2Corp_MissingBranchID.pdf
+2016-10-12 12:07:55.2716 | Attempting to send the web request to:https://dptng.njcourts.gov:2045/civilFilingWS_t
+2016-10-12 12:07:55.2716 | eCourts | Code: ECCV200 Description: Branch Id cannot be null or empty
+2016-10-12 12:07:55.2716 | End of Submission
+2016-10-12 12:07:55.2716 | Failed. Please review the eCourts | Code above.
+2016-10-12 12:07:55.2716 | Failed Submission Check Log File : \TestCorp2Corp_MissingBranchID.XML_Failed_201610121207552716.txt
+2016-10-12 12:07:55.2716 | Writing log file : C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp_MissingBranchID.XML_Failed_201610121207552716.txt

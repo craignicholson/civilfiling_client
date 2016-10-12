@@ -1,0 +1,23 @@
+2016-10-11 18:23:13.1563 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp.pdf
+2016-10-11 18:23:13.1573 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp.XML
+2016-10-11 18:23:13.1573 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp_MissingBranchID.pdf
+2016-10-11 18:23:13.1573 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp_MissingBranchID.XML
+2016-10-11 18:23:13.1573 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2CorpBAD.pdf
+2016-10-11 18:23:13.1573 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2CorpBAD.XML
+2016-10-11 18:23:13.1573 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2CorpCDATA.pdf
+2016-10-11 18:23:13.1573 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2CorpCDATA.XML
+2016-10-11 18:23:13.1573 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Individ.pdf
+2016-10-11 18:23:13.1573 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Individ.XML
+2016-10-11 18:23:13.1573 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestIndivid2Corp.pdf
+2016-10-11 18:23:13.1573 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestIndivid2Corp.XML
+2016-10-11 18:23:13.1573 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestIndivid2Individ.pdf
+2016-10-11 18:23:13.1573 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestIndivid2Individ.XML
+2016-10-11 18:23:13.1573 | Attempting to send request
+2016-10-11 18:23:13.1573 | Reading File:C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp.XML
+2016-10-11 18:23:13.1573 | Reading file: TestCorp2Corp.XML
+2016-10-11 18:23:13.1573 | Creating Attachment file: TestCorp2Corp.pdf
+2016-10-11 18:23:13.1573 | Attempting to send the web request to:https://dptng.njcourts.gov:2045/civilFilingWS_t
+2016-10-11 18:23:13.1573 | eCourts | Code: ECCV500 Description: Filing submitted scuccessfully
+2016-10-11 18:23:13.1573 | eCourts | Efiling Sequence Number :SCP20161007601
+2016-10-11 18:23:13.1573 | eCourts | Docket Number :ATL-DC-005393-16
+2016-10-11 18:23:13.1573 | End of Submission

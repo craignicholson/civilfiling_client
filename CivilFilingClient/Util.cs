@@ -177,15 +177,20 @@ namespace CivilFilingClient
                 newDirectory = DateTime.Now.ToString("yyyyMMdd");
                 Directory.CreateDirectory(root_dir + @"\" + newDirectory);
                 logFilename = @"\" + docketNumber + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt";
+                responses.Add("Successful Submission Check Log File : " + logFilename);
+                _logger.Info("Successful Submission Check Log File : " + logFilename);
             }
             else //File did not load 
             {
                 // Create Error Log File : Failed_TestCorp2CorpBAD.XML_201610111313522504
                 logFilename = @"\" + Path.GetFileName(xmlFilePath) + "_" + docketNumber + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt";
+                responses.Add("Failed Submission Check Log File : " + logFilename);
+                _logger.Info("Failed Submission Check Log File : " + logFilename);
             }
 
             try
             {
+                responses.Add("Writing log file : " + root_dir + logFilename);
                 // All log files are in the root of the origin file dir
                 using (StreamWriter outputFile = new StreamWriter(root_dir + logFilename))
                 {
@@ -197,17 +202,25 @@ namespace CivilFilingClient
                 // Otherwise leave the files in the current folder.
                 if (docketNumber != "Failed")
                 {
+                    responses.Add("Archive File : " + Path.GetFileName(xmlFilePath));
+                    responses.Add("Archive File : " + Path.GetFileName(pdfFilePath));
+                    responses.Add("Archive Path : " + root_dir + @"\" + newDirectory);
+                    _logger.Info("Archive File : " + Path.GetFileName(xmlFilePath));
+                    _logger.Info("Archive File : " + Path.GetFileName(pdfFilePath));
+                    _logger.Info("Archive Path : " + root_dir + @"\" + newDirectory);
                     File.Move(xmlFilePath, root_dir + @"\" + newDirectory + @"\" + Path.GetFileName(xmlFilePath));
                     File.Move(pdfFilePath, root_dir + @"\" + newDirectory + @"\" + Path.GetFileName(pdfFilePath));
                 }
             }
             catch (IOException ex)
             {
+                responses.Add("IOException writing log file : " + ex.Message);
                 _logger.Error(ex.Message);
                 throw;
             }
             catch (System.Exception ex)
             {
+                responses.Add("Exception writing log file : " + ex.Message);
                 _logger.Error(ex.Message);
                 throw;
             }

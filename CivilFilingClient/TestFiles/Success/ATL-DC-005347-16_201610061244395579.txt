@@ -1,0 +1,10 @@
+2016-10-06 12:44:39.5579 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\Test.pdf
+2016-10-06 12:44:39.5579 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2CorpCDATA.XML
+2016-10-06 12:44:39.5579 | Attemping to send  request
+2016-10-06 12:44:39.5579 | Reading File:C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2CorpCDATA.XML
+2016-10-06 12:44:39.5579 | Reading file: TestCorp2CorpCDATA.XML
+2016-10-06 12:44:39.5579 | Creating Attachment file: Test.pdf
+2016-10-06 12:44:39.5579 | Attempting to send the web request to:https://dptng.njcourts.gov:2045/civilFilingWS_t
+2016-10-06 12:44:39.5579 | eCourts | Code: ECCV500 Description: Filing submitted scuccessfully
+2016-10-06 12:44:39.5579 | eCourts | Efiling Sequence Number :SCP20161007544
+2016-10-06 12:44:39.5579 | eCourts | Docket Number :ATL-DC-005347-16

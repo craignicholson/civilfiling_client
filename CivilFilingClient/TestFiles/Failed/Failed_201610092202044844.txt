@@ -1,0 +1,7 @@
+2016-10-09 22:02:04.4854 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp_MissingBranchID.XML
+2016-10-09 22:02:04.4854 | Attemping to send  request
+2016-10-09 22:02:04.4854 | Reading File:C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp_MissingBranchID.XML
+2016-10-09 22:02:04.4854 | Reading file: TestCorp2Corp_MissingBranchID.XML
+2016-10-09 22:02:04.4854 | Creating Attachment file: Test.pdf
+2016-10-09 22:02:04.4854 | Attempting to send the web request to:http://localhost:8081/soapserver
+2016-10-09 22:02:04.4854 | The server did not provide a meaningful reply; this might be caused by a contract mismatch, a premature session shutdown or an internal server error.

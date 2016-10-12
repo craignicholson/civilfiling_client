@@ -1,0 +1,10 @@
+2016-10-12 12:07:57.3110 | Attempting to send request
+2016-10-12 12:07:57.3110 | Reading File:C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2CorpCDATA.XML
+2016-10-12 12:07:57.3110 | Reading file: TestCorp2CorpCDATA.XML
+2016-10-12 12:07:57.3110 | Creating Attachment file: TestCorp2CorpCDATA.pdf
+2016-10-12 12:07:57.3110 | Attempting to send the web request to:https://dptng.njcourts.gov:2045/civilFilingWS_t
+2016-10-12 12:07:57.3110 | eCourts | Code: ECCV110 Description: Party name can only contain A-Z, a-z, 0-9, space, period, dash, $, ?, !, (, ), #, %, comma, slash, single quote, &
+2016-10-12 12:07:57.3110 | End of Submission
+2016-10-12 12:07:57.3110 | Failed. Please review the eCourts | Code above.
+2016-10-12 12:07:57.3110 | Failed Submission Check Log File : \TestCorp2CorpCDATA.XML_Failed_201610121207573110.txt
+2016-10-12 12:07:57.3110 | Writing log file : C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2CorpCDATA.XML_Failed_201610121207573110.txt

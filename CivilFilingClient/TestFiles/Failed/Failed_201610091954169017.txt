@@ -1,0 +1,22 @@
+2016-10-09 19:54:16.9017 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp.XML
+2016-10-09 19:54:16.9017 | Attemping to send  request
+2016-10-09 19:54:16.9017 | Reading File:C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp.XML
+2016-10-09 19:54:16.9017 | Reading file: TestCorp2Corp.XML
+2016-10-09 19:54:16.9017 | Creating Attachment file: Test.pdf
+2016-10-09 19:54:16.9017 | Attempting to send the web request to:http://localhost:8081/soapserver
+2016-10-09 19:54:16.9017 | The provided URI scheme 'http' is invalid; expected 'https'.
+Parameter name: via
+2016-10-09 19:54:16.9017 | Attemping to send  request
+2016-10-09 19:54:16.9017 | Reading File:C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp.XML
+2016-10-09 19:54:16.9017 | Reading file: TestCorp2Corp.XML
+2016-10-09 19:54:16.9017 | Creating Attachment file: Test.pdf
+2016-10-09 19:54:16.9017 | Attempting to send the web request to:http://localhost:8081/soapserver
+2016-10-09 19:54:16.9017 | The provided URI scheme 'http' is invalid; expected 'https'.
+Parameter name: via
+2016-10-09 19:54:16.9017 | Attemping to send  request
+2016-10-09 19:54:16.9017 | Reading File:C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp.XML
+2016-10-09 19:54:16.9017 | Reading file: TestCorp2Corp.XML
+2016-10-09 19:54:16.9017 | Creating Attachment file: Test.pdf
+2016-10-09 19:54:16.9017 | Attempting to send the web request to:http://localhost:8081/soapserver
+2016-10-09 19:54:16.9017 | The provided URI scheme 'http' is invalid; expected 'https'.
+Parameter name: via

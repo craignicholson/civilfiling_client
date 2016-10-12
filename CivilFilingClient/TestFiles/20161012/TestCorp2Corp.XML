@@ -12,7 +12,7 @@
             <docType>pdf</docType>
             <documentCode>CMPL</documentCode>
             <documentDescription>Complaint</documentDescription>
-            <documentName>Test</documentName>
+            <documentName>TestCorp2Corp</documentName>
             <extention>.pdf</extention>
           </attachmentList>
           <attorneyFirmId>F88888003</attorneyFirmId>
@@ -24,27 +24,35 @@
           <civilCase>
             <caseAction>028</caseAction>
             <courtSection>SCP</courtSection>
-            <defendantCaption>defendantCaption not required</defendantCaption>
+            <defendantCaption>Defendant Caption</defendantCaption>
             <demandAmount>5400</demandAmount>
             <docketDetailsForOtherCourt>docketDetailsForOtherCourt</docketDetailsForOtherCourt>
             <juryDemand>N</juryDemand>
-            <lawFirmCaseId>IndividualvsCorp</lawFirmCaseId>
-            <otherCourtActions>Y</otherCourtActions>
-            <plaintiffCaption>plaintiffCaption not required</plaintiffCaption>
+            <lawFirmCaseId>corp2corp</lawFirmCaseId>
+            <otherCourtActions>N</otherCourtActions>
+            <plaintiffCaption>test plantiff caption</plaintiffCaption>
             <serviceMethod>03</serviceMethod>
             <venue>ATL</venue>
             <venueOfIncident>CPM</venueOfIncident>
           </civilCase>
           <defendantList>
-            <corporationName>BL&amp;L</corporationName>
+            <adaAccommodationInd>N</adaAccommodationInd>
+            <address>
+              <addressLine1>123 Main Street</addressLine1>
+              <city>Parsippany</city>
+              <stateCode>NJ</stateCode>
+              <zipCode>07054</zipCode>
+            </address>
+            <corporationName>Initech</corporationName>
             <corporationType>CO</corporationType>
+            <interpreterInd>N</interpreterInd>
+            <partyAffiliation>ADM</partyAffiliation>
             <partyDescription>BUS</partyDescription>
           </defendantList>
           <documentRedactionInd>Y</documentRedactionInd>
           <fee>
             <accountNumber>141375</accountNumber>
             <attorneyClientRefNumber>1</attorneyClientRefNumber>
-            <exemptionReason>CO</exemptionReason>
             <feeExempt>Y</feeExempt>
             <paymentType>CG</paymentType>
           </fee>
@@ -52,17 +60,15 @@
             <adaAccommodationInd>N</adaAccommodationInd>
             <address>
               <addressLine1>123 Main Street</addressLine1>
-              <city>Memphis</city>
-              <stateCode>TN</stateCode>
-              <zipCode>37501</zipCode>
+              <city>Parsippany</city>
+              <stateCode>NJ</stateCode>
+              <zipCode>07054</zipCode>
             </address>
+            <corporationName>Weyland Yutani Corp</corporationName>
+            <corporationType>CO</corporationType>
             <interpreterInd>N</interpreterInd>
-            <name>
-              <firstName>Mitch</firstName>
-              <lastName>McDeere</lastName>
-              <middleName>M</middleName>
-            </name>
-            <partyDescription>IND</partyDescription>
+            <partyAffiliation>ADM</partyAffiliation>
+            <partyDescription>BUS</partyDescription>
           </plaintiffList>
         </bulkFilingPacket>
       </arg0>

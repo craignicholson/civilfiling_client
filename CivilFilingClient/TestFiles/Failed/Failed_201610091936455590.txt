@@ -1,0 +1,8 @@
+2016-10-09 19:36:45.5600 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\CMP2_TESTDAN_addBranchId.XML
+2016-10-09 19:36:45.5600 | Attemping to send  request
+2016-10-09 19:36:45.5600 | Reading File:C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\CMP2_TESTDAN_addBranchId.XML
+2016-10-09 19:36:45.5600 | Reading file: CMP2_TESTDAN_addBranchId.XML
+2016-10-09 19:36:45.5600 | Creating Attachment file: CMP_TESTDAN.pdf
+2016-10-09 19:36:45.5600 | Attempting to send the web request to:https://dptng.njcourts.gov:2045/civilFilingWS_t
+2016-10-09 19:36:45.5600 | The provided URI scheme 'https' is invalid; expected 'http'.
+Parameter name: via

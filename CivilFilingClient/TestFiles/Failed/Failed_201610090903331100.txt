@@ -1,0 +1,7 @@
+2016-10-09 09:03:33.1110 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp_MissingBranchID.XML
+2016-10-09 09:03:33.1110 | Attemping to send  request
+2016-10-09 09:03:33.1110 | Reading File:C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp_MissingBranchID.XML
+2016-10-09 09:03:33.1110 | Reading file: TestCorp2Corp_MissingBranchID.XML
+2016-10-09 09:03:33.1110 | Creating Attachment file: Test.pdf
+2016-10-09 09:03:33.1110 | Attempting to send the web request to:https://dptng.njcourts.gov:2045/civilFilingWS_t
+2016-10-09 09:03:33.1110 | Rejected by policy. (from client)

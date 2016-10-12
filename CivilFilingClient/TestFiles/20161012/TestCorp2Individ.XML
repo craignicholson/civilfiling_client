@@ -4,7 +4,7 @@
                   xmlns:xsd="http://www.w3.org/2001/XMLSchema"
                   xmlns:tns2="http://webservice.civilfiling.ecourts.ito.aoc.nj/">
   <soapenv:Body>
-    <tns2:submitCivilFiling>s
+    <tns2:submitCivilFiling>
       <arg0>
         <bulkFilingPacket>
           <attachmentList>
@@ -12,7 +12,7 @@
             <docType>pdf</docType>
             <documentCode>CMPL</documentCode>
             <documentDescription>Complaint</documentDescription>
-            <documentName>Test</documentName>
+            <documentName>TestCorp2Individ</documentName>
             <extention>.pdf</extention>
           </attachmentList>
           <attorneyFirmId>F88888003</attorneyFirmId>
@@ -28,7 +28,7 @@
             <demandAmount>5400</demandAmount>
             <docketDetailsForOtherCourt>docketDetailsForOtherCourt</docketDetailsForOtherCourt>
             <juryDemand>N</juryDemand>
-            <lawFirmCaseId>IndvsInd</lawFirmCaseId>
+            <lawFirmCaseId>CorpVsIndividual</lawFirmCaseId>
             <otherCourtActions>Y</otherCourtActions>
             <plaintiffCaption>plaintiffCaption not required</plaintiffCaption>
             <serviceMethod>03</serviceMethod>
@@ -37,11 +37,11 @@
           </civilCase>
           <defendantList>
             <name>
-              <firstName>Taylor</firstName>
-              <lastName>Swift</lastName>
-              <middleName>Alison</middleName>
+              <firstName>Oliva</firstName>
+              <lastName>Dunham</lastName>
+              <middleName>K</middleName>
             </name>
-            <partyAffiliation>USA</partyAffiliation>
+            <partyAffiliation>HEI</partyAffiliation>
             <partyDescription>IND</partyDescription>
           </defendantList>
           <documentRedactionInd>Y</documentRedactionInd>
@@ -56,18 +56,15 @@
             <adaAccommodationInd>N</adaAccommodationInd>
             <address>
               <addressLine1>123 Main Street</addressLine1>
-              <addressLine2>Unit 24</addressLine2>
-              <city>Memphis</city>
-              <stateCode>TN</stateCode>
-              <zipCode>37501</zipCode>
+              <city>Parsippany</city>
+              <stateCode>NJ</stateCode>
+              <zipCode>07054</zipCode>
             </address>
+            <corporationName>Massive Dynamic</corporationName>
+            <corporationType>CO</corporationType>
             <interpreterInd>N</interpreterInd>
-            <name>
-              <firstName>Kanye</firstName>
-              <lastName>West</lastName>
-              <middleName>Omari</middleName>
-            </name>
-            <partyDescription>IND</partyDescription>
+            <partyAffiliation>ADM</partyAffiliation>
+            <partyDescription>BUS</partyDescription>
           </plaintiffList>
         </bulkFilingPacket>
       </arg0>

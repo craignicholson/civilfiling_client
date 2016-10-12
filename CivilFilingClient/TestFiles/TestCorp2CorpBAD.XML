@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/"
+                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+                  xmlns:tns2="http://webservice.civilfiling.ecourts.ito.aoc.nj/">
+  <soapenv:Body>
+    <tns2:submitCivilFiling>
+      <arg0>
+        <bulkFilingPacket>
+          <attachmentList>
+            <contentType>application/pdf</contentType>
+            <docType>pdf</docType>
+            <documentCode>CMPL</documentCode>
+            <documentDescription>Complaint</documentDescription>
+            <documentName>TestCorp2CorpBAD</documentName>
+            <extention>.pdf</extention>
+          </attachmentList>
+          <attorneyFirmId>F88888003</attorneyFirmId>
+          <attorneyId>888888005</attorneyId>
+          <civilCase>
+            <caseAction>028</caseAction>
+            <courtSection>SCP</courtSection>
+            <defendantCaption>Defendant Caption</defendantCaption>
+            <demandAmount>5400</demandAmount>
+            <docketDetailsForOtherCourt>docketDetailsForOtherCourt</docketDetailsForOtherCourt>
+            <juryDemand>N</juryDemand>
+            <lawFirmCaseId>corp2corp</lawFirmCaseId>
+            <otherCourtActions>N</otherCourtActions>
+            <plaintiffCaption>test plantiff caption</plaintiffCaption>
+            <serviceMethod>03</serviceMethod>
+            <venue>ATL</venue>
+            <venueOfIncident>CPM</venueOfIncident>
+          </civilCase>
+          <defendantList>
+            <adaAccommodationInd>N</adaAccommodationInd>
+            <address>
+              <addressLine1>123 Main Street</addressLine1>
+              <city>Parsippany</city>
+              <stateCode>NJ</stateCode>
+              <zipCode>07054</zipCode>
+            </address>
+            <corporationName>Initech</corporationName>
+            <corporationType>CO</corporationType>
+            <interpreterInd>N</interpreterInd>
+            <partyAffiliation>ADM</partyAffiliation>
+            <partyDescription>BUS</partyDescription>
+          </defendantList>
+          <documentRedactionInd>Y</documentRedactionInd>
+          <fee>
+            <accountNumber>141375</accountNumber>
+            <attorneyClientRefNumber>1</attorneyClientRefNumber>
+            <feeExempt>Y</feeExempt>
+            <paymentType>CG</paymentType>
+          </fee>
+          <plaintiffList>
+            <adaAccommodationInd>N</adaAccommodationInd>
+            <address>
+              <addressLine1>123 Main Street</addressLine1>
+              <city>Parsippany</city>
+              <stateCode>NJ</stateCode>
+              <zipCode>07054</zipCode>
+            </address>
+            <corporationName>Weyland Yutani Corp</corporationName>
+            <corporationType>CO</corporationType>
+            <interpreterInd>N</interpreterInd>
+            <partyAffiliation>ADM</partyAffiliation>
+            <partyDescription>BUS</partyDescription>
+          </plaintiffList>
+        </bulkFilingPacket>
+      </arg0>
+    </tns2:submitCivilFiling>
+  </soapenv:Body>
+</soapenv:Envelope>

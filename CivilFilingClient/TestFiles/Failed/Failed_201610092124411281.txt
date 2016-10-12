@@ -1,0 +1,8 @@
+2016-10-09 21:24:41.1301 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp_MissingBranchID.XML
+2016-10-09 21:24:41.1301 | Attemping to send  request
+2016-10-09 21:24:41.1301 | Reading File:C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp_MissingBranchID.XML
+2016-10-09 21:24:41.1301 | Reading file: TestCorp2Corp_MissingBranchID.XML
+2016-10-09 21:24:41.1301 | Creating Attachment file: Test.pdf
+2016-10-09 21:24:41.1301 | Attempting to send the web request to:http://localhost:8081/soapserver
+2016-10-09 21:24:41.1301 | There was no endpoint listening at http://localhost:8081/soapserver that could accept the message. This is often caused by an incorrect address or SOAP action. See InnerException, if present, for more details.
+2016-10-09 21:24:41.1301 | Unable to connect to the remote server

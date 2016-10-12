@@ -1,0 +1,4 @@
+2016-10-11 12:50:26.0137 | Reading file: TestCorp2Corp_MissingBranchID.XML
+2016-10-11 12:50:26.0137 | Creating Attachment file: TestCorp2Corp_MissingBranchID.pdf
+2016-10-11 12:50:26.0137 | Attempting to send the web request to:https://dptng.njcourts.gov:2045/civilFilingWS_t
+2016-10-11 12:50:26.0137 | eCourts | Code: ECCV200 Description: Branch Id cannot be null or empty
