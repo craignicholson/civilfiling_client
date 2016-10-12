@@ -18,15 +18,36 @@ namespace CivilFilingClient
             Username = username;
             Password = password;
             Endpoint = endpoint;
-            Xmlfilepath = xmlFilePath;
+            XmlFilePath = xmlFilePath;
             Responses = responses;
+        }
+
+        public FileSuitEngine(string username, string password, string endpoint, string xmlFilePath, string pdfFilePath, List<string> responses)
+        {
+            Username = username;
+            Password = password;
+            Endpoint = endpoint;
+            XmlFilePath = xmlFilePath;
+            PdfFilePath = pdfFilePath;
+            Responses = responses;
+        }
+
+        public FileSuitEngine(string username, string password, string endpoint, string xmlFilePath, List<Attachments> attachments ,List<string> responses)
+        {
+            Username = username;
+            Password = password;
+            Endpoint = endpoint;
+            XmlFilePath = xmlFilePath;
+            Responses = responses;
+            Files = attachments;
         }
 
         private string Username { get; set; }
         private string Password { get; set; }
         private string Endpoint { get; set; }
-        private string Xmlfilepath { get; set; }
-        private string Pdffilepath { get; set; }
+        private string XmlFilePath { get; set; }
+        private string PdfFilePath { get; set; }
+        private List<Attachments> Files { get; set; }
         private List<string> Responses { get; set; }
 
         public bool FileSuit()
@@ -37,16 +58,18 @@ namespace CivilFilingClient
             string strDocketNumber = string.Empty;
             List<CourtCaseFiles> files = new List<CourtCaseFiles>();
 
-            string fileMsg = "Reading File:" + Xmlfilepath;
+            string fileMsg = "Reading File:" + XmlFilePath;
             Responses.Add(fileMsg);
             _logger.Info(fileMsg);
-            
 
-            var bfp = Util.ReadXmlfile(Xmlfilepath, Responses, files);
+            string pdfFilepath = string.Empty;
+            //This is the complicated part...  If I have a list of attachements they
+            // are in a list, we can also accept the xmlFilePath and pdfFilePath
+            var bfp = Util.ReadXmlfile(XmlFilePath, Responses, files, out pdfFilepath);
             if (bfp == null)
             {
-                Responses.Add("Invalid formatted file:" + Path.GetFileName(Xmlfilepath));
-                _logger.Info("Invalid formatted file:" + Path.GetFileName(Xmlfilepath));
+                Responses.Add("Invalid formatted file:" + Path.GetFileName(XmlFilePath));
+                _logger.Info("Invalid formatted file:" + Path.GetFileName(XmlFilePath));
                 return false;
             }
 
@@ -107,7 +130,7 @@ namespace CivilFilingClient
             //When no docket number is received the transaction has failed
             if (strDocketNumber.Length == 0)
             {
-                strDocketNumber = "Failed_" + Path.GetFileName(Xmlfilepath).ToString();
+                strDocketNumber = "Failed";
                 string failedMesssage = "Failed. Please review the eCourts | Code above.";
                 Responses.Add(failedMesssage);
                 _logger.Info(failedMesssage);
@@ -117,8 +140,13 @@ namespace CivilFilingClient
                 IsSuccess = true;
             }
             // Save the data out to a file, in this reality it should be taking one xml and one pdf file only
-            Util.SaveResponseToFile(Path.GetDirectoryName(Xmlfilepath).ToString(), Responses, strDocketNumber, files);
+            // The problem here is we need the full path to the pdf... which should be the same DirectoryName
+            // with the PDF name tagged onto the directory...  Need to clean this up
+            Util.SaveResponseToFile(Responses, strDocketNumber, XmlFilePath,  pdfFilepath);
 
+            // Clear out the files we just loaded
+            //var itemToRemove = resultlist.Single(r => r.Id == 2);
+            //resultList.Remove(itemToRemove);
             return IsSuccess;
         }
     }
