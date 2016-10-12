@@ -2,72 +2,116 @@
 
 Requirements
 ------------
-Law firm in NJ uses a system in some BASIC variant to interact with NJ Legal system.
+Law firm in NJ uses a system to interact with NJ Legal system.
 NJ Courts moving to E-Filing over SOAP.
 
-Write a simple windows form app that loads XML files and corresponding pdf attachments 
+A windows form app that loads XML files and corresponding pdf attachments 
 from a directory and submits them over the SOAP service.  
 
 Save output of SOAP service into a text file in the same directory.
 
-Use Cases
+Features
 ------------
+* Attach multiple xml and pdf files for batch processing.
+* Swtich Production and Test EndPoints using the Settings on the menu.
+* Application expects one packet per xml file.
+* Each xml file processed will output results into a separate file.
+* The response from the web service will be written to the same directory the xml and pdf originate.
+* Successful requests move the xml and pdf files into an archive folder.
+* Daily log files located in the application folder.
+* Command Line Interface for automation.
 
-## 1
-User will select one xml and one pdf file to be loaded and sent to New Jersey Courts
-The one xml and one pdf file will be associated with the case.
+Command Line Interface Example
+------------
+One can execute the application from the command line.
 
-The response from the web service will be written to the same directory the xml and pdf
-originate from.
+```
+C:\> cd "C:\Users\CivilFilingClient\"
+C:\...CivilFilingClient> CivilFilingClient.exe "888888005" "P@ssword" "https://dptng.njcourts.gov:2045/civilFilingWS_t" "C:\Files\TestCorp2Corp_MissingBranchID.xml" 
 
-## Assumptions
- * xml and pdf file will be in same directory
- * we only expect to have one xml and pdf file per submission
+C:\...CivilFilingClient> CivilFilingClient.exe "888888005" "P@ssword" "https://dptng.njcourts.gov:2045/civilFilingWS_t" "C:\Files\TestIndivid2Individ.xml" 
 
+```
+There is no output back to the command line.  Review the log files for the results.
 
+TODO:  Also include the pdf file path.
 
 Installation
 ------------
-TODO: Create msi installer
+Run the CivilFilingClient.msi or Setup.exe
 
 Dependencies
 ------------
-* New Jeresy Courts Web Service
+* New Jeresy Courts Web Service Endpoints
 * NLog
 
 
-Configuration
+Application Setting (CivilFilingClient.exe.config)
 ------------
-App.config (Development) or CivilFilingClient.exe.config (Production).
-
+The following application settings are required.
 ```xml
 
-        <client>
-          <endpoint address="https://dptng.njcourts.gov:2045/civilFilingWS_t"
-              binding="basicHttpBinding"
-              bindingConfiguration="CivilFilingWSService_CivilFilingWSPort"
-              contract="CivilFilingServiceReference.CivilFilingWS"
-              name="CivilFilingWSPort">
-            <headers>
-              <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"><wsse:UsernameToken Id="unt_20"><wsse:Username>888888005</wsse:Username><wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">P@ssword</wsse:Password></wsse:UsernameToken></wsse:Security>
-            </headers>
-          </endpoint>
-        </client>
+  <appSettings>
+    <add key="productionEndPoint" value="https://dpprod.njcourts.gov:2045/civilFilingWS_p"/>
+    <add key="productionUsername" value="333333333"/>
+    <add key="productionPwd" value="53c3t"/>
+    <add key="testEndPoint" value="https://dptng.njcourts.gov:2045/civilFilingWS_t"/>
+    <add key="testUsername" value="888888005"/>
+    <add key="testPwd" value="123987GJGJJ$"/>
+    <!-- mode is 'Test' -> testEndPoint and mode is 'Production' -> productionEndpoint-->
+    <add key="mode" value="Test"/>
+  </appSettings>
 
 ```
-Endpoint Address is the url of the New Jersey Courts web service.
 
-The security is in the <headers/> element.  The header element needs to be one line for now, since
-adding in CRLF adds '>&#xD' at each new line character.
+Configuration Bindings (CivilFilingClient.exe.config)
+------------
+Bindings setup the transport security the NJ soap web service endpoint.  
+The client node configures the channel for the NJ soap web service endpoint.
 
-Setting the web service username and password is done in the security header.
+The soap endpoint requires a specific soap header with credentials.  All
+communication is over https so the credentials are encrypted.
 
+```xml
+    <bindings>
+      <basicHttpBinding>
+        <binding name="CivilFilingWSPortBinding" >
+          <security mode="Transport">
+            <transport clientCredentialType="None" />
+          </security>
+        </binding>
+        <binding name="CivilFilingWSService_CivilFilingWSPort" messageEncoding="Mtom">
+          <security mode="Transport">
+            <transport clientCredentialType="None" />
+          </security>
+        </binding>
+      </basicHttpBinding>
+    </bindings>
+    <client>
+      <endpoint address="https://dptng.njcourts.gov:2045/civilFilingWS_t"
+          binding="basicHttpBinding"
+          bindingConfiguration="CivilFilingWSService_CivilFilingWSPort"
+          contract="CivilFilingServiceReference.CivilFilingWS"
+          name="CivilFilingWSPort">
+        <headers>
+          <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <wsse:UsernameToken Id="unt_20">
+              <wsse:Username>888888005</wsse:Username>
+              <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">P@ssword</wsse:Password>
+            </wsse:UsernameToken>
+          </wsse:Security>
+        </headers>
+      </endpoint>
+    </client>
+
+```
+### Secruity Header Example
 ```xml
 
 <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
 	<wsse:UsernameToken Id="unt_20">
-		<wsse:Username>888888005</wsse:Username>
-		<wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">P@ssword</wsse:Password>
+		<wsse:Username>123123123</wsse:Username>
+		<wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">PASSWORD</wsse:Password>
 	</wsse:UsernameToken>
 </wsse:Security>
 
@@ -75,24 +119,31 @@ Setting the web service username and password is done in the security header.
 
 Test Files
 --------------
-There is a folder named TestFiles which contains 3 files.
-* MessageSample1.XML
-* some.pdf
-* Responses.txt
+* TEST_CMP2_TESTDAN.XML
+* TEST_CMP_TESTDAN.PDF
+* TEST_CMP_TESTDAN_addBranchId.XML
+* TestCorp2Corp.XML
+* TestCorp2Corp.pdf
+* TestCorp2CorpBAD.XML
+* TestCorp2CorpBAD.pdf
+* TestCorp2CorpCDATA.XML
+* TestCorp2CorpCDATA.pdf
+* TestCorp2Corp_MissingBranchID.XML
+* TestCorp2Corp_MissingBranchID.pdf
+* TestCorp2Individ.XML
+* TestCorp2Individ.pdf
+* TestIndivid2Corp.XML
+* TestIndivid2Corp.pdf
+* TestIndivid2Individ.XML
+* TestIndivid2Individ.pdf
 
-MessageSample1.xml should be what the law firm will try and upload.  This is my guess for now.
-The pdf is just a sample pdf.
-Responses.txt contains the output of the processing as required by the scope or this work.
-
-Currently I keep getting this error message:
-
+Example eCourt Codes - Error Messages
+--------------
 ```txt
+
 Code: ECCV200 Description: Branch Id cannot be null or empty
+
 ```
-
-And I'm not seeing the branch Id in the xml objects to send.  :-(
-
-
 Sample Soap Message
 --------------
 This is a sample message from the New Jeresy Court web service specification
@@ -268,7 +319,7 @@ A-Z, a-z, 0-9, space, period, dash, $, ?, !, (, ), #, %, comma, slash, single qu
 
 Inspecting the soap message 
 ------------
-One can inspect the soap message by creating an endpoint and sending the request to the endpoint.
+You can inspect the soap message by creating an endpoint and sending the request to the endpoint.
 You will need to comment out the security in the App.config.
 
 ```xml
@@ -279,6 +330,8 @@ You will need to comment out the security in the App.config.
 
 ```
 This will allow you to see the message in clear text.
+
+You can also install and enable Wireshark on windows to decrypt the https traffic you generate.
 
 Logging
 ------------
@@ -297,16 +350,12 @@ https://ecourtstraining.judiciary.state.nj.us/webe19/CIVILCaseJacketWeb/pages/ci
 
 http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd
 
-Testing
--------------
-http://localhost:8081/soapserver
 
 Notes
 -------------
 
-Step 1 Registration
+### Registration
 Test: https://ecourtstraining.judiciary.state.nj.us/webe19/ecourtsweb/pages/home/home.faces 
-
 username: 888888005
 password: P@ssword
 
@@ -316,26 +365,17 @@ Attorney Name :	TEST5 CIVIL BULK FILING5
 Attorney Bar ID :	888888005
 Firm Name :	CIVIL BULK FILING TEST3
 
-Code: ECCV200 Description: Branch Id cannot be null or empty
-There is no branch in the schema?
-
-Firm id = 9735384700
-Atty id = 288551973
-
 
 Please use the following for attorney, firm and branch id. Attached is the updated documentation. Branch id is a required field and it can be in the attributes list under BulkFilingpacket
  
-Testing Account		
+### Testing Account		
 Firm Id - F88888003
 Attorney ID – 888888005     
 Branch Id – 0001
-Account number for fee processing - 143055  
-WebService User - F00000495
-password - P@ssword
+Account number for fee processing - 143055
 
-Tests 
-C:\> cd "C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\bin\Debug\"
-C:\...Debug> CivilFilingClient.exe "888888005" "P@ssword" "https://dptng.njcourts.gov:2045/civilFilingWS_t" "C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp_MissingBranchID.xml" 
+Branch Id and Account Number are required for processing. See the eCourts specification for more information about the required elements.
 
-
-CivilFilingClient.exe "888888005" "P@ssword" "https://dptng.njcourts.gov:2045/civilFilingWS_t" "C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestIndivid2Individ.xml" 
+Web Service Credentials
+username: 888888005
+password: P@ssword
