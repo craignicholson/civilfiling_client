@@ -47,8 +47,8 @@ namespace CivilFilingClient
             {
                 var soapmsg = "/soapenv:Envelope/soapenv:Body/tns2:submitCivilFiling/arg0/bulkFilingPacket";
                 var message = "File soap format is incorrect.  Review the namespaces to make sure they contain: " + Environment.NewLine + soapmsg;
-                responses.Add("ERROR xml nodes should contain: " + message);
-                _logger.Error("ERROR xml nodes should contain" + message);
+                responses.Add("Error xml nodes should contain: " + message);
+                _logger.Error("Error xml nodes should contain" + message);
                 return null;
             }
             try
@@ -78,7 +78,7 @@ namespace CivilFilingClient
                 if (ex.InnerException != null)
                     message = Environment.NewLine + ex.InnerException.Message;
 
-                responses.Add("ERROR Attaching file: " + message);
+                responses.Add("Error Attaching file: " + message);
                 _logger.Error(message);
                 // Stop all processing
                 return null;
@@ -136,9 +136,9 @@ namespace CivilFilingClient
                     if (ex.InnerException != null)
                         message = " | " + ex.InnerException.Message;
 
-                    responses.Add("Error reading file: " + message);
-                    _logger.Error(message);
-                    // Stop all processing
+                    responses.Add("ReadXmlfile Error reading file: " + message);
+                    _logger.Error("ReadXmlfile Error reading file: " + message);
+                    // Stop processing by returning a null
                     return null;
                 }
                 return bfp;
@@ -214,13 +214,13 @@ namespace CivilFilingClient
             }
             catch (IOException ex)
             {
-                responses.Add("IOException writing log file : " + ex.Message);
+                responses.Add("SaveResponseToFile IOException writing log file : " + ex.Message);
                 _logger.Error(ex.Message);
                 throw;
             }
             catch (System.Exception ex)
             {
-                responses.Add("Exception writing log file : " + ex.Message);
+                responses.Add("SaveResponseToFile Exception writing log file : " + ex.Message);
                 _logger.Error(ex.Message);
                 throw;
             }

@@ -146,7 +146,6 @@ namespace CivilFilingClient
         /// <param name="e"></param>
         private void btnAttach_Click(object sender, EventArgs e)
         {
-            _logger.Info("BEGINING NEW RUN");
             // We will only attach the pdf... but we can have many pdf's
             // Use Case - we will file one case at a time.
             // xml file can have many plantiff and defendants
