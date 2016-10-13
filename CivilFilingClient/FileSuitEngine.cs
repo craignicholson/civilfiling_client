@@ -32,22 +32,11 @@ namespace CivilFilingClient
             Responses = responses;
         }
 
-        public FileSuitEngine(string username, string password, string endpoint, string xmlFilePath, List<Attachments> attachments ,List<string> responses)
-        {
-            Username = username;
-            Password = password;
-            Endpoint = endpoint;
-            XmlFilePath = xmlFilePath;
-            Responses = responses;
-            Files = attachments;
-        }
-
         private string Username { get; set; }
         private string Password { get; set; }
         private string Endpoint { get; set; }
         private string XmlFilePath { get; set; }
         private string PdfFilePath { get; set; }
-        private List<Attachments> Files { get; set; }
         private List<string> Responses { get; set; }
 
         public bool FileSuit()

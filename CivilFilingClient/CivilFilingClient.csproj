@@ -54,7 +54,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Attachments.cs" />
     <Compile Include="civilFilingWS_T_xsd2.cs" />
     <Compile Include="CourtCaseFiles.cs" />
     <Compile Include="CourtCaseFilesClean.cs" />
