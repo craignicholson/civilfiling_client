@@ -84,16 +84,18 @@ namespace CivilFilingClient
                 catch(System.Exception ex)
                 {
                     // TODO: Colors these red
-                    _logger.Error(ex.Message);
+                    Responses.Add("eCourts " + Endpoint + " error :" + message);
+                    _logger.Error("eCourts " + Endpoint + " error :" + message);
 
                     if (ex.InnerException != null)
                     {
-                        _logger.Error(ex.InnerException.Message);
+                        Responses.Add("eCourts " + Endpoint + " error :" + ex.InnerException);
+                        _logger.Error("eCourts " + Endpoint + " error :" + ex.InnerException);
                     }
                     Util.SaveResponseToFile(Responses, "Failed", XmlFilePath,  pdfFilepath);
                     // throw the error back to the UI so they know the timeout occured
                     // note this will be logged 2x because we are throwing it up the stack
-                    throw ex;
+                    throw new System.ArgumentException("eCourts " + Endpoint + " error :", ex.Message); ;
                 }
             }
             if (filingReponse.messages != null)
