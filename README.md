@@ -23,19 +23,44 @@ Features
 
 Command Line Interface Example
 ------------
-One can execute the application from the command line.
+One can execute the application from the command line.  Here is an example  you can run from windows command prompt.
 
 ```
 C:\> cd "C:\Users\CivilFilingClient\"
-C:\...CivilFilingClient> CivilFilingClient.exe "888888005" "P@ssword" "https://dptng.njcourts.gov:2045/civilFilingWS_t" "C:\Files\TestCorp2Corp_MissingBranchID.xml" 
+C:\Users\CivilFilingClient> CivilFilingClient.exe "888888005" "P@ssword" "https://dptng.njcourts.gov:2045/civilFilingWS_t" "C:\Files\TestCorp2Corp_MissingBranchID.xml" 
 
-C:\...CivilFilingClient> CivilFilingClient.exe "888888005" "P@ssword" "https://dptng.njcourts.gov:2045/civilFilingWS_t" "C:\Files\TestIndivid2Individ.xml" 
+C:\Users\CivilFilingClient> CivilFilingClient.exe "888888005" "P@ssword" "https://dptng.njcourts.gov:2045/civilFilingWS_t" "C:\Files\TestIndivid2Individ.xml" 
 
 ```
+It does require the pdf to be in the same folder as the xml file.
+
+The parameters to pass in are the following:
+* Username
+* Password
+* EndPoint {testing or production}
+* xml full file Path
+
 There is no output back to the command line.  Review the log files for the results.
 
 TODO:  Also include the pdf file path.  Currently the application will expect the pdf to be in the same directory as
 the xml file.
+
+### Windows Batch File Example
+What you can do is create a windows batch file which is a text file with .bat extension.
+
+Inside of the batch file you can have several of the above commands:
+
+2016_10_31_eCourtSuits.bat or eCourtSuits.bat
+(We can timestamp and run this manaully or name the batch file the same name every day)
+```
+C:\Users\CivilFilingClient> CivilFilingClient.exe "888888005" "P@ssword" "https://dptng.njcourts.gov:2045/civilFilingWS_t" "C:\Files\File1.xml" 
+C:\Users\CivilFilingClient> CivilFilingClient.exe "888888005" "P@ssword" "https://dptng.njcourts.gov:2045/civilFilingWS_t" "C:\Files\File2.xml" 
+C:\Users\CivilFilingClient> CivilFilingClient.exe "888888005" "P@ssword" "https://dptng.njcourts.gov:2045/civilFilingWS_t" "C:\Files\File3.xml" 
+C:\Users\CivilFilingClient> CivilFilingClient.exe "888888005" "P@ssword" "https://dptng.njcourts.gov:2045/civilFilingWS_t" "C:\Files\File4.xml" 
+C:\Users\CivilFilingClient> CivilFilingClient.exe "888888005" "P@ssword" "https://dptng.njcourts.gov:2045/civilFilingWS_t" "C:\Files\File5.xml" 
+
+```
+If you name the file using the eCourtSuits.bat, you can setup this to be ran daily in the Windows Task Scheduler once you are ok with the processing.
 
 Installation
 ------------
@@ -431,8 +456,8 @@ Please use the following for attorney, firm and branch id. Attached is the updat
  
 ### Testing Account		
 Firm Id - F88888003
-Attorney ID – 888888005     
-Branch Id – 0001
+Attorney ID Â– 888888005     
+Branch Id Â– 0001
 Account number for fee processing - 143055
 
 Branch Id and Account Number are required for processing. See the eCourts specification for more information about the required elements.
