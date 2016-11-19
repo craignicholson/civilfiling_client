@@ -61,7 +61,17 @@ namespace CivilFilingClient
                     responses.Add("Creating Attachment file: " + fileName);
                     // Users of the eCourts system do not see a file extension on the document when they download the pdf.
                     // They have to right click and save as pdf, instead of just clicking to view.  Setting the document
-                    // to the full name to see if this fixes the issue.
+                    // to the full name to see if this fixes the issue.  Example from the Documentation from eCourts is provided.
+                    // Document Name does not hav ethe extention.
+                    // < attachmentList >
+                    //      < contentType > application / pdf </ contentType >
+                    //      < docType > pdf </ docType >
+                    //      < documentCode > CMPL </ documentCode >
+                    //      < documentDescription > Complaint </ documentDescription >
+                    //      < documentName > Test </ documentName >
+                    //      < extention >.pdf </ extention >
+                    //</ attachmentList >
+
                     bfp.attachmentList[0].documentName = fileName;
 
                     // PDF file might not be in same directory so we should check to 
