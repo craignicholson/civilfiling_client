@@ -10,6 +10,9 @@
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
+# TestFiles
+[T]estFiles/
+
 # Build results
 [Dd]ebug/
 [Dd]ebugPublic/
@@ -240,3 +243,7 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+
+# Test Files
+TestFiles/Failure
+TestFiles/Success
