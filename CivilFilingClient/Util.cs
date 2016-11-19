@@ -59,6 +59,10 @@ namespace CivilFilingClient
                     bfp = (CivilFilingServiceReference.bulkFilingPacket)ser.Deserialize(new StringReader(node.OuterXml));
                     string fileName = bfp.attachmentList[0].documentName + bfp.attachmentList[0].extention;
                     responses.Add("Creating Attachment file: " + fileName);
+                    // Users of the eCourts system do not see a file extension on the document when they download the pdf.
+                    // They have to right click and save as pdf, instead of just clicking to view.  Setting the document
+                    // to the full name to see if this fixes the issue.
+                    bfp.attachmentList[0].documentName = fileName;
 
                     // PDF file might not be in same directory so we should check to 
                     // to see is we have the PDF in our list of files
