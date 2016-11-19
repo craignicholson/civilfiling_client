@@ -47,7 +47,7 @@ namespace CivilFilingClient
             string strDocketNumber = string.Empty;
             List<CourtCaseFiles> files = new List<CourtCaseFiles>();
 
-            string fileMsg = "Reading File:" + XmlFilePath;
+            string fileMsg = "XML File:" + XmlFilePath;
             Responses.Add(fileMsg);
             _logger.Info(fileMsg);
 
@@ -136,7 +136,8 @@ namespace CivilFilingClient
             Responses.Add("End of Submission");
             _logger.Info("End of Submission");
 
-            //When no docket number is received the transaction has failed
+            //When no docket number is received the transaction might have failed
+            //If we have a eFilingNumber the message has been queued.
             if (strDocketNumber.Length == 0)
             {
                 strDocketNumber = "Failed";
