@@ -11,7 +11,7 @@
 *.userprefs
 
 # TestFiles
-[T]estFiles/
+[Tt]estFiles/
 
 # Build results
 [Dd]ebug/
