@@ -317,5 +317,11 @@ namespace CivilFilingClient
         {
             //Do nothing...
         }
+
+        private void getStatusToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmGetCivilFilingStatus frm = new frmGetCivilFilingStatus();
+            frm.Show();
+        }
     }
 }

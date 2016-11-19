@@ -25,6 +25,7 @@ namespace CivilFilingClient
             //string username, string password, string endpoint, string xmlFilePath, List<string> responses)
             if (args.Length == 5)
             {
+                //Console ... there is none... it all goes to bit bucket dev/null when calling via CLI this way
                 Console.WriteLine("Beginning of CLI Process");
                 _logger.Info("Beginning of CLI Process");
                 foreach (var arg in args)
