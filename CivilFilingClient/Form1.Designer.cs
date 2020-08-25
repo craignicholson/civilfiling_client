@@ -37,8 +37,9 @@
             this.settingsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.productionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.testToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.lblMode = new System.Windows.Forms.Label();
             this.getStatusToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.noticesToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.lblMode = new System.Windows.Forms.Label();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -87,7 +88,7 @@
             this.label1.AutoSize = true;
             this.label1.Location = new System.Drawing.Point(6, 356);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(222, 13);
+            this.label1.Size = new System.Drawing.Size(452, 25);
             this.label1.TabIndex = 3;
             this.label1.Text = "eCourts web service availability (2AM to 8PM)";
             // 
@@ -98,7 +99,7 @@
             this.settingsToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(731, 24);
+            this.menuStrip1.Size = new System.Drawing.Size(731, 42);
             this.menuStrip1.TabIndex = 4;
             this.menuStrip1.Text = "menuStrip1";
             // 
@@ -107,16 +108,17 @@
             this.settingsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.productionToolStripMenuItem,
             this.testToolStripMenuItem,
-            this.getStatusToolStripMenuItem});
+            this.getStatusToolStripMenuItem,
+            this.noticesToolStripMenuItem});
             this.settingsToolStripMenuItem.Name = "settingsToolStripMenuItem";
-            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(61, 20);
+            this.settingsToolStripMenuItem.Size = new System.Drawing.Size(113, 38);
             this.settingsToolStripMenuItem.Text = "Settings";
             // 
             // productionToolStripMenuItem
             // 
             this.productionToolStripMenuItem.CheckOnClick = true;
             this.productionToolStripMenuItem.Name = "productionToolStripMenuItem";
-            this.productionToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.productionToolStripMenuItem.Size = new System.Drawing.Size(324, 38);
             this.productionToolStripMenuItem.Text = "Production";
             this.productionToolStripMenuItem.Click += new System.EventHandler(this.productionToolStripMenuItem_Click);
             // 
@@ -124,9 +126,25 @@
             // 
             this.testToolStripMenuItem.CheckOnClick = true;
             this.testToolStripMenuItem.Name = "testToolStripMenuItem";
-            this.testToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
+            this.testToolStripMenuItem.Size = new System.Drawing.Size(324, 38);
             this.testToolStripMenuItem.Text = "Test";
             this.testToolStripMenuItem.Click += new System.EventHandler(this.testToolStripMenuItem_Click);
+            // 
+            // getStatusToolStripMenuItem
+            // 
+            this.getStatusToolStripMenuItem.Name = "getStatusToolStripMenuItem";
+            this.getStatusToolStripMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.getStatusToolStripMenuItem.Text = "Get Status";
+            this.getStatusToolStripMenuItem.Visible = false;
+            this.getStatusToolStripMenuItem.Click += new System.EventHandler(this.getStatusToolStripMenuItem_Click);
+            // 
+            // noticesToolStripMenuItem
+            // 
+            this.noticesToolStripMenuItem.Name = "noticesToolStripMenuItem";
+            this.noticesToolStripMenuItem.Size = new System.Drawing.Size(324, 38);
+            this.noticesToolStripMenuItem.Text = "Notices";
+            this.noticesToolStripMenuItem.Visible = false;
+            this.noticesToolStripMenuItem.Click += new System.EventHandler(this.noticesToolStripMenuItem_Click);
             // 
             // lblMode
             // 
@@ -134,16 +152,9 @@
             this.lblMode.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblMode.Location = new System.Drawing.Point(10, 42);
             this.lblMode.Name = "lblMode";
-            this.lblMode.Size = new System.Drawing.Size(63, 20);
+            this.lblMode.Size = new System.Drawing.Size(125, 37);
             this.lblMode.TabIndex = 5;
             this.lblMode.Text = "Sample";
-            // 
-            // getStatusToolStripMenuItem
-            // 
-            this.getStatusToolStripMenuItem.Name = "getStatusToolStripMenuItem";
-            this.getStatusToolStripMenuItem.Size = new System.Drawing.Size(152, 22);
-            this.getStatusToolStripMenuItem.Text = "Get Status";
-            this.getStatusToolStripMenuItem.Click += new System.EventHandler(this.getStatusToolStripMenuItem_Click);
             // 
             // Form1
             // 
@@ -177,6 +188,7 @@
         private System.Windows.Forms.ToolStripMenuItem testToolStripMenuItem;
         private System.Windows.Forms.Label lblMode;
         private System.Windows.Forms.ToolStripMenuItem getStatusToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem noticesToolStripMenuItem;
     }
 }
 

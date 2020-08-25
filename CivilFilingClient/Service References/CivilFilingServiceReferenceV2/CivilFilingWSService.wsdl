@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="utf-8"?>
+<definitions xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:wsp="http://www.w3.org/ns/ws-policy" xmlns:wsam="http://www.w3.org/2007/05/addressing/metadata" xmlns:tns="http://webservice.civilfiling.ecourts.ito.aoc.nj/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:wsp1_2="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" name="CivilFilingWSService" targetNamespace="http://webservice.civilfiling.ecourts.ito.aoc.nj/" xmlns="http://schemas.xmlsoap.org/wsdl/">
+  <wsp:Policy wsu:Id="CivilFilingWSPortBinding_MTOM_Policy">
+    <ns1:OptimizedMimeSerialization wsp:Optional="true" xmlns:ns1="http://schemas.xmlsoap.org/ws/2004/09/policy/optimizedmimeserialization" />
+  </wsp:Policy>
+  <types>
+    <xsd:schema>
+      <xsd:import schemaLocation="CivilFilingWSService_schema1.xsd" namespace="http://webservice.civilfiling.ecourts.ito.aoc.nj/" />
+    </xsd:schema>
+  </types>
+  <message name="submitCivilFiling">
+    <part name="parameters" element="tns:submitCivilFiling" />
+  </message>
+  <message name="submitCivilFilingResponse">
+    <part name="parameters" element="tns:submitCivilFilingResponse" />
+  </message>
+  <message name="ECourtsCivilServiceException">
+    <part name="fault" element="tns:ECourtsCivilServiceException" />
+  </message>
+  <message name="Exception">
+    <part name="fault" element="tns:Exception" />
+  </message>
+  <message name="getCivilFilingStatus">
+    <part name="parameters" element="tns:getCivilFilingStatus" />
+  </message>
+  <message name="getCivilFilingStatusResponse">
+    <part name="parameters" element="tns:getCivilFilingStatusResponse" />
+  </message>
+  <message name="searchNotices">
+    <part name="parameters" element="tns:searchNotices" />
+  </message>
+  <message name="searchNoticesResponse">
+    <part name="parameters" element="tns:searchNoticesResponse" />
+  </message>
+  <portType name="CivilFilingWS">
+    <operation name="submitCivilFiling">
+      <input wsam:Action="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/submitCivilFilingRequest" message="tns:submitCivilFiling" />
+      <output wsam:Action="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/submitCivilFilingResponse" message="tns:submitCivilFilingResponse" />
+      <fault wsam:Action="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/submitCivilFiling/Fault/ECourtsCivilServiceException" name="ECourtsCivilServiceException" message="tns:ECourtsCivilServiceException" />
+      <fault wsam:Action="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/submitCivilFiling/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="getCivilFilingStatus">
+      <input wsam:Action="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/getCivilFilingStatusRequest" message="tns:getCivilFilingStatus" />
+      <output wsam:Action="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/getCivilFilingStatusResponse" message="tns:getCivilFilingStatusResponse" />
+      <fault wsam:Action="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/getCivilFilingStatus/Fault/ECourtsCivilServiceException" name="ECourtsCivilServiceException" message="tns:ECourtsCivilServiceException" />
+      <fault wsam:Action="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/getCivilFilingStatus/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+    <operation name="searchNotices">
+      <input wsam:Action="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/searchNoticesRequest" message="tns:searchNotices" />
+      <output wsam:Action="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/searchNoticesResponse" message="tns:searchNoticesResponse" />
+      <fault wsam:Action="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/searchNotices/Fault/ECourtsCivilServiceException" name="ECourtsCivilServiceException" message="tns:ECourtsCivilServiceException" />
+      <fault wsam:Action="http://webservice.civilfiling.ecourts.ito.aoc.nj/CivilFilingWS/searchNotices/Fault/Exception" name="Exception" message="tns:Exception" />
+    </operation>
+  </portType>
+  <binding name="CivilFilingWSPortBinding" type="tns:CivilFilingWS">
+    <wsp:PolicyReference URI="#CivilFilingWSPortBinding_MTOM_Policy" />
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" />
+    <operation name="submitCivilFiling">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+      <fault name="ECourtsCivilServiceException">
+        <soap:fault use="literal" name="ECourtsCivilServiceException" namespace="" />
+      </fault>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="getCivilFilingStatus">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+      <fault name="ECourtsCivilServiceException">
+        <soap:fault use="literal" name="ECourtsCivilServiceException" namespace="" />
+      </fault>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+    <operation name="searchNotices">
+      <soap:operation soapAction="" />
+      <input>
+        <soap:body use="literal" />
+      </input>
+      <output>
+        <soap:body use="literal" />
+      </output>
+      <fault name="ECourtsCivilServiceException">
+        <soap:fault use="literal" name="ECourtsCivilServiceException" namespace="" />
+      </fault>
+      <fault name="Exception">
+        <soap:fault use="literal" name="Exception" namespace="" />
+      </fault>
+    </operation>
+  </binding>
+  <service name="CivilFilingWSService">
+    <port name="CivilFilingWSPort" binding="tns:CivilFilingWSPortBinding">
+      <soap:address location="REPLACE_WITH_ACTUAL_URL" />
+    </port>
+  </service>
+</definitions>

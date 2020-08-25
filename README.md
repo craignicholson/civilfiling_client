@@ -1,7 +1,9 @@
 # Civil Filing Client
 
 Requirements
+
 ------------
+
 Law firm in NJ uses a system to interact with NJ Legal system.
 NJ Courts moving to E-Filing over SOAP.
 
@@ -10,8 +12,116 @@ from a directory and submits them over the SOAP service.
 
 Save output of SOAP service into a text file in the same directory.
 
+                OperationContext.Current.OutgoingMessageHeaders.Add(new SecurityHeader("feinsuch", "F00000495", "Feinsuch#1"));
+                OperationContext.Current.OutgoingMessageHeaders.Add(new SecurityHeader("feinsuch", "888888029", "P@ssword"));
+
+
+Hi Dan,
+
+Here is the updated doc from our IT I spoke about. They updated the URL to connect to the webservice. Test: https://portal.njcourts.gov/webe19/ecourtsweb/pages/home/home.faces
+
+ 
+
+Also here is Vijaya’s contact info it you have technical questions Vijaya.thatipallyl1@njcourts.gov or at 609-815-2900 ext. 35735.
+
+
+Good afternoon:
+
+ 
+
+In the past month or so, Chris Baghsarian from our office had reached out to you regarding the current JEFIS Bulk Noticing process. This was done due to the fact that our IT department here at the Judiciary was looking to move away from the current delivery method, and replace it with a more modern process. With that in mind, the current plan is to provide this notice data via webservice. Subsequently, a new webservice method has been deployed to our training environment for testing purposes, and updated documentation is attached to this email for reference. At the moment, no data/notices are currently available to retrieve, so the purpose of this initial testing would just be to ensure that you can call the new method successfully. Instead of receiving the notices, you would just receive a hard coded response at this time. In the coming weeks, we will be introducing more production based data into the training environment, and we will expand the scope of testing accordingly and provide updates along the way.
+
+ 
+
+Throughout this process, if you run into any issues, please feel free to contact Chris or myself, and if you have any technical questions, please contact Vijaya Thatipally in our IT department directly at Vijaya.thatipallyl1@njcourts.gov or at 609-815-2900 ext. 35735.
+
+ 
+
+Thank you.
+
+ 
+
+Michael G. Levins
+
+Administrative Office of the Courts
+
+Automated Trial Court Services Unit
+
+Hi Dan,
+
+Are you able to connect to the new webservice? If so how is it going, we are anticipating having Data in the training environment this week. Thanks.
+
+ 
+
+Chris Baghsarian
+
+Automated Trial Court Services Unit
+
+609-815-2900 ext 51878
+
+
+ex.Message
+"Error creating a reader for the MTOM message"
+ex.InnerException
+{"MTOM messages must have type 'application/xop+xml'."}
+    Data: {System.Collections.ListDictionaryInternal}
+    HResult: -2146232000
+    HelpLink: null
+    InnerException: null
+    LineNumber: 0
+    LinePosition: 0
+    Message: "MTOM messages must have type 'application/xop+xml'."
+    Source: "System.Runtime.Serialization"
+    SourceUri: null
+    StackTrace: "   at System.Xml.XmlMtomReader.ReadMessageContentTypeHeader(ContentTypeHeader header, String& boundary, String& start, String& startInfo)\r\n   at System.Xml.XmlMtomReader.Initialize(Stream stream, String contentType, XmlDictionaryReaderQuotas quotas, Int32 maxBufferSize)\r\n   at System.Xml.XmlMtomReader.SetInput(Stream stream, Encoding[] encodings, String contentType, XmlDictionaryReaderQuotas quotas, Int32 maxBufferSize, OnXmlDictionaryReaderClose onClose)\r\n   at System.ServiceModel.Channels.MtomMessageEncoder.MtomBufferedMessageData.TakeXmlReader()"
+    TargetSite: {Void ReadMessageContentTypeHeader(System.Xml.ContentTypeHeader, System.String ByRef, System.String ByRef, System.String ByRef)}
+
+
+
+
+
+
+
+ex.Message
+"The maximum message size quota for incoming messages (65536) has been exceeded. To increase the quota, use the MaxReceivedMessageSize property on the appropriate binding element."
+
+      <basicHttpBinding>
+        <binding name="CivilFilingWSPortBinding" sendTimeout="00:03:00" maxBufferSize="999999" maxReceivedMessageSize="999999">
+          <security mode="Transport">
+            <transport clientCredentialType="None" />
+          </security>
+        </binding>
+        <binding name="CivilFilingWSService_CivilFilingWSPort" sendTimeout="00:03:00"
+          messageEncoding="Mtom" maxBufferSize="999999" maxReceivedMessageSize="999999">
+          <security mode="Transport">
+            <transport clientCredentialType="None" />
+          </security>
+        </binding>
+      </basicHttpBinding>
+
+
+FIX - https://stackoverflow.com/questions/9967053/where-to-put-maxreceivedmessagesize-property-in-wcf-services-web-config-file
+
+        <binding name="CivilFilingWSPortBinding" sendTimeout="00:03:00" maxBufferSize="999999" maxReceivedMessageSize="999999">
+          <security mode="Transport">
+            <transport clientCredentialType="None" />
+          </security>
+        </binding>
+        <binding name="CivilFilingWSService_CivilFilingWSPort" sendTimeout="00:03:00"
+          messageEncoding="Mtom" maxBufferSize="999999" maxReceivedMessageSize="999999">
+          <security mode="Transport">
+            <transport clientCredentialType="None" />
+          </security>
+        </binding>
+
+
+
+
+
 Features
+
 ------------
+
 * Attach multiple xml and pdf files for batch processing.
 * Switch Production and Test EndPoints using the Settings on the menu.
 * Application expects one packet per xml file.
@@ -22,19 +132,23 @@ Features
 * Command Line Interface for automation.
 
 Command Line Interface Example
+
 ------------
 One can execute the application from the command line.  Here is an example  you can run from windows command prompt.
 
-```
+```cmd
+
 C:\> cd "C:\Users\CivilFilingClient\"
 C:\Users\CivilFilingClient> CivilFilingClient.exe "888888005" "P@ssword" "https://dptng.njcourts.gov:2045/civilFilingWS_t" "C:\Files\TestCorp2Corp_MissingBranchID.xml" 
 
 C:\Users\CivilFilingClient> CivilFilingClient.exe "888888005" "P@ssword" "https://dptng.njcourts.gov:2045/civilFilingWS_t" "C:\Files\TestIndivid2Individ.xml" 
 
 ```
+
 It does require the pdf to be in the same folder as the xml file.
 
 The parameters to pass in are the following:
+
 * Username
 * Password
 * EndPoint {testing or production}
@@ -45,14 +159,17 @@ There is no output back to the command line.  Review the log files for the resul
 TODO:  Also include the pdf file path.  Currently the application will expect the pdf to be in the same directory as
 the xml file.
 
-### Windows Batch File Example
+## Windows Batch File Example
+
 What you can do is create a windows batch file which is a text file with .bat extension.
 
 Inside of the batch file you can have several of the above commands:
 
 2016_10_31_eCourtSuits.bat or eCourtSuits.bat
 (We can timestamp and run this manaully or name the batch file the same name every day)
-```
+
+```cmd
+
 C:\Users\CivilFilingClient> CivilFilingClient.exe "888888005" "P@ssword" "https://dptng.njcourts.gov:2045/civilFilingWS_t" "C:\Files\File1.xml" 
 C:\Users\CivilFilingClient> CivilFilingClient.exe "888888005" "P@ssword" "https://dptng.njcourts.gov:2045/civilFilingWS_t" "C:\Files\File2.xml" 
 C:\Users\CivilFilingClient> CivilFilingClient.exe "888888005" "P@ssword" "https://dptng.njcourts.gov:2045/civilFilingWS_t" "C:\Files\File3.xml" 
@@ -60,21 +177,26 @@ C:\Users\CivilFilingClient> CivilFilingClient.exe "888888005" "P@ssword" "https:
 C:\Users\CivilFilingClient> CivilFilingClient.exe "888888005" "P@ssword" "https://dptng.njcourts.gov:2045/civilFilingWS_t" "C:\Files\File5.xml" 
 
 ```
+
 If you name the file using the eCourtSuits.bat, you can setup this to be ran daily in the Windows Task Scheduler once you are ok with the processing.
 
 Installation
+
 ------------
 Run the CivilFilingClient.msi or Setup.exe
 
 Dependencies
+
 ------------
+
 * New Jersey Courts Web Service Endpoints
 * NLog
 
-
 Application Setting (CivilFilingClient.exe.config)
+
 ------------
 The following application settings are required.
+
 ```xml
 
   <appSettings>
@@ -91,6 +213,7 @@ The following application settings are required.
 ```
 
 Configuration Bindings (CivilFilingClient.exe.config)
+
 ------------
 Bindings setup the transport security the NJ soap web service endpoint.  
 The client node configures the channel for the NJ soap web service endpoint.
@@ -131,20 +254,22 @@ communication is over https so the credentials are encrypted.
     </client>
 
 ```
-### Security Header Example
+
+## Security Header Example
+
 ```xml
 
 <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
-	<wsse:UsernameToken Id="unt_20">
-		<wsse:Username>123123123</wsse:Username>
-		<wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">PASSWORD</wsse:Password>
-	</wsse:UsernameToken>
+  <wsse:UsernameToken Id="unt_20">
+    <wsse:Username>123123123</wsse:Username>
+    <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">PASSWORD</wsse:Password>
+  </wsse:UsernameToken>
 </wsse:Security>
 
 ```
 
-Test Files
---------------
+### Test Files
+
 * TEST_CMP2_TESTDAN.XML
 * TEST_CMP_TESTDAN.PDF
 * TEST_CMP_TESTDAN_addBranchId.XML
@@ -163,9 +288,10 @@ Test Files
 * TestIndivid2Individ.XML
 * TestIndivid2Individ.pdf
 
-Sample Soap Message
---------------
+## Sample Soap Message
+
 This is a sample message from the New Jeresy Court web service specification
+
 ```xml
 
 <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" 
@@ -324,9 +450,11 @@ Sample Message Generated by this Application
 ```
 
 Successful Message from eCourts
+
 ------------
 
 Note: We should mention to them the spelling error.
+
 ```txt
 
 ECCV500 Description: Filing submitted scuccessfully
@@ -336,31 +464,38 @@ Docket Number :ATL-DC-005336-16
 ```
 
 Error Messages (samples from eCourts)
+
 ------------
 More messages can be found in the specifications document.
 
 See the specification for the error codes which the web service will return.
 
 ### Security (Username or Password failed)
+
 ```txt
 
 Rejected by policy. (from client) 
 
 ```
 
+When you receive this message either or both the username and password are invalid.
+
 #### http timeout
+
 ```txt
 
 The HTTP request to 'https://dptng.njcourts.gov:2045/civilFilingWS_t' has exceeded the allotted timeout of 00:00:59.9680000. 
 The time allotted to this operation may have been a portion of a longer timeout.
 
 ```
+
 When you see this error communication with the webservice was disconnected before
 the submission could be created or the web service (eCourts) could respond back to the client (CivilFilingClient).
 
 TODO: We can set the timeout to be longer if needed in the future.
 
 ### Missing Branch Id
+
 ```txt
 
 ECCV200 Description: Branch Id cannot be null or empty
@@ -368,6 +503,7 @@ ECCV200 Description: Branch Id cannot be null or empty
 ```
 
 ### Invalid Characters
+
 ```txt
 
 ECCV110 Description: Party name can only contain A-Z, a-z, 0-9, space, period, dash, $, ?, !, (, ), #, %, comma, slash, single quote, &
@@ -375,6 +511,7 @@ ECCV110 Description: Party name can only contain A-Z, a-z, 0-9, space, period, d
 ```
 
 ### eCourt returns only Sequence Number
+
 The eCourt web service was down and not processing the submissions.  The request will be accepted and return a sequence number
 but no Docket Number.  You will have to resend this submission once the web service is back up.
 
@@ -394,16 +531,20 @@ Code: ECCV110 Description: Attorney's Client Reference number should be a numeri
 
 
 ```
+
 ### File Name Valid characters
+
 A-Z, a-z, 0-9, .
 
 Note, This application might need to validate the filename, we can test and see what
 happens when I send a pdf file with characters which are not valid.
 
 ### Text Valid characters
+
 A-Z, a-z, 0-9, space, period, dash, $, ?, !, (, ), #, %, comma, slash, single quote, &
 
-Inspecting the soap message 
+Inspecting the soap message
+
 ------------
 You can inspect the soap message by creating an endpoint and sending the request to the endpoint.
 You will need to comment out the security in the App.config.
@@ -411,21 +552,38 @@ You will need to comment out the security in the App.config.
 ```xml
 
 <security mode="Transport">
-	<transport clientCredentialType="None" />
+  <transport clientCredentialType="None" />
 </security>
 
 ```
+
 This will allow you to see the message in clear text.
 
 You can also install and enable Wireshark on windows to decrypt the https traffic you generate.
 
 Logging
+
 ------------
+
 Logs are written for each run and are located in the logs folder inside the applications folder.
 The logs are setup to maintain up to 365 days of logs. 
 
-References
+Web Service Creation
+
 ------------
+
+GUI
+
+In Visual Studio Right Click on CivilFilingClient>ServiceReferences
+
+- Add Service Reference
+- Address (Your path to the wsdl in a folder with the xsd file) : c:\source\repos\civilfiling\test\CivilFilingWSService.wsdl
+- Add your namespace:  CivilFilingClient[Version]
+
+References
+
+------------
+
 https://dptng.njcourts.gov:2045/civilFilingWS_t
 
 http://stackoverflow.com/questions/848841/c-sharp-xslt-transform-adding-xa-and-xd-to-the-output
@@ -436,28 +594,25 @@ https://ecourtstraining.judiciary.state.nj.us/webe19/CIVILCaseJacketWeb/pages/ci
 
 http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd
 
-
-Notes
--------------
-
 ### Registration
+
 Test: https://ecourtstraining.judiciary.state.nj.us/webe19/ecourtsweb/pages/home/home.faces 
 username: 888888005
 password: P@ssword
 
 Your email address has been successfully added for eCourts - electronic filing, service and notification in the New Jersey Trial Courts. The email addresses provided will be used for electronic notifications on all eCourts filings.
 
-Attorney Name :	TEST5 CIVIL BULK FILING5
-Attorney Bar ID :	888888005
-Firm Name :	CIVIL BULK FILING TEST3
-
+Attorney Name :TEST5 CIVIL BULK FILING5
+Attorney Bar ID :888888005
+Firm Name :CIVIL BULK FILING TEST3
 
 Please use the following for attorney, firm and branch id. Attached is the updated documentation. Branch id is a required field and it can be in the attributes list under BulkFilingpacket
- 
-### Testing Account		
+
+### Testing Account
+
 Firm Id - F88888003
-Attorney ID  888888005     
-Branch Id  0001
+Attorney ID - 888888005
+Branch Id - 0001
 Account number for fee processing - 143055
 
 Branch Id and Account Number are required for processing. See the eCourts specification for more information about the required elements.

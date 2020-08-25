@@ -149,6 +149,8 @@ namespace CivilFilingClient
             // We will only attach the pdf... but we can have many pdf's
             // Use Case - we will file one case at a time.
             // xml file can have many plantiff and defendants
+            // Version 2.0 will accept a csv file and the csv file will contain the path to the pdf. 
+            //   User will only need to attach one csv file for each one complaint
             DialogResult dr = openFileDialog1.ShowDialog();
             if (dr == DialogResult.OK)
             {
@@ -203,7 +205,7 @@ namespace CivilFilingClient
         {
             // Set the file dialog to filter for graphics files.
             openFileDialog1.Filter =
-                "Files (*.PDF;*.XML)|*.PDF;*.XML|" +
+                "Files (*.PDF;*.XML;*.CSV)|*.PDF;*.XML;*.CSV|" +
                 "All files (*.*)|*.*";
 
             // Allow the user to select multiple images.
@@ -234,6 +236,23 @@ namespace CivilFilingClient
                         _logger.Info("Attempting to send request");
                         FileSuitEngine suit = new FileSuitEngine(_CurrentUsername, _CurrentPwd, _CurrentEndPoint, item.FullFilePath, _responses);
                         item.IsSubmitted = suit.FileSuit();
+
+                        //Write responses to RichTextBox... I know this is a hack... not real time
+                        foreach (var log in _responses)
+                        {
+                            richTextBox1.AppendText(Environment.NewLine + log);
+                        }
+                        //clean up - data was submitted, and log file has been written
+                        //_files.Remove(item);
+                        _responses.Clear();
+                    }
+                    if (item.FileExtension.ToUpper() == ".CSV")
+                    {
+                        richTextBox1.AppendText(Environment.NewLine + Environment.NewLine + "Process started for CSV file... "+ item.FileName );
+                        _responses.Add("Attempting to send request");
+                        _logger.Info("Attempting to send request");
+                        FileSuitEngine suit = new FileSuitEngine(_CurrentUsername, _CurrentPwd, _CurrentEndPoint, item.FullFilePath, _responses);
+                        item.IsSubmitted = suit.FileSuitCSV();
 
                         //Write responses to RichTextBox... I know this is a hack... not real time
                         foreach (var log in _responses)
@@ -321,6 +340,12 @@ namespace CivilFilingClient
         private void getStatusToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmGetCivilFilingStatus frm = new frmGetCivilFilingStatus();
+            frm.Show();
+        }
+
+        private void noticesToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            frmSearchNotices frm = new frmSearchNotices();
             frm.Show();
         }
     }

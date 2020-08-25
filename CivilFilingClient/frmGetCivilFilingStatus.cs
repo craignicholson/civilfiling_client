@@ -20,7 +20,7 @@ namespace CivilFilingClient
 
         private void btnAttach_Click(object sender, EventArgs e)
         {
-            var address = new EndpointAddress("https://dptng.njcourts.gov:2045/civilFilingWS_p");
+            var address = new EndpointAddress("https://dptng.njcourts.gov:2045/civilFilingWS_t");
             // Create a new client with the endpoint we want to send the request
             var client = new CivilFilingServiceReference.CivilFilingWSClient("CivilFilingWSPort", address);
             // Create the response outside of the using since instantiation inside of using limits the scope of the variable
@@ -28,8 +28,7 @@ namespace CivilFilingClient
             
             using (new OperationContextScope(client.InnerChannel))
             {
-                OperationContext.Current.OutgoingMessageHeaders.Add(new SecurityHeader("feinsuch", "F00000495", "Feinsuch#1"));
-                OperationContext.Current.OutgoingMessageHeaders.Add(new SecurityHeader("feinsuch", "888888005", "P@ssword"));
+                OperationContext.Current.OutgoingMessageHeaders.Add(new SecurityHeader("feinsuch", "888888029", "P@ssword"));
                 string message = "Attempting to send the web request to:" + client.Endpoint.Address.ToString();
                 //Responses.Add(message);
                 //_logger.Warn(message);

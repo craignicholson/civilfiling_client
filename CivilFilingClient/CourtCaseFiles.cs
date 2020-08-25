@@ -6,6 +6,7 @@
     /// of the soapenvelope.  We will use the PDF in the soap envelope to find the file path
     /// for the PDF.  If the PDF is not found we will assume the XML directory will also have
     /// the PDF file located in the same directory as the PDF file.
+    /// Version 2.0 will accept csv files.
     /// </summary>
     public class CourtCaseFiles
     {
