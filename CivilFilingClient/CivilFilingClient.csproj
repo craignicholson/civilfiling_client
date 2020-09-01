@@ -48,6 +48,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.6.8\lib\net45\NLog.dll</HintPath>
     </Reference>
@@ -88,20 +89,9 @@
     <Compile Include="frmGetCivilFilingStatus.Designer.cs">
       <DependentUpon>frmGetCivilFilingStatus.cs</DependentUpon>
     </Compile>
-    <Compile Include="frmSearchNotices.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="frmSearchNotices.Designer.cs">
-      <DependentUpon>frmSearchNotices.cs</DependentUpon>
-    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SecurityHeader.cs" />
-    <Compile Include="Service References\CivilFilingServiceReferenceV2\Reference.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </Compile>
     <Compile Include="Service References\CivilFilingServiceReference\Reference.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -109,35 +99,11 @@
     </Compile>
     <Compile Include="TestRequests.cs" />
     <Compile Include="Util.cs" />
-    <None Include="Service References\CivilFilingServiceReferenceV2\CivilFilingClient.CivilFilingServiceReferenceV2.civilFilingResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\CivilFilingServiceReferenceV2\CivilFilingClient.CivilFilingServiceReferenceV2.getCivilFilingStatusResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\CivilFilingServiceReferenceV2\CivilFilingClient.CivilFilingServiceReferenceV2.noticeResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\CivilFilingServiceReferenceV2\CivilFilingClient.CivilFilingServiceReferenceV2.searchNoticesResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\CivilFilingServiceReferenceV2\CivilFilingClient.CivilFilingServiceReferenceV2.submitCivilFilingResponse.datasource">
-      <DependentUpon>Reference.svcmap</DependentUpon>
-    </None>
-    <None Include="Service References\CivilFilingServiceReferenceV2\Reference.svcmap">
-      <Generator>WCF Proxy Generator</Generator>
-      <LastGenOutput>Reference.cs</LastGenOutput>
-    </None>
-    <None Include="Service References\CivilFilingServiceReferenceV2\configuration.svcinfo" />
-    <None Include="Service References\CivilFilingServiceReferenceV2\configuration91.svcinfo" />
     <EmbeddedResource Include="Form1.resx">
       <DependentUpon>Form1.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmGetCivilFilingStatus.resx">
       <DependentUpon>frmGetCivilFilingStatus.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmSearchNotices.resx">
-      <DependentUpon>frmSearchNotices.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -151,6 +117,7 @@
     <Content Include="Icon.ico" />
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <SubType>Designer</SubType>
     </Content>
     <None Include="packages.config">
       <SubType>Designer</SubType>
@@ -164,10 +131,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-    <None Include="Service References\CivilFilingServiceReferenceV2\CivilFilingWSService.wsdl" />
-    <None Include="Service References\CivilFilingServiceReferenceV2\CivilFilingWSService_schema1.xsd">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Service References\CivilFilingServiceReference\CivilFilingClient.CivilFilingServiceReference.civilFilingResponse.datasource">
       <DependentUpon>Reference.svcmap</DependentUpon>
     </None>
@@ -187,7 +150,6 @@
     <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <ItemGroup>
-    <WCFMetadataStorage Include="Service References\CivilFilingServiceReferenceV2\" />
     <WCFMetadataStorage Include="Service References\CivilFilingServiceReference\" />
   </ItemGroup>
   <ItemGroup>

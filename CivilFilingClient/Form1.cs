@@ -190,14 +190,6 @@ namespace CivilFilingClient
             }
         }
 
-        private void TestLoad()
-        {
-            foreach(var file in _files)
-            {
-
-            }
-        }
-
         /// <summary>
         /// InitializeOpenFileDialog so by default we only see pdf and xml files.
         /// </summary>
@@ -235,7 +227,7 @@ namespace CivilFilingClient
                         _responses.Add("Attempting to send request");
                         _logger.Info("Attempting to send request");
                         FileSuitEngine suit = new FileSuitEngine(_CurrentUsername, _CurrentPwd, _CurrentEndPoint, item.FullFilePath, _responses);
-                        item.IsSubmitted = suit.FileSuit();
+                        item.IsSubmitted = suit.FileSuitXml();
 
                         //Write responses to RichTextBox... I know this is a hack... not real time
                         foreach (var log in _responses)
@@ -340,12 +332,6 @@ namespace CivilFilingClient
         private void getStatusToolStripMenuItem_Click(object sender, EventArgs e)
         {
             frmGetCivilFilingStatus frm = new frmGetCivilFilingStatus();
-            frm.Show();
-        }
-
-        private void noticesToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            frmSearchNotices frm = new frmSearchNotices();
             frm.Show();
         }
     }

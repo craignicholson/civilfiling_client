@@ -138,14 +138,6 @@
             this.getStatusToolStripMenuItem.Visible = false;
             this.getStatusToolStripMenuItem.Click += new System.EventHandler(this.getStatusToolStripMenuItem_Click);
             // 
-            // noticesToolStripMenuItem
-            // 
-            this.noticesToolStripMenuItem.Name = "noticesToolStripMenuItem";
-            this.noticesToolStripMenuItem.Size = new System.Drawing.Size(324, 38);
-            this.noticesToolStripMenuItem.Text = "Notices";
-            this.noticesToolStripMenuItem.Visible = false;
-            this.noticesToolStripMenuItem.Click += new System.EventHandler(this.noticesToolStripMenuItem_Click);
-            // 
             // lblMode
             // 
             this.lblMode.AutoSize = true;

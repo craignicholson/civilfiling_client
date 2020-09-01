@@ -620,3 +620,117 @@ Branch Id and Account Number are required for processing. See the eCourts specif
 Web Service Credentials
 username: 888888005
 password: P@ssword
+
+
+Example for using with go soap server to inspect the soap message
+
+http://localhost:8081/soapserver
+
+---------SOAP SERVER TEST CONFIG
+
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <configSections>
+  </configSections>
+  <startup>
+    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.5.2" />
+  </startup>
+  <appSettings>
+    <add key="productionEndPoint" value="http://localhost:8081/soapserver"/>
+    <add key="productionUsername" value="F00012033"/>
+    <add key="productionPwd" value="x8xNbC$c"/>
+    <add key="testEndPoint" value="http://localhost:8081/soapserver"/>
+    <add key="testUsername" value="888888029"/>
+    <add key="testPwd" value="P@ssword"/>
+    <!-- mode is 'Test' -> testEndPoint and mode is 'Production' -> productionEndpoint-->
+    <add key="mode" value="Test"/>
+  </appSettings>
+  <system.serviceModel>
+    <bindings>
+      <basicHttpBinding>
+        <binding name="CivilFilingWSPortBinding" sendTimeout="00:03:00">
+          <security mode="None">
+            <transport clientCredentialType="None" />
+          </security>
+        </binding>
+        <binding name="CivilFilingWSService_CivilFilingWSPort" sendTimeout="00:03:00"
+          messageEncoding="Mtom">
+          <security mode="None">
+            <transport clientCredentialType="None" />
+          </security>
+        </binding>
+      </basicHttpBinding>
+    </bindings>
+    <client>
+      <endpoint address="https://dptng.njcourts.gov:2045/civilFilingWS_t"
+          binding="basicHttpBinding"
+          bindingConfiguration="CivilFilingWSService_CivilFilingWSPort"
+          contract="CivilFilingServiceReference.CivilFilingWS"
+          name="CivilFilingWSPort">
+        <headers>
+          <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <wsse:UsernameToken Id="unt_20">
+              <wsse:Username>888888005</wsse:Username>
+              <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">P@ssword</wsse:Password>
+            </wsse:UsernameToken>
+          </wsse:Security>
+        </headers>
+      </endpoint>
+    </client>
+  </system.serviceModel>
+</configuration>
+
+
+
+-------------------------GOOD CONFIG
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+  <configSections>
+  </configSections>
+  <startup>
+    <supportedRuntime version="v4.0" sku=".NETFramework,Version=v4.5.2" />
+  </startup>
+  <appSettings>
+    <add key="productionEndPoint" value="https://dpprod.njcourts.gov:2045/civilFilingWS_p"/>
+    <add key="productionUsername" value="F00012033"/>
+    <add key="productionPwd" value="x8xNbC$c"/>
+    <add key="testEndPoint" value="https://dptng.njcourts.gov:2045/civilFilingWS_t"/>
+    <add key="testUsername" value="888888029"/>
+    <add key="testPwd" value="P@ssword"/>
+    <!-- mode is 'Test' -> testEndPoint and mode is 'Production' -> productionEndpoint-->
+    <add key="mode" value="Test"/>
+  </appSettings>
+  <system.serviceModel>
+    <bindings>
+      <basicHttpBinding>
+        <binding name="CivilFilingWSPortBinding" sendTimeout="00:03:00">
+          <security mode="Transport">
+            <transport clientCredentialType="None" />
+          </security>
+        </binding>
+        <binding name="CivilFilingWSService_CivilFilingWSPort" sendTimeout="00:03:00"
+          messageEncoding="Mtom">
+          <security mode="Transport">
+            <transport clientCredentialType="None" />
+          </security>
+        </binding>
+      </basicHttpBinding>
+    </bindings>
+    <client>
+      <endpoint address="https://dptng.njcourts.gov:2045/civilFilingWS_t"
+          binding="basicHttpBinding"
+          bindingConfiguration="CivilFilingWSService_CivilFilingWSPort"
+          contract="CivilFilingServiceReference.CivilFilingWS"
+          name="CivilFilingWSPort">
+        <headers>
+          <wsse:Security xmlns:wsse="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd">
+            <wsse:UsernameToken Id="unt_20">
+              <wsse:Username>888888005</wsse:Username>
+              <wsse:Password Type="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-username-token-profile-1.0#PasswordText">P@ssword</wsse:Password>
+            </wsse:UsernameToken>
+          </wsse:Security>
+        </headers>
+      </endpoint>
+    </client>
+  </system.serviceModel>
+</configuration>

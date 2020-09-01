@@ -116,86 +116,12 @@ namespace CivilFilingClient
         }
 
         /// <summary>
-        /// This is best used by the CLI Interface... but unused right now... 
-        /// </summary>
-        /// <param name="xmlfilepath"></param>
-        /// <param name="responses"></param>
-        /// <param name="pdffilepath"></param>
-        /// <returns></returns>
-        public static CivilFilingServiceReference.bulkFilingPacket ReadXmlfile(string xmlfilepath, List<string> responses, string pdffilepath)
-        {
-            if (File.Exists(xmlfilepath) && File.Exists(pdffilepath))
-            {
-                CivilFilingServiceReference.bulkFilingPacket bfp = null;
-                pdffilepath = string.Empty;
-                responses.Add("ReadXmlfile.Deserialize file: " + Path.GetFileName(xmlfilepath));
-                responses.Add("Attaching file: " + Path.GetFileName(pdffilepath));
-                _logger.Info("ReadXmlfile.Deserialize file: " + Path.GetFileName(xmlfilepath));
-                _logger.Info("ReadXmlfile.Attaching file: " + Path.GetFileName(pdffilepath));
-
-                var xmldoc = new XmlDocument();
-                try
-                {
-                    xmldoc.Load(xmlfilepath);  // File IO, needs try catch, but I have .Exits aboveis this too much
-                }
-                catch (System.Exception ex)
-                {
-                    responses.Add("xmldoc.Load file: " + ex.Message + " - " + xmlfilepath);
-                    _logger.Info("xmldoc.Load file: " + ex.Message + " - " + xmlfilepath);
-                }
-                var names = new XmlNamespaceManager(xmldoc.NameTable);
-                names.AddNamespace("xsi", "http://www.w3.org/2001/XMLSchema-instance");
-                names.AddNamespace("soapenv", "http://schemas.xmlsoap.org/soap/envelope/");
-                names.AddNamespace("tns2", "http://webservice.civilfiling.ecourts.ito.aoc.nj/");
-
-                var node = xmldoc.SelectSingleNode("/soapenv:Envelope/soapenv:Body/tns2:submitCivilFiling/arg0/bulkFilingPacket", names);
-                XmlSerializer ser = new XmlSerializer(typeof(CivilFilingServiceReference.bulkFilingPacket));
-
-                // If the xml doc is not formatted with the correct namespaces the node will 
-                // be returned null
-                if (node == null)
-                {
-                    var soapmsg = "/soapenv:Envelope/soapenv:Body/tns2:submitCivilFiling/arg0/bulkFilingPacket";
-                    var message = "File soap format is incorrect.  Review the namespaces to make sure they contain: " + Environment.NewLine + soapmsg;
-                    responses.Add("ERROR xml nodes should contain: " + message);
-                    _logger.Error("ERROR xml nodes should contain" + message);
-                    return null;
-                }
-                try
-                {
-                    bfp = (CivilFilingServiceReference.bulkFilingPacket)ser.Deserialize(new StringReader(node.OuterXml));
-                    string fileName = bfp.attachmentList[0].documentName + bfp.attachmentList[0].extention;
-                    responses.Add("Creating Attachment file: " + fileName);
-                    byte[] bytes = File.ReadAllBytes(pdffilepath);
-                    bfp.attachmentList[0].bytes = bytes;
-                }
-                catch (System.Exception ex)
-                {
-                    var message = "Error reading file : " + ex.Message;
-                    if (ex.InnerException != null)
-                        message = " | " + ex.InnerException.Message;
-
-                    responses.Add("Creating Attachment file Error reading file: " + message);
-                    _logger.Error("Creating Attachment file Error reading file: " + message);
-                    // Stop processing by returning a null
-                    return null;
-                }
-                return bfp;
-            } // file path was wrong
-            else
-            {
-                _logger.Warn("Check the file path for : " + xmlfilepath);
-                _logger.Warn("Check the file path for : " + pdffilepath);
-                return null;
-            }
-        }
-
-        /// <summary>
-        /// SaveResponseToFile writes out the log history to the same directory the xml
-        /// file is located, moves all success parsed files to a main directory YYYYMMDD
-        /// and then clears all the responses from the list.
-        /// The log history file name will be the DocketNumber_reponses.txt or Failed_responses.txt
-        /// located in the original directory with the files.
+        /// SaveResponseToFile (request from customer) writes the processing messages for a current file to the same directory the xml or csv
+        /// file is located and moves all successfully parsed files to a main directory and then clears all the responses from the list.
+        /// The log history file name will be the DocketNumber_reponses.txt or Failed_responses.txt located in the original directory with the files.
+        /// The goal of this method is to provide one log file per processed file to make it easier for user to review 
+        /// and issues or history for the file processed. Please note we also log everything using Nlog to the /log folder.
+        /// One log file per day only saving a specific number of files per time frame. See Nlog.config maxArchiveFiles config.
         /// </summary>
         /// <param name="filePathOfOrigin"> The root folder where the file originated</param>
         /// <param name="responses">List of responses from the processing and submission to eCourts</param>
@@ -220,7 +146,7 @@ namespace CivilFilingClient
                     responses.Add("Successful Submission Check Log File : " + logFilename);
                     _logger.Info("Successful Submission Check Log File : " + logFilename);
                 }
-                else //File did not load 
+                else // File did not load 
                 {
                     // Create Error Log File : Failed_TestCorp2CorpBAD.XML_201610111313522504
                     logFilename = @"\" + Path.GetFileName(xmlFilePath) + "_" + docketNumber + "_" + DateTime.Now.ToString("yyyyMMddHHmmssffff") + ".txt";
@@ -269,6 +195,31 @@ namespace CivilFilingClient
                 responses.Add("Error for " + xmlFilePath + " : " + ex.Message);
                 _logger.Error("Error for " + xmlFilePath + " : " + ex.Message);
             }
+        }
+
+        /// <summary>
+        /// IsStringTooLongCheck verifies if string is greater than 20 chars
+        /// and shortens when over 20 chars.
+        /// ElsterStaging Database for these 26 tables max length ranges from
+        /// 	20 to 255
+        /// varchar(max) will not support an index, so we need a way to map
+        /// the truncation of strings by the size in the database.
+        /// Over use of Trim for some reason... :-<
+        /// </summary>
+        /// <returns>The string too long check.</returns>
+        /// <param name="value">Value.</param>
+        public static string SubStr(string value, int maxlength)
+        {
+            value = value.Trim();
+            if (value.Length > maxlength)
+            {
+                var msg = string.Format("Truncated string: from {0} to {1} chars, Original text : {2}, Truncated text: {3}", value.Length, maxlength, value, value.Substring(0, maxlength));
+                _logger.Info(msg);
+
+                return value.Substring(0, maxlength).Trim();
+            }
+            else
+                return value.Trim();
         }
     }
 }

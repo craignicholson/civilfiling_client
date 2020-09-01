@@ -40,7 +40,7 @@ namespace CivilFilingClient
                 var xmlfilepath = args[4];
                 //var pdffilepath = args[5]; //Should pdf file path be here?  I think so... the more restrictive the more success
                 FileSuitEngine suit = new FileSuitEngine(username, password, endpoint, xmlfilepath, responses);
-                suit.FileSuit();
+                suit.FileSuitXml();
                 foreach(var log in responses)
                 {
                     Console.WriteLine(log);
