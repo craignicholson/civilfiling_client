@@ -202,7 +202,7 @@ namespace CivilFilingClient
 
             // Allow the user to select multiple images.
             openFileDialog1.Multiselect = true;
-            openFileDialog1.Title = "Civil Filing Client (Accepts xml and pdfs files)";
+            openFileDialog1.Title = "Civil Filing Client (Accept xml and pdfs files)";
             openFileDialog1.FileName = string.Empty;
         }
 

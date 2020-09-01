@@ -37,7 +37,7 @@ namespace CivilFilingClient
             att.docType = "pdf";
             att.documentCode = "CMPL";
             att.documentDescription = "Complaint";
-            att.documentName = "Test";
+            att.documentName = "Test.pdf";
             att.extention = ".pdf";
 
             CivilFilingServiceReference.fee fee = new CivilFilingServiceReference.fee();

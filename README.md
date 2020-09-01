@@ -615,6 +615,15 @@ Attorney ID - 888888005
 Branch Id - 0001
 Account number for fee processing - 143055
 
+If you do not have one, please use the following and this is for testing purposes only
+
+ 
+Updated Values
+Attorney id  - 888888029
+Firm Id - F88888015
+Branch id – 0001
+JACS account - 143089
+
 Branch Id and Account Number are required for processing. See the eCourts specification for more information about the required elements.
 
 Web Service Credentials

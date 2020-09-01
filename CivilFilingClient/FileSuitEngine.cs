@@ -15,6 +15,11 @@ namespace CivilFilingClient
         /// </summary>
         private static Logger _logger = LogManager.GetCurrentClassLogger();
 
+        /// <summary>
+        /// The logger we will use to log soap transactions to help with debugging.
+        /// </summary>
+        private static readonly log4net.ILog soapLogger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+
         //Constructor
         public FileSuitEngine(string username, string password, string endpoint, string xmlFilePath, List<string> responses)
         {
@@ -233,11 +238,11 @@ namespace CivilFilingClient
                     }
 
                     // Process the fields into the list object
-                    // Trim all the data.
+                    // Trim all the data. Trucnate all the data.
                     // Need error checking here for index out of range checks and captures
                     ComplaintCsv data = new ComplaintCsv();
-                    data.AttorneyId = fields[0].Trim();             // REQ - 9 digits
-                    data.AttorneyFirmId = fields[1].Trim();         // REQ - 9 digits
+                    data.AttorneyId = fields[0].Trim();             // REQ - Must be 9 digits
+                    data.AttorneyFirmId = fields[1].Trim();         // REQ - Must be 9 digits
                     data.BranchId = fields[2].Trim();               // REQ - 
                     data.CourtSection = fields[3].Trim();           // REQ - Defaults to SCP, not defined in Code Tables
                     data.Venue = fields[4].Trim();                  // REQ - ATL,BER,BUR,CAM,CPM,CUM,ESX,GLO,HUD,HNT,MER,MID,MON,MRS,OCN,PAS,SLM,SOM,SSX,UNN,WRN (See Venue in Code Tables)
@@ -265,7 +270,7 @@ namespace CivilFilingClient
                     data.Language_Plaintiff = fields[20].Trim();            // REQ if InterpreterNeeded is Y
                     data.AccomodationNeeded_Plaintiff = fields[21].Trim();  // REQ - Y or N
                     data.AccomodationRequirement_Plaintiff = fields[22].Trim();
-                    data.AdditionalAccomodationDetails_Plaintiff = Util.SubStr(fields[23], 50);
+                    data.AdditionalAccomodationDetails_Plaintiff = Util.SubStr(fields[23], 50); //max 50 chars
 
                     data.FirstName_Plaintiff = Util.SubStr(fields[24], 9);    // REQ
                     data.MiddleInitial_Plaintiff = Util.SubStr(fields[25], 1);// REQ
@@ -332,12 +337,29 @@ namespace CivilFilingClient
                 attorneyFirmId = complaints[0].AttorneyFirmId  // REQ
             };
 
+            if (complaints[0].AttorneyId.Length < 9) // REQ - Must be 9 digits
+            {
+                //Error must be 9 digits
+                Responses.Add(complaints[0].AttorneyId + ": AttorneyId needs to have 9 digits.");
+                _logger.Info(complaints[0].AttorneyId + ": AttorneyId needs to have 9 digits");
+            }      
+            if (complaints[0].AttorneyFirmId.Length < 9) // REQ - Must be 9 digits
+            {
+                //Error must be 9 digits
+                Responses.Add(complaints[0].AttorneyFirmId + ": AttorneyFirmId needs to have 9 digits.");
+                _logger.Info(complaints[0].AttorneyFirmId + ": AttorneyFirmId needs to have 9 digits");
+            }
             // REQUIRED Branch Id is an Attribute
             CivilFilingServiceReference.attribute attr = new CivilFilingServiceReference.attribute
             {
                 name = "branchId",                 // REQ
                 value = complaints[0].BranchId     // REQ
             };
+            if (complaints[0].BranchId.Length < 1) // Required but no description
+            {
+                Responses.Add(complaints[0].BranchId + ": branchId is misssing.");
+                _logger.Info(complaints[0].BranchId + ": branchId is missing.");
+            }
 
             // Populate the attributes
             CivilFilingServiceReference.attribute[] attrs = new CivilFilingServiceReference.attribute[1];
@@ -347,6 +369,12 @@ namespace CivilFilingClient
             // CASE DATA
             CivilFilingServiceReference.@case caseData = new CivilFilingServiceReference.@case();
             caseData.courtSection = complaints[0].CourtSection;             // REQ - Defaults to SCP
+            if (complaints[0].CourtSection != "SCP")
+            {
+                Responses.Add(complaints[0].CourtSection + ": CourtSection needs to be SCP");
+                _logger.Info(complaints[0].CourtSection + ": CourtSection needs to be SCP");
+            }
+
             if (!VenueCodeValidate(complaints[0].Venue))
             {
                 //TODO: move list up or show list in this message
@@ -374,23 +402,47 @@ namespace CivilFilingClient
                 caseData.demandAmountSpecified = true; // REQ, TODO need to create a check to see if a value exists in DemandAmount
             }
             caseData.juryDemand = complaints[0].JuryDemand;                // REQ N for None, S for 6 Jurors
+            char[] charscharsJuryDemand = { 'N', '6' };
+            if (complaints[0].JuryDemand.IndexOfAny(charscharsJuryDemand) == -1)
+            {
+                Responses.Add("JuryDemand must contain N or S for 6 jurors.: " + complaints[0].JuryDemand);
+                _logger.Info("JuryDemand must contain N or S for 6 jurors.: " + complaints[0].JuryDemand);
+            }
             caseData.serviceMethod = complaints[0].ServiceMethod;          // REQ - Defaults to '03' no documentation
-            caseData.lawFirmCaseId = complaints[0].LawFirmCaseId;          // Code: ECCV110 Description: Law Firm Case Id should be alphanumeric 
-            if (!VenueCodeValidate(complaints[0].CountyOfIncident))
+            char[] charsServiceMethod = { '3' };
+            if (complaints[0].ServiceMethod.IndexOfAny(charsServiceMethod) == -1)
+            {
+                Responses.Add(complaints[0].ServiceMethod + ": ServiceMethod needs to be 03 or 3");
+                _logger.Info(complaints[0].ServiceMethod + ": ServiceMethod needs to be 03 or 3");
+            }
+            caseData.lawFirmCaseId = complaints[0].LawFirmCaseId;          // NOT REQ Max 20 Chars, 
+                                                                           // Code: ECCV110 Description: Law Firm Case Id should be alphanumeric 
+                                                                           // Code: ECCV110 Description: Law Firm Case Id can only contain A-Z, a - z, 0 - 9, space, period, dash, $, ?, !, (, ), #, %, comma, slash, single quote, &, :, double quote
+            caseData.venueOfIncident = complaints[0].CountyOfIncident;     // REQ
+            if (!VenueCodeValidate(complaints[0].CountyOfIncident))        // REQ
             {
                 //TODO: move list up or show list in this message
-                Responses.Add("Venue Code is not correct for CountyOfIncident: " + complaints[0].CountyOfIncident);
-                _logger.Info("Venue Code is not correct for CountyOfIncident: " + complaints[0].CountyOfIncident);
+                Responses.Add("Venue Code is not correct for CountyOfIncident or VenueofIndcident: " + complaints[0].CountyOfIncident);
+                _logger.Info("Venue Code is not correct for CountyOfIncident or VenueofIndcident: " + complaints[0].CountyOfIncident);
             }
-            caseData.venueOfIncident = complaints[0].CountyOfIncident;     // REQ
-            caseData.plaintiffCaption = complaints[0].PlantiffCaption;
-            caseData.defendantCaption = complaints[0].DefendantCaption;
-            caseData.docketDetailsForOtherCourt = "";                      // NOT LISTED IN DOCUMENTATION
+            caseData.plaintiffCaption = complaints[0].PlantiffCaption;     // NOT REQ
+            caseData.defendantCaption = complaints[0].DefendantCaption;    // NOT REQ
+            //caseData.docketDetailsForOtherCourt = "";                    // NOT LISTED IN DOCUMENTATION
+            //caseData.otherCourtActions = "";                             // NOT LISTED IN DOCUMENTATION
+           
 
             // PLANTIFF LIST
             CivilFilingServiceReference.party plaintiff = new CivilFilingServiceReference.party();
             plaintiff.partyDescription = complaints[0].PartyDescription_Plaintiff;          // REQ - BUS OR IND
-            plaintiff.partyAffiliation = complaints[0].PartyAffiliation_Plaintiff;          // NOT REQ
+            List<string> charsPartyDescription = new List<string>();
+            charsPartyDescription.Add("BUS");
+            charsPartyDescription.Add("IND");
+            if (!charsPartyDescription.Contains(plaintiff.partyDescription))
+            {
+                Responses.Add(complaints[0].PartyDescription_Plaintiff + ": PartyDescription_Plaintiff needs to be BUS or IND");
+                _logger.Info(complaints[0].PartyDescription_Plaintiff + ": PartyDescription_Plaintiff needs to be BUS or IND");
+            }
+
             // TODO: REQ if BUS, these must have values
             if (complaints[0].PartyDescription_Plaintiff == "BUS")
             {
@@ -400,18 +452,25 @@ namespace CivilFilingClient
                     Responses.Add("Code is not correct for corporationType: " + complaints[0].CorporationType_Plaintiff);
                     _logger.Info("Code is not correct for corporationType: " + complaints[0].CorporationType_Plaintiff);
                 }
-                if(complaints[0].CorpName_Plaintiff.Trim().Length < 1) // REQ if PartyDescription_Plaintiff is BUS
+                plaintiff.corporationName = complaints[0].CorpName_Plaintiff;        // Max 30 chars, already truncated above when loading ComplaintCsv (data)
+                if (complaints[0].CorpName_Plaintiff.Trim().Length < 1) // REQ if PartyDescription_Plaintiff is BUS
                 {
                     Responses.Add("CorpName_Plaintiff needs to have a value: " + complaints[0].CorpName_Plaintiff);
                     _logger.Info("CorpName_Plaintiff needs to have a value: " + complaints[0].CorpName_Plaintiff);
                 }
-                plaintiff.corporationName = complaints[0].CorpName_Plaintiff;        // Max 30 chars, already truncated above when loading ComplaintCsv
-            } 
+            }
+            plaintiff.partyAffiliation = complaints[0].PartyAffiliation_Plaintiff;   // NOT REQ
             plaintiff.phoneNumber = complaints[0].Phone_Plaintiff;                   // NOT REQ
             plaintiff.interpreterInd = complaints[0].InterpreterNeeded_Plaintiff;    // REQ Y or N
-            if(complaints[0].InterpreterNeeded_Plaintiff == "Y")
+            char[] charsYesAndNo = { 'Y', 'N' };
+            if (complaints[0].InterpreterNeeded_Plaintiff.IndexOfAny(charsYesAndNo) == -1)
             {
-                plaintiff.language = complaints[0].Language_Plaintiff;  // REQ if InterpreterNeeded_Plaintiff is BUS
+                Responses.Add(complaints[0].InterpreterNeeded_Plaintiff + ": InterpreterNeeded_Plaintiff needs to be Y or N");
+                _logger.Info(complaints[0].InterpreterNeeded_Plaintiff + ": InterpreterNeeded_Plaintiff needs to be Y or Y");
+            }
+            if (complaints[0].InterpreterNeeded_Plaintiff == "Y")
+            {
+                plaintiff.language = complaints[0].Language_Plaintiff;  // REQ if InterpreterNeeded_Plaintiff is Y
                 if (complaints[0].Language_Plaintiff.Trim().Length < 1) 
                 {
                     Responses.Add("Language_Plaintiff needs to have a value: " + complaints[0].Language_Plaintiff);
@@ -419,7 +478,12 @@ namespace CivilFilingClient
                 }
             }
             plaintiff.adaAccommodationInd = complaints[0].AccomodationNeeded_Plaintiff;     // REQ
-            if(complaints[0].AccomodationNeeded_Plaintiff == "Y")
+            if (complaints[0].AccomodationNeeded_Plaintiff.IndexOfAny(charsYesAndNo) == -1)
+            {
+                Responses.Add(complaints[0].AccomodationNeeded_Plaintiff + ": AccomodationNeeded_Plaintiff needs to be Y or N");
+                _logger.Info(complaints[0].AccomodationNeeded_Plaintiff + ": AccomodationNeeded_Plaintiff needs to be Y or Y");
+            }
+            if (complaints[0].AccomodationNeeded_Plaintiff == "Y")
             {
                 plaintiff.accommodationType = complaints[0].AccomodationRequirement_Plaintiff;
                 if (complaints[0].AccomodationRequirement_Plaintiff.Trim().Length < 1)
@@ -428,24 +492,59 @@ namespace CivilFilingClient
                     _logger.Info("Language_Plaintiff needs to have a value: " + complaints[0].AccomodationRequirement_Plaintiff);
                 }
             }
-            plaintiff.additionalAccommodationDetails = complaints[0].AdditionalAccomodationDetails_Plaintiff; // MAX 50 Chars
+            plaintiff.additionalAccommodationDetails = complaints[0].AdditionalAccomodationDetails_Plaintiff; // MAX 50 Chars, trucnated above
 
             // REQ if plantiff.partyDescription = "IND";
             if (complaints[0].PartyDescription_Plaintiff == "IND")
             {
                 CivilFilingServiceReference.name plaintiffName = new CivilFilingServiceReference.name();
                 plaintiffName.firstName = complaints[0].FirstName_Plaintiff;
+                if (complaints[0].FirstName_Plaintiff.Trim().Length < 1)
+                {
+                    Responses.Add("FirstName_Plaintiff needs to have a value: " + complaints[0].FirstName_Plaintiff);
+                    _logger.Info("FirstName_Plaintiff needs to have a value: " + complaints[0].FirstName_Plaintiff);
+                }
                 plaintiffName.middleName = complaints[0].MiddleInitial_Plaintiff;
+                if (complaints[0].MiddleInitial_Plaintiff.Trim().Length < 1)
+                {
+                    Responses.Add("MiddleInitial_Plaintiff needs to have a value: " + complaints[0].MiddleInitial_Plaintiff);
+                    _logger.Info("MiddleInitial_Plaintiff needs to have a value: " + complaints[0].MiddleInitial_Plaintiff);
+                }
                 plaintiffName.lastName = complaints[0].LastName_Plaintiff;
+                if (complaints[0].LastName_Plaintiff.Trim().Length < 1)
+                {
+                    Responses.Add("LastName_Plaintiff needs to have a value: " + complaints[0].LastName_Plaintiff);
+                    _logger.Info("LastName_Plaintiff needs to have a value: " + complaints[0].LastName_Plaintiff);
+                }
                 plaintiff.name = plaintiffName;
             }
             // PLAINTIFF ADDRESS REQ
             CivilFilingServiceReference.address pAddress = new CivilFilingServiceReference.address();
             pAddress.addressLine1 = complaints[0].AddressLine1_Plaintiff; // REQ
+            if (complaints[0].AddressLine1_Plaintiff.Trim().Length < 1)
+            {
+                Responses.Add("AddressLine1_Plaintiff needs to have a value: " + complaints[0].AddressLine1_Plaintiff);
+                _logger.Info("AddressLine1_Plaintiff needs to have a value: " + complaints[0].AddressLine1_Plaintiff);
+            }
             pAddress.addressLine2 = complaints[0].AddressLine2_Plaintiff; // NOT REQ
             pAddress.city = complaints[0].City_Plaintiff;                 // REQ
+            if (complaints[0].City_Plaintiff.Trim().Length < 1)
+            {
+                Responses.Add("City_Plaintiff needs to have a value: " + complaints[0].City_Plaintiff);
+                _logger.Info("City_Plaintiff needs to have a value: " + complaints[0].City_Plaintiff);
+            }
             pAddress.stateCode = complaints[0].State_Plaintiff;           // REQ
+            if (complaints[0].State_Plaintiff.Trim().Length < 1)
+            {
+                Responses.Add("State_Plaintiff needs to have a value: " + complaints[0].State_Plaintiff);
+                _logger.Info("State_Plaintiff needs to have a value: " + complaints[0].State_Plaintiff);
+            }
             pAddress.zipCode = complaints[0].ZipCode_Plaintiff;           // REQ
+            if (complaints[0].ZipCode_Plaintiff.Trim().Length < 1)
+            {
+                Responses.Add("ZipCode_Plaintiff needs to have a value: " + complaints[0].ZipCode_Plaintiff);
+                _logger.Info("ZipCode_Plaintiff needs to have a value: " + complaints[0].ZipCode_Plaintiff);
+            }
             pAddress.zipCodeExt = complaints[0].ZipCodeExt_Plaintiff; // NOT REQ
             plaintiff.address = pAddress;
 
@@ -469,17 +568,56 @@ namespace CivilFilingClient
             // DEFENDANT
             CivilFilingServiceReference.party defendant = new CivilFilingServiceReference.party();
             defendant.partyDescription = complaints[0].PartyDescription_Defendant;  // REQ BUS or IND or FIC
+            if (!charsPartyDescription.Contains(defendant.partyDescription))
+            {
+                Responses.Add(complaints[0].PartyDescription_Defendant + ": PartyDescription_Defendant needs to be BUS or IND");
+                _logger.Info(complaints[0].PartyDescription_Defendant + ": PartyDescription_Defendant needs to be BUS or IND");
+            }
             defendant.partyAffiliation = complaints[0].PartyAffiliation_Defendant;  // NOT REQ
-            defendant.corporationType = complaints[0].CorporationType_Defendant;    // REQ  "BUS";
-            defendant.corporationName = complaints[0].Name_Defendant;               // REQ  "BUS";
+            if (complaints[0].PartyDescription_Defendant.Trim() == "BUS")
+            {
+                defendant.corporationType = complaints[0].CorporationType_Defendant;    // REQ  "BUS";
+                
+                if (!CorporationTypeValidate(complaints[0].CorporationType_Defendant))
+                {
+                    Responses.Add("Code is not correct for CorporationType_Defendant: " + complaints[0].CorporationType_Defendant);
+                    _logger.Info("Code is not correct for CorporationType_Defendant: " + complaints[0].CorporationType_Defendant);
+                }
+                defendant.corporationName = complaints[0].Name_Defendant;               // REQ  "BUS";
+                if (complaints[0].Name_Defendant.Trim().Length < 1) // REQ if PartyDescription_Plaintiff is BUS
+                {
+                    Responses.Add("Name_Defendant needs to have a value: " + complaints[0].Name_Defendant);
+                    _logger.Info("Name_Defendant needs to have a value: " + complaints[0].Name_Defendant);
+                }
+            }
+
             defendant.phoneNumber = complaints[0].Phone_Defendant;                  // NOT REQ Max 10 digits
 
             // defendant.name REQ if defendant.partyDescription = "IND" 
             CivilFilingServiceReference.name defendantName = new CivilFilingServiceReference.name();
-            defendantName.firstName = complaints[0].FirstName_Defendant;    // REQ
-            defendantName.middleName = complaints[0].MiddleInitial_Defendant;// REQ
-            defendantName.lastName = complaints[0].LastName_Defendant;// REQ
-            defendant.name = defendantName;
+            if (defendant.partyDescription == "IND")
+            {
+                defendantName.firstName = complaints[0].FirstName_Defendant;    // REQ
+                if (complaints[0].FirstName_Defendant.Trim().Length < 1)
+                {
+                    Responses.Add("FirstName_Defendant needs to have a value: " + complaints[0].FirstName_Defendant);
+                    _logger.Info("FirstName_Defendant needs to have a value: " + complaints[0].FirstName_Defendant);
+                }
+                defendantName.middleName = complaints[0].MiddleInitial_Defendant;// REQ
+                if (complaints[0].MiddleInitial_Defendant.Trim().Length < 1)
+                {
+                    Responses.Add("MiddleInitial_Defendant needs to have a value: " + complaints[0].MiddleInitial_Defendant);
+                    _logger.Info("MiddleInitial_Defendant needs to have a value: " + complaints[0].MiddleInitial_Defendant);
+                }
+                defendantName.lastName = complaints[0].LastName_Defendant;// REQ
+                if (complaints[0].LastName_Defendant.Trim().Length < 1)
+                {
+                    Responses.Add("LastName_Defendant needs to have a value: " + complaints[0].LastName_Defendant);
+                    _logger.Info("LastName_Defendant needs to have a value: " + complaints[0].LastName_Defendant);
+                }
+                defendant.name = defendantName;
+            }
+
 
             // DEFENDANT ADDRESS NOT REQ
             CivilFilingServiceReference.address dAddress = new CivilFilingServiceReference.address();
@@ -511,7 +649,12 @@ namespace CivilFilingClient
             // ATTACHMENT - Supporting only one attachment this version
             CivilFilingServiceReference.attachment att = new CivilFilingServiceReference.attachment();
             string filePath = complaints[0].PDF_FileLocation;
-            byte[] bytes = File.ReadAllBytes(filePath);
+            byte[] bytes = File.ReadAllBytes(filePath);     // REQ
+            if(filePath.Length < 1)
+            {
+                Responses.Add("No attachement found: " + filePath);
+                _logger.Info("No attachement found: " + filePath);
+            }
 
             att.documentCode = "CMPL";                      // REQ - CMPL - Complaint, can it take more?
             att.docType = "pdf";                            // REQ - pdf
@@ -526,19 +669,37 @@ namespace CivilFilingClient
             fee.attorneyFee = Convert.ToDecimal(complaints[0].AttorneyFee);      // NOT REQ, Numeric
             fee.attorneyFeeSpecified = true;                                     // TODO: Work in a check for this, if user supplied a attorneyFee
             fee.feeExempt = complaints[0].FeeExempt;                             // REQ  Y or N, usually a N.
+            if (fee.feeExempt.IndexOfAny(charsYesAndNo) == -1)
+            {
+                Responses.Add("feeExempt need to be Y or N: " + fee.feeExempt);
+                _logger.Info("feeExempt need to be Y or N: " + fee.feeExempt);
+            }
             fee.paymentType = complaints[0].PaymentMethod;                       // REQ - 'CG' if feeExempt is N
+            if (fee.feeExempt == "N" && fee.paymentType != "CG")
+            {
+                Responses.Add("paymentType need to be CG when paymentType is N: " + fee.paymentType);
+                _logger.Info("paymentType need to be CG when paymentType is N: " + fee.paymentType);
+            }
             fee.accountNumber = complaints[0].AccountNumber;                     // REQ if feeExempt is N, Numeric
+            if (fee.feeExempt == "N" && fee.accountNumber.Length < 1)
+            {
+                Responses.Add("accountNumber needs a value to be CG when feeExempt is Y: " + fee.accountNumber);
+                _logger.Info("accountNumber needs a value to be CG when feeExempt is Y: " + fee.accountNumber);
+            }
             fee.attorneyClientRefNumber = complaints[0].AttorneyClientRefNumber; // NOT REQ - Numeric
             fee.exemptionReason = complaints[0].ReasonForFilingFeeExemption;     // REQ if feeExempt is Y, see code table
-
+            if (fee.feeExempt == "Y" && fee.exemptionReason.Length < 1)
+            {
+                Responses.Add("exemptionReason needs a value to be CG when feeExempt is Y: " + fee.exemptionReason);
+                _logger.Info("exemptionReason needs a value to be CG when feeExempt is Y: " + fee.exemptionReason);
+            }
             // Check for Additional Plaintiffs and Defendants
             // 1st line is Headers, 2nd line is the default complaint
             // All lines past the 2nd line are additional plaintiffs and defendants
             // Note: complaints list will not contain the header line from file so we can use a count > 1, the default complaint to start
             // the adding of additional plaintiffs and defendants
             if (complaints.Count > 1)
-            {
-                
+            {              
                 for (int line = 1; line < complaints.Count; line++)
                 {
                     // PLAINTIFF
@@ -618,6 +779,10 @@ namespace CivilFilingClient
             var client = new CivilFilingServiceReference.CivilFilingWSClient("CivilFilingWSPort", address);
             // Create the response outside of the using since instantiation inside of using limits the scope of the variable
             CivilFilingServiceReference.civilFilingResponse filingReponse = null;
+
+            // Wire up the soap logger
+            soapLogger.Info("Sending Soap Request");
+
             using (new OperationContextScope(client.InnerChannel))
             {
                 // Changed the 1st value of SecurityHeader from feinsuch to CivilFilingClient 8/26/2020
@@ -647,6 +812,9 @@ namespace CivilFilingClient
                     throw new System.ArgumentException("eCourts " + Endpoint + " error :", ex.Message); ;
                 }
             }
+            // Wire up the soap logger
+            soapLogger.Info("Got Soap Response");
+
             if (filingReponse.messages != null)
             {
                 foreach (var msg in filingReponse.messages)
@@ -711,15 +879,15 @@ namespace CivilFilingClient
         {
             var county = "ATL,BER,BUR,CAM,CPM,CUM,ESX,GLO,HUD,HNT,MER,MID,MON,MRS,OCN,PAS,SLM,SOM,SSX,UNN,WRN".Split(',');
             var countylist = county.Cast<string>().ToList();
-            Responses.Add("VenueCodeValidate Codes: " + String.Join(", ", countylist));
+            //Responses.Add("VenueCodeValidate Codes: " + String.Join(", ", countylist));
             _logger.Info("VenueCodeValidate Codes: " + String.Join(", ", countylist));
             return countylist.Contains(value);
         }
         public bool CaseActionValidate(string value)
         {
-            var actions = "28,175,32,37,41,33".Split(',');
+            var actions = "028,175,032,037,041,033".Split(',');
             var actionList = actions.Cast<string>().ToList();
-            Responses.Add("CaseActionValidate Codes: " + String.Join(", ", actionList));
+            //Responses.Add("CaseActionValidate Codes: " + String.Join(", ", actionList));
             _logger.Info("CaseActionValidate Codes: " + String.Join(", ", actionList));
             return actionList.Contains(value);
         }
@@ -727,7 +895,7 @@ namespace CivilFilingClient
         {
             var corpTypes = "CO,LC,LP,OT,SP".Split(',');          
             var corpTypeList = corpTypes.Cast<string>().ToList();
-            Responses.Add("CorporationTypeValidate Codes: " + String.Join(", ", corpTypeList));
+            //Responses.Add("CorporationTypeValidate Codes: " + String.Join(", ", corpTypeList));
             _logger.Info("CorporationTypeValidate Codes: " + String.Join(", ", corpTypeList));
             return corpTypeList.Contains(value);
         }
@@ -735,7 +903,7 @@ namespace CivilFilingClient
         {
             var states = "AL,AK,AS,AZ,AR,CA,CN,CO,CT,DE,DC,FM,FL,FR,GA,GU,HI,ID,IL,IN,IA,KS,KY,LA,ME,MH,MD,MA,MI,MN,MS,MO,MT,NE,NV,NH,NJ,NM,NY,NC,ND,MP,OH,OK,OR,PW,PA,PR,RI,SC,SD,TN,TX,UT,VT,VI,VA,WA,WV,WI,WY".Split(',');
             var stateList = states.Cast<string>().ToList();
-            Responses.Add("StateValidate Codes: " + String.Join(", ", stateList));
+            //Responses.Add("StateValidate Codes: " + String.Join(", ", stateList));
             _logger.Info("StateValidate Codes: " + String.Join(", ", stateList));
             return stateList.Contains(value);
         }
@@ -743,7 +911,7 @@ namespace CivilFilingClient
         {
             var altTypes = "AK,DB,FK,NK,OB,SB,SU,TA".Split(',');
             var altTypeList = altTypes.Cast<string>().ToList();
-            Responses.Add("AltTypeValidate Codes: " + String.Join(", ", altTypeList));
+            //Responses.Add("AltTypeValidate Codes: " + String.Join(", ", altTypeList));
             _logger.Info("AltTypeValidate Codes: " + String.Join(", ", altTypeList));
             return altTypeList.Contains(value);
         }
@@ -751,7 +919,7 @@ namespace CivilFilingClient
         {
             var adaCodes = "A,L,B,X,C,D,M,W,N,O,F,P,R,T,S,I".Split(',');
             var adaCodeList = adaCodes.Cast<string>().ToList();
-            Responses.Add("AdaValidate Codes: " + String.Join(", ", adaCodeList));
+            //Responses.Add("AdaValidate Codes: " + String.Join(", ", adaCodeList));
             _logger.Info("AdaValidate Codes: " + String.Join(", ", adaCodeList));
             return adaCodeList.Contains(value);
         }
@@ -759,7 +927,7 @@ namespace CivilFilingClient
         {
             var docTypes = "AF,BR,CE,EX,MC".Split(',');
             var docTypeList = docTypes.Cast<string>().ToList();
-            Responses.Add("DocTypeValidate Codes: " + String.Join(", ", docTypeList));
+            //Responses.Add("DocTypeValidate Codes: " + String.Join(", ", docTypeList));
             _logger.Info("DocTypeValidate Codes: " + String.Join(", ", docTypeList));
             return docTypeList.Contains(value);
         }
@@ -767,7 +935,7 @@ namespace CivilFilingClient
         {
             var feeCodes = "CO,LS,SA,PD".Split(',');
             var feeCodeList = feeCodes.Cast<string>().ToList();
-            Responses.Add("FeeExemptionValidate Codes: " + String.Join(", ", feeCodeList));
+            //Responses.Add("FeeExemptionValidate Codes: " + String.Join(", ", feeCodeList));
             _logger.Info("FeeExemptionValidate Codes: " + String.Join(", ", feeCodeList));
             return feeCodeList.Contains(value);
         }
@@ -775,7 +943,7 @@ namespace CivilFilingClient
         {
             var codes = "ADM,CTY,EST,EXE,HEI,JCR,USA".Split(',');
             var codeList = codes.Cast<string>().ToList();
-            Responses.Add("PartyAffilValidate Codes: " + String.Join(", ", codeList));
+            //Responses.Add("PartyAffilValidate Codes: " + String.Join(", ", codeList));
             _logger.Info("PartyAffilValidate Codes: " + String.Join(", ", codeList));
             return codeList.Contains(value);
         }
