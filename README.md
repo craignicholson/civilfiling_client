@@ -617,8 +617,7 @@ Account number for fee processing - 143055
 
 If you do not have one, please use the following and this is for testing purposes only
 
- 
-Updated Values
+Updated Values from 2020-09-01
 Attorney id  - 888888029
 Firm Id - F88888015
 Branch id – 0001

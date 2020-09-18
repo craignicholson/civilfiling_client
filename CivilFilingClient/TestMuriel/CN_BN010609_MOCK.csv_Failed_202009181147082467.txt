@@ -1,0 +1,12 @@
+2020-09-18 11:47:08.2537 | Attempting to send request
+2020-09-18 11:47:08.2537 | CSV File:C:\Users\craig\source\repos\civilfiling\CivilFilingClient\TestMuriel\CN_BN010609_MOCK.csv
+2020-09-18 11:47:08.2537 | Line Number: 3, Number of Columns: 58
+2020-09-18 11:47:08.2537 | Line Number: 4, Number of Columns: 58
+2020-09-18 11:47:08.2537 | CorporationTypeValidate Codes: CO, LC, LP, OT, SP
+2020-09-18 11:47:08.2537 | MiddleInitial_Defendant needs to have a value: 
+2020-09-18 11:47:08.2537 | Attempting to send the web request to:https://dptng.njcourts.gov:2045/civilFilingWS_t
+2020-09-18 11:47:08.2537 | eCourts | Code: ECCV200 Description: Please provide a valid Firm/ branch ID
+2020-09-18 11:47:08.2537 | End of Submission
+2020-09-18 11:47:08.2537 | Failed. Please review the eCourts | Code above.
+2020-09-18 11:47:08.2537 | Failed Submission Check Log File : \CN_BN010609_MOCK.csv_Failed_202009181147082467.txt
+2020-09-18 11:47:08.2537 | Writing log file : C:\Users\craig\source\repos\civilfiling\CivilFilingClient\TestMuriel\CN_BN010609_MOCK.csv_Failed_202009181147082467.txt

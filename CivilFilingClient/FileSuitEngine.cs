@@ -217,9 +217,10 @@ namespace CivilFilingClient
                 {
                     var lineNumber = fieldParser.LineNumber;
                     // Parse the line just read into the array
+                    // Note ReadFields will skip empty rows, will have to use ReadLines if we want to see empty rows
                     fields = fieldParser.ReadFields();
 
-                    // get the column headers
+                    // Skip the column headers
                     if (firstLine)
                     {
                         firstLine = false;
@@ -237,97 +238,104 @@ namespace CivilFilingClient
                         _logger.Info(fieldErr);
                     }
 
-                    // Process the fields into the list object
-                    // Trim all the data. Trucnate all the data.
-                    // Need error checking here for index out of range checks and captures
-                    ComplaintCsv data = new ComplaintCsv();
-                    data.AttorneyId = fields[0].Trim();             // REQ - Must be 9 digits
-                    data.AttorneyFirmId = fields[1].Trim();         // REQ - Must be 9 digits
-                    data.BranchId = fields[2].Trim();               // REQ - 
-                    data.CourtSection = fields[3].Trim();           // REQ - Defaults to SCP, not defined in Code Tables
-                    data.Venue = fields[4].Trim();                  // REQ - ATL,BER,BUR,CAM,CPM,CUM,ESX,GLO,HUD,HNT,MER,MID,MON,MRS,OCN,PAS,SLM,SOM,SSX,UNN,WRN (See Venue in Code Tables)
-                    data.CertifcationText = fields[5].Trim();       // REQ - Default to Y for Yes
-                    data.Action = fields[6].Trim();                 // REQ - 28,175,32,37,41,33 - 3 digit numeric, Refer to the Case Action worksheet in the Code Tables
-                    var demandAmount = fields[7].Trim();
-                    // Customer is sending in $1,000.00 so we need to clean this up
-                    // typically this is handled by the application export but we are helping others here instead
-                    demandAmount = demandAmount.Replace("$", "");
-                    demandAmount = demandAmount.Replace(",", "");
-                    data.DemandAmount = demandAmount;               // REQ - Less than 15000. Accepts up to two decimal places
-                    data.JuryDemand = fields[8].Trim();             // REQ - N-is None; S-is 6 Jurors
-                    data.ServiceMethod = fields[9].Trim();          // REQ - Default to 03, no documentation exists
-                    data.LawFirmCaseId = Util.SubStr(fields[10], 20); // NOT REQ - Alpha-numeric, Max 20 chars
-                    data.CountyOfIncident = fields[11].Trim();      // REQ - 3 letter venue code. Refer to the County worksheet in the Code Tables spreadsheet
-                    data.PlantiffCaption = Util.SubStr(fields[12], 123);  // NOT REQ
-                    data.DefendantCaption = Util.SubStr(fields[13], 123); // NOT REQ
+                    try
+                    {
 
-                    data.PartyDescription_Plaintiff = fields[14].Trim();    // REQ - BUS or IND (TODO Add check)
-                    data.PartyAffiliation_Plaintiff = fields[15].Trim();    // REQ if BUS
-                    data.CorporationType_Plaintiff = fields[16].Trim();     // REQ if BUS
-                    data.CorpName_Plaintiff = Util.SubStr(fields[17], 30); // NOT REQ - Max 30 chars
-                    data.Phone_Plaintiff = Util.SubStr(fields[18], 10);    // NOT REQ
-                    data.InterpreterNeeded_Plaintiff = fields[19].Trim();   // REQ - Y or N
-                    data.Language_Plaintiff = fields[20].Trim();            // REQ if InterpreterNeeded is Y
-                    data.AccomodationNeeded_Plaintiff = fields[21].Trim();  // REQ - Y or N
-                    data.AccomodationRequirement_Plaintiff = fields[22].Trim();
-                    data.AdditionalAccomodationDetails_Plaintiff = Util.SubStr(fields[23], 50); //max 50 chars
+                        // Process the fields into the list object
+                        // Trim all the data. Trucnate all the data.
+                        // Need error checking here for index out of range checks and captures
+                        ComplaintCsv data = new ComplaintCsv();
+                        data.AttorneyId = fields[0].Trim();             // REQ - Must be 9 digits
+                        data.AttorneyFirmId = fields[1].Trim();         // REQ - Must be 9 digits
+                        data.BranchId = fields[2].Trim();               // REQ - 
+                        data.CourtSection = fields[3].Trim();           // REQ - Defaults to SCP, not defined in Code Tables
+                        data.Venue = fields[4].Trim();                  // REQ - ATL,BER,BUR,CAM,CPM,CUM,ESX,GLO,HUD,HNT,MER,MID,MON,MRS,OCN,PAS,SLM,SOM,SSX,UNN,WRN (See Venue in Code Tables)
+                        data.CertifcationText = fields[5].Trim();       // REQ - Default to Y for Yes
+                        data.Action = fields[6].Trim();                 // REQ - 28,175,32,37,41,33 - 3 digit numeric, Refer to the Case Action worksheet in the Code Tables
+                        var demandAmount = fields[7].Trim();
+                        // Customer is sending in $1,000.00 so we need to clean this up
+                        // typically this is handled by the application export but we are helping others here instead
+                        demandAmount = demandAmount.Replace("$", "");
+                        demandAmount = demandAmount.Replace(",", "");
+                        data.DemandAmount = demandAmount;               // REQ - Less than 15000. Accepts up to two decimal places
+                        data.JuryDemand = fields[8].Trim();             // REQ - N-is None; S-is 6 Jurors
+                        data.ServiceMethod = fields[9].Trim();          // REQ - Default to "03" "3" will fail, no documentation exists
+                        data.LawFirmCaseId = Util.SubStr(fields[10], 20); // NOT REQ - Alpha-numeric, Max 20 chars
+                        data.CountyOfIncident = fields[11].Trim();      // REQ - 3 letter venue code. Refer to the County worksheet in the Code Tables spreadsheet
+                        data.PlantiffCaption = Util.SubStr(fields[12], 123);  // NOT REQ
+                        data.DefendantCaption = Util.SubStr(fields[13], 123); // NOT REQ
 
-                    data.FirstName_Plaintiff = Util.SubStr(fields[24], 9);    // REQ
-                    data.MiddleInitial_Plaintiff = Util.SubStr(fields[25], 1);// REQ
-                    data.LastName_Plaintiff = Util.SubStr(fields[26], 20);    // REQ
+                        data.PartyDescription_Plaintiff = fields[14].Trim();    // REQ - BUS or IND (TODO Add check)
+                        data.PartyAffiliation_Plaintiff = fields[15].Trim();    // REQ if BUS
+                        data.CorporationType_Plaintiff = fields[16].Trim();     // REQ if BUS
+                        data.CorpName_Plaintiff = Util.SubStr(fields[17], 30); // NOT REQ - Max 30 chars
+                        data.Phone_Plaintiff = Util.SubStr(fields[18], 10);    // NOT REQ
+                        data.InterpreterNeeded_Plaintiff = fields[19].Trim();   // REQ - Y or N
+                        data.Language_Plaintiff = fields[20].Trim();            // REQ if InterpreterNeeded is Y
+                        data.AccomodationNeeded_Plaintiff = fields[21].Trim();  // REQ - Y or N
+                        data.AccomodationRequirement_Plaintiff = fields[22].Trim();
+                        data.AdditionalAccomodationDetails_Plaintiff = Util.SubStr(fields[23], 50); //max 50 chars
 
-                    data.AddressLine1_Plaintiff = Util.SubStr(fields[27], 36);// REQ
-                    data.AddressLine2_Plaintiff = Util.SubStr(fields[28], 36);// NOT REQ
-                    data.City_Plaintiff = Util.SubStr(fields[29], 16);// REQ
-                    data.State_Plaintiff = Util.SubStr(fields[30], 2);// REQ
-                    data.ZipCode_Plaintiff = Util.SubStr(fields[31], 5); // REQ
-                    data.ZipCodeExt_Plaintiff = Util.SubStr(fields[32], 4); // NOT REQ
+                        data.FirstName_Plaintiff = Util.SubStr(fields[24], 9);    // REQ
+                        data.MiddleInitial_Plaintiff = Util.SubStr(fields[25], 1);// REQ
+                        data.LastName_Plaintiff = Util.SubStr(fields[26], 20);    // REQ
 
-                    data.AlternateType_Plaintiff = fields[33].Trim(); // NOT REQ - Refer to Alternate worksheet in Code Tables spreadsheet
-                    data.AlternateName_Plaintiff = Util.SubStr(fields[34], 65); // TODO: AlternateType_Plaintiff must have value if this field has a value, could always force to AK
+                        data.AddressLine1_Plaintiff = Util.SubStr(fields[27], 36);// REQ
+                        data.AddressLine2_Plaintiff = Util.SubStr(fields[28], 36);// NOT REQ
+                        data.City_Plaintiff = Util.SubStr(fields[29], 16);// REQ
+                        data.State_Plaintiff = Util.SubStr(fields[30], 2);// REQ
+                        data.ZipCode_Plaintiff = Util.SubStr(fields[31], 5); // REQ
+                        data.ZipCodeExt_Plaintiff = Util.SubStr(fields[32], 4); // NOT REQ
 
-                    data.PartyDescription_Defendant = fields[35].Trim(); // REQ - BUS - Business, IND - Individual, FIC - Fictious
-                    data.PartyAffiliation_Defendant = fields[36].Trim(); // NOT REQ
-                    data.CorporationType_Defendant = fields[37].Trim();
-                    data.Name_Defendant = Util.SubStr(fields[38], 30);   // Max 30
-                    data.Phone_Defendant = Util.SubStr(fields[39], 10);  // Max 10
+                        data.AlternateType_Plaintiff = fields[33].Trim(); // NOT REQ - Refer to Alternate worksheet in Code Tables spreadsheet
+                        data.AlternateName_Plaintiff = Util.SubStr(fields[34], 65); // TODO: AlternateType_Plaintiff must have value if this field has a value, could always force to AK
 
-                    data.FirstName_Defendant = Util.SubStr(fields[40], 9); // Max 9
-                    data.MiddleInitial_Defendant = Util.SubStr(fields[41], 1); // Max 1
-                    data.LastName_Defendant = Util.SubStr(fields[42], 20); // Max 20
+                        data.PartyDescription_Defendant = fields[35].Trim(); // REQ - BUS - Business, IND - Individual, FIC - Fictious
+                        data.PartyAffiliation_Defendant = fields[36].Trim(); // NOT REQ
+                        data.CorporationType_Defendant = fields[37].Trim();
+                        data.Name_Defendant = Util.SubStr(fields[38], 30);   // Max 30
+                        data.Phone_Defendant = Util.SubStr(fields[39], 10);  // Max 10
 
-                    data.AddressLine1_Defendant = Util.SubStr(fields[43], 36); // Max 36
-                    data.AddressLine2_Defendant = Util.SubStr(fields[44], 36); // Max 36
-                    data.City_Defendant = Util.SubStr(fields[45], 16); // Max 16
-                    data.State_Defendant = Util.SubStr(fields[46], 2); // Max 2
-                    data.ZipCode_Defendant = Util.SubStr(fields[47], 5); // Max 5
-                    data.ZipCodeExt_Defendant = Util.SubStr(fields[48], 4); // Max 4
+                        data.FirstName_Defendant = Util.SubStr(fields[40], 9); // Max 9
+                        data.MiddleInitial_Defendant = Util.SubStr(fields[41], 1); // Max 1
+                        data.LastName_Defendant = Util.SubStr(fields[42], 20); // Max 20
 
-                    data.AlternateType_Defendant = fields[49].Trim();
-                    data.AlternateName_Defendant = Util.SubStr(fields[50], 65); // Max 65
+                        data.AddressLine1_Defendant = Util.SubStr(fields[43], 36); // Max 36
+                        data.AddressLine2_Defendant = Util.SubStr(fields[44], 36); // Max 36
+                        data.City_Defendant = Util.SubStr(fields[45], 16); // Max 16
+                        data.State_Defendant = Util.SubStr(fields[46], 2); // Max 2
+                        data.ZipCode_Defendant = Util.SubStr(fields[47], 5); // Max 5
+                        data.ZipCodeExt_Defendant = Util.SubStr(fields[48], 4); // Max 4
 
-                    // PDF location must be reachable by this application
-                    data.PDF_FileLocation = fields[51].Trim();
+                        data.AlternateType_Defendant = fields[49].Trim();
+                        data.AlternateName_Defendant = Util.SubStr(fields[50], 65); // Max 65
 
-                    // Fee: BulkFilingPacket > Fee
-                    var attorneyFee = fields[52].Trim();
-                    attorneyFee = attorneyFee.Replace("$", "");
-                    attorneyFee = attorneyFee.Replace(",", "");
-                    data.AttorneyFee = attorneyFee;
-                    data.PaymentMethod = fields[53].Trim(); // REQ if Fee exempt is N, default to CG
-                    data.AccountNumber = fields[54].Trim();
-                    data.AttorneyClientRefNumber = Util.SubStr(fields[55], 10); // Max 10
-                    data.FeeExempt = fields[56].Trim();  // REQ  - Y or N
-                    data.ReasonForFilingFeeExemption = fields[57].Trim();
+                        // PDF location must be reachable by this application
+                        data.PDF_FileLocation = fields[51].Trim();
 
-                    complaints.Add(data);
+                        // Fee: BulkFilingPacket > Fee
+                        var attorneyFee = fields[52].Trim();
+                        attorneyFee = attorneyFee.Replace("$", "");
+                        attorneyFee = attorneyFee.Replace(",", "");
+                        data.AttorneyFee = attorneyFee;
+                        data.PaymentMethod = fields[53].Trim(); // REQ if Fee exempt is N, default to CG
+                        data.AccountNumber = fields[54].Trim();
+                        data.AttorneyClientRefNumber = Util.SubStr(fields[55], 10); // Max 10
+                        data.FeeExempt = fields[56].Trim();  // REQ  - Y or N
+                        data.ReasonForFilingFeeExemption = fields[57].Trim();
 
+                        complaints.Add(data);
+                    }
+                    catch (System.Exception e)
+                    {
+                        Responses.Add(e.Message);
+                        _logger.Info(e.Message);
+                    }
                 }
             }
 
             ////
             // As we build the bulkFilingPacket we will attempt to apply the Validation Rules
-            // 
             ////
 
             // Create the soap message
@@ -342,7 +350,7 @@ namespace CivilFilingClient
                 //Error must be 9 digits
                 Responses.Add(complaints[0].AttorneyId + ": AttorneyId needs to have 9 digits.");
                 _logger.Info(complaints[0].AttorneyId + ": AttorneyId needs to have 9 digits");
-            }      
+            }
             if (complaints[0].AttorneyFirmId.Length < 9) // REQ - Must be 9 digits
             {
                 //Error must be 9 digits
@@ -390,7 +398,7 @@ namespace CivilFilingClient
             }
             caseData.caseAction = complaints[0].Action;                     // REQ
             var demandAmt = System.Convert.ToDecimal(complaints[0].DemandAmount);
-            if(demandAmt > 15000)
+            if (demandAmt > 15000)
             {
                 Responses.Add("Demand Amount is over 15000");
                 _logger.Info("Demand Amount is over 15000");
@@ -402,7 +410,7 @@ namespace CivilFilingClient
                 caseData.demandAmountSpecified = true; // REQ, TODO need to create a check to see if a value exists in DemandAmount
             }
             caseData.juryDemand = complaints[0].JuryDemand;                // REQ N for None, S for 6 Jurors
-            char[] charscharsJuryDemand = { 'N', '6' };
+            char[] charscharsJuryDemand = { 'N', 'S' };
             if (complaints[0].JuryDemand.IndexOfAny(charscharsJuryDemand) == -1)
             {
                 Responses.Add("JuryDemand must contain N or S for 6 jurors.: " + complaints[0].JuryDemand);
@@ -427,13 +435,13 @@ namespace CivilFilingClient
             }
             caseData.plaintiffCaption = complaints[0].PlantiffCaption;     // NOT REQ
             caseData.defendantCaption = complaints[0].DefendantCaption;    // NOT REQ
-            //caseData.docketDetailsForOtherCourt = "";                    // NOT LISTED IN DOCUMENTATION
-            //caseData.otherCourtActions = "";                             // NOT LISTED IN DOCUMENTATION
-           
+                                                                           //caseData.docketDetailsForOtherCourt = "";                    // NOT LISTED IN DOCUMENTATION
+                                                                           //caseData.otherCourtActions = "";                             // NOT LISTED IN DOCUMENTATION
+
 
             // PLANTIFF LIST
             CivilFilingServiceReference.party plaintiff = new CivilFilingServiceReference.party();
-            plaintiff.partyDescription = complaints[0].PartyDescription_Plaintiff;          // REQ - BUS OR IND
+            plaintiff.partyDescription = complaints[0].PartyDescription_Plaintiff; // REQ - BUS OR IND
             List<string> charsPartyDescription = new List<string>();
             charsPartyDescription.Add("BUS");
             charsPartyDescription.Add("IND");
@@ -449,8 +457,8 @@ namespace CivilFilingClient
                 plaintiff.corporationType = complaints[0].CorporationType_Plaintiff; // REQ: CO,LC,LP,OT,SP - CorporationTypeValidate
                 if (!CorporationTypeValidate(complaints[0].CorporationType_Plaintiff))
                 {
-                    Responses.Add("Code is not correct for corporationType: " + complaints[0].CorporationType_Plaintiff);
-                    _logger.Info("Code is not correct for corporationType: " + complaints[0].CorporationType_Plaintiff);
+                    Responses.Add("Code is not correct for CorporationType_Plaintiff: " + complaints[0].CorporationType_Plaintiff);
+                    _logger.Info("Code is not correct for CorporationType_Plaintiff: " + complaints[0].CorporationType_Plaintiff);
                 }
                 plaintiff.corporationName = complaints[0].CorpName_Plaintiff;        // Max 30 chars, already truncated above when loading ComplaintCsv (data)
                 if (complaints[0].CorpName_Plaintiff.Trim().Length < 1) // REQ if PartyDescription_Plaintiff is BUS
@@ -471,7 +479,7 @@ namespace CivilFilingClient
             if (complaints[0].InterpreterNeeded_Plaintiff == "Y")
             {
                 plaintiff.language = complaints[0].Language_Plaintiff;  // REQ if InterpreterNeeded_Plaintiff is Y
-                if (complaints[0].Language_Plaintiff.Trim().Length < 1) 
+                if (complaints[0].Language_Plaintiff.Trim().Length < 1)
                 {
                     Responses.Add("Language_Plaintiff needs to have a value: " + complaints[0].Language_Plaintiff);
                     _logger.Info("Language_Plaintiff needs to have a value: " + complaints[0].Language_Plaintiff);
@@ -577,7 +585,7 @@ namespace CivilFilingClient
             if (complaints[0].PartyDescription_Defendant.Trim() == "BUS")
             {
                 defendant.corporationType = complaints[0].CorporationType_Defendant;    // REQ  "BUS";
-                
+
                 if (!CorporationTypeValidate(complaints[0].CorporationType_Defendant))
                 {
                     Responses.Add("Code is not correct for CorporationType_Defendant: " + complaints[0].CorporationType_Defendant);
@@ -650,7 +658,7 @@ namespace CivilFilingClient
             CivilFilingServiceReference.attachment att = new CivilFilingServiceReference.attachment();
             string filePath = complaints[0].PDF_FileLocation;
             byte[] bytes = File.ReadAllBytes(filePath);     // REQ
-            if(filePath.Length < 1)
+            if (filePath.Length < 1)
             {
                 Responses.Add("No attachement found: " + filePath);
                 _logger.Info("No attachement found: " + filePath);
@@ -663,7 +671,7 @@ namespace CivilFilingClient
             att.documentDescription = "Complaint";          // REQ - Max 256 chars
             att.extention = ".pdf";                         // REQ - .pdf
             att.bytes = bytes;                              // REQ - Byte array with Base 64 encoding
-            
+
             // FEE
             CivilFilingServiceReference.fee fee = new CivilFilingServiceReference.fee();
             fee.attorneyFee = Convert.ToDecimal(complaints[0].AttorneyFee);      // NOT REQ, Numeric
@@ -699,7 +707,7 @@ namespace CivilFilingClient
             // Note: complaints list will not contain the header line from file so we can use a count > 1, the default complaint to start
             // the adding of additional plaintiffs and defendants
             if (complaints.Count > 1)
-            {              
+            {
                 for (int line = 1; line < complaints.Count; line++)
                 {
                     // PLAINTIFF
@@ -713,6 +721,7 @@ namespace CivilFilingClient
                     def.phoneNumber = complaints[line].Phone_Defendant;                  // Max 10 digits
 
                     // DEFENDANT.name REQ if defendant.partyDescription = "IND" 
+                    // NOT TO SELF - DO WE NEED TO VALIDATE THESE FIELDS TOO?, I THINK YES
                     CivilFilingServiceReference.name defName = new CivilFilingServiceReference.name();
                     defName.firstName = complaints[line].FirstName_Defendant;
                     defName.middleName = complaints[line].MiddleInitial_Defendant;
@@ -741,6 +750,7 @@ namespace CivilFilingClient
                 }
             }
 
+            // VALIDATION FINISHED - CREATE THE bulkFilingPacket to send to the webservice
             // Add everything we just created to bfp (bulkFilingPacket)
             // ADD caseData
             bfp.civilCase = caseData;
@@ -874,7 +884,7 @@ namespace CivilFilingClient
             return IsSuccess;
         }
 
-        
+
         public bool VenueCodeValidate(string value)
         {
             var county = "ATL,BER,BUR,CAM,CPM,CUM,ESX,GLO,HUD,HNT,MER,MID,MON,MRS,OCN,PAS,SLM,SOM,SSX,UNN,WRN".Split(',');
@@ -893,9 +903,11 @@ namespace CivilFilingClient
         }
         public bool CorporationTypeValidate(string value)
         {
-            var corpTypes = "CO,LC,LP,OT,SP".Split(',');          
+            var corpTypes = "CO,LC,LP,OT,SP".Split(',');
             var corpTypeList = corpTypes.Cast<string>().ToList();
-            //Responses.Add("CorporationTypeValidate Codes: " + String.Join(", ", corpTypeList));
+            // If all these lists where local to the file I could put the write out in the
+            // if statement when validation fails vs inside of the validation method
+            Responses.Add("CorporationTypeValidate Codes: " + String.Join(", ", corpTypeList));
             _logger.Info("CorporationTypeValidate Codes: " + String.Join(", ", corpTypeList));
             return corpTypeList.Contains(value);
         }
