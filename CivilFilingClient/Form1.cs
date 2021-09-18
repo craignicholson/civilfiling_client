@@ -202,7 +202,7 @@ namespace CivilFilingClient
 
             // Allow the user to select multiple images.
             openFileDialog1.Multiselect = true;
-            openFileDialog1.Title = "Civil Filing Client (Accept xml and pdfs files)";
+            openFileDialog1.Title = "Civil Filing Client (Accept xml, csv and pdfs files)";
             openFileDialog1.FileName = string.Empty;
         }
 
@@ -219,6 +219,11 @@ namespace CivilFilingClient
             // Create the EndPoint, username and password, and UsernameTokenId
             try
             {
+                // item could be xml, pdf, or csv file
+                // Note that each web request will have a pdf to be attached with the same name as the xml or csv file
+                // but with a different extension.  YourData.xml and YourData.pdf, also note that
+                // the pdf name is inside of the YourData.xml file. We are not doing anything with the pdf files
+                // in this loop and will assume the pdf files are in the same directory as the xml/csv files.
                 foreach (var item in _files.ToArray())
                 {
                     if (item.FileExtension.ToUpper() == ".XML")
@@ -280,7 +285,7 @@ namespace CivilFilingClient
         /// all files which were submitted.  A submitted item can be
         /// a failed or successful submission.
         /// </summary>
-        private void clearIsSubmittedItems()
+        private void ClearSubmittedItems()
         {
             _responses.Clear();
             foreach (CourtCaseFiles item in _files)
@@ -291,7 +296,7 @@ namespace CivilFilingClient
         }
 
         // productionToolStripMenuItem_Click - sets the mode to production
-        // which means we will use the productionEndPoint
+        // which means we will use the productionEndPoint (user request)
         private void productionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             productionToolStripMenuItem.Checked = true;
@@ -307,7 +312,7 @@ namespace CivilFilingClient
             _logger.Info("Mode set to Production :" + _CurrentEndPoint);
         }
 
-        // testToolStripMenuItem_Click - sets the mode to production
+        // testToolStripMenuItem_Click - sets the mode to Test
         // which means we will use the testEndPoint
         private void testToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -326,13 +331,8 @@ namespace CivilFilingClient
 
         private void openFileDialog1_FileOk(object sender, CancelEventArgs e)
         {
-            //Do nothing...
+            //Do nothing... the file dialog box does all the work
         }
 
-        private void getStatusToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            frmGetCivilFilingStatus frm = new frmGetCivilFilingStatus();
-            frm.Show();
-        }
     }
 }

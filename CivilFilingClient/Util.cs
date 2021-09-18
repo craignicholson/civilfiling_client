@@ -61,8 +61,10 @@ namespace CivilFilingClient
                     responses.Add("Creating Attachment file: " + fileName);
                     // Users of the eCourts system do not see a file extension on the document when they download the pdf.
                     // They have to right click and save as pdf, instead of just clicking to view.  Setting the document
-                    // to the full name to see if this fixes the issue.  Example from the Documentation from eCourts is provided.
-                    // Document Name does not hav ethe extention.
+                    // to the full name to see if this fixes the issue.  
+                    // (See example file with this project to copy for your code)
+                    // Example from the Documentation from eCourts is provided.
+                    // Document Name does not have ethe extention.
                     // < attachmentList >
                     //      < contentType > application / pdf </ contentType >
                     //      < docType > pdf </ docType >
@@ -74,8 +76,10 @@ namespace CivilFilingClient
 
                     bfp.attachmentList[0].documentName = fileName;
 
+                    // DEPRECATED
                     // PDF file might not be in same directory so we should check to 
                     // to see is we have the PDF in our list of files
+                    // TODO: THIS CODE SEEMS BUSTED SINCE FILES IS ALWAYS EMPTY NOW
                     CourtCaseFiles pdfFile = files.Find(item => item.FileName.ToUpper() == fileName.ToUpper());
                     if (pdfFile != null)
                     {
@@ -87,10 +91,26 @@ namespace CivilFilingClient
                     else //If users does not attach any file assume the pdf is in same directory as XML file.
                     {
                         //TODO: Will a pdf always be a requirement?
-                        responses.Add("PDF not found using root or origin : " + Path.GetDirectoryName(xmlfilepath) + @"\" + fileName);
-                        _logger.Info("PDF not found using root or origin : " + Path.GetDirectoryName(xmlfilepath) + @"\" + fileName);
+                        responses.Add("Using the xml file directory and xml documentName for attachment : " + Path.GetDirectoryName(xmlfilepath) + @"\" + fileName);
+                        _logger.Info("Using the xml file directoryand xml documentName for attachment : " + Path.GetDirectoryName(xmlfilepath) + @"\" + fileName);
 
                         pdffilepath = Path.GetDirectoryName(xmlfilepath) + @"\" + fileName;
+                        // Checking the existance of the specified
+                        if (File.Exists(pdffilepath))
+                        {
+                            var fileFoundmsg = "Specified file exists.";
+                            responses.Add(fileFoundmsg);
+                            _logger.Info(fileFoundmsg);
+
+                        }
+                        else
+                        {
+                            Console.WriteLine();
+                            var fileNotFoundmsg = "Specified file does not exist in the current directory.";
+                            responses.Add(fileNotFoundmsg);
+                            _logger.Info(fileNotFoundmsg);
+                        }
+
                     }
                     byte[] bytes = File.ReadAllBytes(pdffilepath);
                     bfp.attachmentList[0].bytes = bytes;
@@ -198,13 +218,8 @@ namespace CivilFilingClient
         }
 
         /// <summary>
-        /// IsStringTooLongCheck verifies if string is greater than 20 chars
-        /// and shortens when over 20 chars.
-        /// ElsterStaging Database for these 26 tables max length ranges from
-        /// 	20 to 255
-        /// varchar(max) will not support an index, so we need a way to map
-        /// the truncation of strings by the size in the database.
-        /// Over use of Trim for some reason... :-<
+        /// IsStringTooLongCheck verifies if string is greater than max length of chars
+        /// and shortens when over max length.
         /// </summary>
         /// <returns>The string too long check.</returns>
         /// <param name="value">Value.</param>

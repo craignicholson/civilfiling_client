@@ -1,8 +1,8 @@
-﻿using System;
-using System.Text.RegularExpressions;
-
-namespace CivilFilingClient
+﻿namespace CivilFilingClient
 {
+    /// <summary>
+    /// ComplaintCsv is the class to implement parsing a csv file
+    /// </summary>
     class ComplaintCsv
     {
         public string AttorneyId;

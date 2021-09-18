@@ -1,8 +1,0 @@
-2016-10-08 22:29:16.4723 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\CMP2_TESTDAN.XML
-2016-10-08 22:29:16.4723 | Attemping to send  request
-2016-10-08 22:29:16.4723 | Reading File:C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\CMP2_TESTDAN.XML
-2016-10-08 22:29:16.4723 | Reading file: CMP2_TESTDAN.XML
-2016-10-08 22:29:16.4723 | Creating Attachment file: CMP_TESTDAN.pdf
-2016-10-08 22:29:16.4723 | Attempting to send the web request to:https://dptng.njcourts.gov:2045/civilFilingWS_t
-2016-10-08 22:29:16.4723 | An unsecured or incorrectly secured fault was received from the other party. See the inner FaultException for the fault code and detail.
-2016-10-08 22:29:16.4723 | Rejected by policy. (from client)

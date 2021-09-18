@@ -1,8 +1,0 @@
-2016-10-09 19:53:49.2578 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp.XML
-2016-10-09 19:53:49.2578 | Attemping to send  request
-2016-10-09 19:53:49.2578 | Reading File:C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp.XML
-2016-10-09 19:53:49.2578 | Reading file: TestCorp2Corp.XML
-2016-10-09 19:53:49.2578 | Creating Attachment file: Test.pdf
-2016-10-09 19:53:49.2578 | Attempting to send the web request to:http://localhost:8081/soapserver
-2016-10-09 19:53:49.2578 | The provided URI scheme 'http' is invalid; expected 'https'.
-Parameter name: via

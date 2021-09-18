@@ -18,15 +18,6 @@ namespace CivilFilingClient
     ///       </wsse:UsernameToken>
     ///     </Security>
     /// </summary>
-    /// Example C# 
-    /// client = new CivilFilingServiceReference.CivilFilingWSClient("CivilFilingWSPort", address);
-    /// using (new OperationContextScope(client.InnerChannel))
-    /// {
-    ///     OperationContext.Current.OutgoingMessageHeaders.Add(new SecurityHeader("unt_20", "888888005", "P@ssword"));
-    ///     
-    ///     //Send the Request with in the using statement, if you don't the Soap Header is not sent
-    ///     filingReponse = client.submitCivilFiling(filingRequest);
-    /// }
 
     public class SecurityHeader : MessageHeader
     {

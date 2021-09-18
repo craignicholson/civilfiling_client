@@ -1,7 +1,0 @@
-2016-10-11 20:14:07.3904 | Reading File:C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestIndivid2Individ.xml
-2016-10-11 20:14:07.3904 | Reading file: TestIndivid2Individ.xml
-2016-10-11 20:14:07.3904 | Creating Attachment file: TestIndivid2Individ.pdf
-2016-10-11 20:14:07.3904 | Attempting to send the web request to:https://dptng.njcourts.gov:2045/civilFilingWS_t
-2016-10-11 20:14:07.3904 | eCourts | Efiling Sequence Number :SCP20161007605
-2016-10-11 20:14:07.3904 | End of Submission
-2016-10-11 20:14:07.3904 | Failed. Please review the eCourts | Code above.

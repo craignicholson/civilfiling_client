@@ -1,7 +1,0 @@
-2016-10-09 08:49:54.3805 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\CMP2_TESTDAN.XML
-2016-10-09 08:49:54.3805 | Attemping to send  request
-2016-10-09 08:49:54.3805 | Reading File:C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\CMP2_TESTDAN.XML
-2016-10-09 08:49:54.3805 | Reading file: CMP2_TESTDAN.XML
-2016-10-09 08:49:54.3805 | Creating Attachment file: CMP_TESTDAN.pdf
-2016-10-09 08:49:54.3805 | Attempting to send the web request to:https://dptng.njcourts.gov:2045/civilFilingWS_t
-2016-10-09 08:49:54.3805 | Rejected by policy. (from client)

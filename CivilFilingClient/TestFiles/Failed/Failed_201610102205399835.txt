@@ -1,7 +1,0 @@
-2016-10-10 22:05:39.9845 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp_MissingBranchID.XML
-2016-10-10 22:05:39.9845 | Attemping to send  request
-2016-10-10 22:05:39.9845 | Reading File:C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestCorp2Corp_MissingBranchID.XML
-2016-10-10 22:05:39.9845 | Reading file: TestCorp2Corp_MissingBranchID.XML
-2016-10-10 22:05:39.9845 | Creating Attachment file: Test.pdf
-2016-10-10 22:05:39.9845 | The provided URI scheme 'https' is invalid; expected 'http'.
-Parameter name: via

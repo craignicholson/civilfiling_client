@@ -7,6 +7,8 @@ namespace CivilFilingClient
     {
         /// <summary>
         /// TestCorp2Corp - Generates a Sample Message for posting to the NJ Courts
+        /// Used for initial testing before we had any XML files produced 
+        /// when the service first deployed. Requirements will change overtime.
         /// </summary>
         /// <returns></returns>
         public static CivilFilingServiceReference.civilFilingRequest TestCorp2Corp()
@@ -20,7 +22,7 @@ namespace CivilFilingClient
             caseData.demandAmountSpecified = true;
             caseData.docketDetailsForOtherCourt = "docketDetailsForOtherCourt";
             caseData.juryDemand = "N";
-            caseData.lawFirmCaseId = "TESTDAN";
+            caseData.lawFirmCaseId = "TESTCASE_ID";
             caseData.otherCourtActions = "N";
             caseData.plaintiffCaption = "test plantiff caption";
             caseData.serviceMethod = "03";

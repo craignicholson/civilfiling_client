@@ -15,12 +15,7 @@ namespace CivilFilingClient
         /// </summary>
         private static Logger _logger = LogManager.GetCurrentClassLogger();
 
-        /// <summary>
-        /// The logger we will use to log soap transactions to help with debugging.
-        /// </summary>
-        private static readonly log4net.ILog soapLogger = log4net.LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        //Constructor
+        // Constructor
         public FileSuitEngine(string username, string password, string endpoint, string xmlFilePath, List<string> responses)
         {
             Username = username;
@@ -64,8 +59,9 @@ namespace CivilFilingClient
             _logger.Info(fileMsg);
 
             string pdfFilepath = string.Empty;
-            // This is the complicated part...  If I have a list of attachements they
+            // This is the complicated part...  If I have a list of attachments they
             // are in a list, we can also accept the xmlFilePath and pdfFilePath
+            // TODO: I think files is no longer used
             var bfp = Util.ReadXmlfile(filePath, Responses, files, out pdfFilepath);
             if (bfp == null)
             {
@@ -74,17 +70,22 @@ namespace CivilFilingClient
                 return false;
             }
 
-            var filingRequest = new CivilFilingServiceReference.civilFilingRequest();
-            filingRequest.bulkFilingPacket = bfp;
+            var filingRequest = new CivilFilingServiceReference.civilFilingRequest
+            {
+                bulkFilingPacket = bfp
+            };
 
             var address = new EndpointAddress(Endpoint);
+            
             // Create a new client with the endpoint we want to send the request
             var client = new CivilFilingServiceReference.CivilFilingWSClient("CivilFilingWSPort", address);
+            
             // Create the response outside of the using since instantiation inside of using limits the scope of the variable
             CivilFilingServiceReference.civilFilingResponse filingReponse = null;
             using (new OperationContextScope(client.InnerChannel))
             {
-                OperationContext.Current.OutgoingMessageHeaders.Add(new SecurityHeader("feinsuch", Username, Password));
+                // TODO: Replace "fiensuch" with a configurable id for the SecurityHeader
+                OperationContext.Current.OutgoingMessageHeaders.Add(new SecurityHeader("CivilFilingClient", Username, Password));
                 string message = "Attempting to send the web request to:" + client.Endpoint.Address.ToString();
                 Responses.Add(message);
                 _logger.Warn(message);
@@ -95,7 +96,6 @@ namespace CivilFilingClient
                 }
                 catch (System.Exception ex)
                 {
-                    // TODO: Colors these red
                     Responses.Add("eCourts " + Endpoint + " error :" + message);
                     _logger.Error("eCourts " + Endpoint + " error :" + message);
 
@@ -110,24 +110,52 @@ namespace CivilFilingClient
                     throw new System.ArgumentException("eCourts " + Endpoint + " error :", ex.Message); ;
                 }
             }
+            if(filingReponse == null)
+            {
+                Responses.Add("filingReponse is null and should not be null.");
+                _logger.Warn("filingReponse is null and should not be null.");
+
+                Responses.Add("Issue occured with web request. Try again later.");
+                _logger.Warn("Issue occured with web request. Try again later.");
+            }
             if (filingReponse.messages != null)
             {
                 foreach (var msg in filingReponse.messages)
                 {
+                    // Put some clear line feeds in user app for easy viewing of the messages
+                    Responses.Add("");
+
                     string filingMsg = "eCourts | Code: " + msg.code + " Description: " + msg.description;
                     Responses.Add(filingMsg);
                     _logger.Warn(filingMsg);
+
+                    var queueFilingProcessed = filingReponse.queueFilingProcessed;
+                    Responses.Add("queueFilingProcessed: " + queueFilingProcessed.ToString().ToUpper());
+                    _logger.Warn("queueFilingProcessed: " + queueFilingProcessed.ToString().ToUpper());
+
+                    // Put some clear line feeds in user app for easy viewing of the messages
+                    Responses.Add("");
                 }
             }
             if (filingReponse.efilingNumber != null)
             {
-                //TODO: Color these blue
-                string eFilingNumberMsg = "eCourts | Efiling Sequence Number :" +
-                    filingReponse.efilingNumber.efilingCourtDiv.ToString() +
-                    filingReponse.efilingNumber.efilingCourtYr.ToString() +
-                    filingReponse.efilingNumber.efilingSeqNo.ToString();
-                Responses.Add(eFilingNumberMsg);
-                _logger.Info(eFilingNumberMsg);
+                // Encountered where efilingNumber is not null, but efilingCourtDiv is null :-(
+                // I should check them all before attemping to read to avoid the object error below
+                // 'Object reference not set to an instance of an object.' 
+                if (filingReponse.efilingNumber.efilingCourtDiv != null)
+                {
+                    string eFilingNumberMsg = "eCourts | Efiling Sequence Number :" +
+                        filingReponse.efilingNumber.efilingCourtDiv.ToString();
+
+                    if (filingReponse.efilingNumber.efilingCourtYr != null)
+                    {
+                        eFilingNumberMsg = eFilingNumberMsg + filingReponse.efilingNumber.efilingCourtYr.ToString();
+                    }
+                    eFilingNumberMsg = eFilingNumberMsg + filingReponse.efilingNumber.efilingSeqNo.ToString();
+
+                    Responses.Add(eFilingNumberMsg);
+                    _logger.Info(eFilingNumberMsg);
+                }
             }
             if (filingReponse.docketNumber != null)
             {
@@ -148,12 +176,12 @@ namespace CivilFilingClient
             Responses.Add("End of Submission");
             _logger.Info("End of Submission");
 
-            //When no docket number is received the transaction might have failed
-            //If we have a eFilingNumber the message has been queued.
+            // When no docket number is received the transaction might have failed
+            // If we have a eFilingNumber the message has been queued.
             if (strDocketNumber.Length == 0)
             {
                 strDocketNumber = "Failed";
-                string failedMesssage = "Failed. Please review the eCourts | Code above.";
+                string failedMesssage = "Failed. Please review the eCourts messages Code above.";
                 Responses.Add(failedMesssage);
                 _logger.Info(failedMesssage);
             }
@@ -161,9 +189,7 @@ namespace CivilFilingClient
             {
                 IsSuccess = true;
             }
-            // Save the data out to a file, in this reality it should be taking one xml and one pdf file only
-            // The problem here is we need the full path to the pdf... which should be the same DirectoryName
-            // with the PDF name tagged onto the directory...  Need to clean this up
+            // Save the data out to a file
             Util.SaveResponseToFile(Responses, strDocketNumber, filePath, pdfFilepath);
 
             return IsSuccess;
@@ -173,6 +199,7 @@ namespace CivilFilingClient
         /// FileSuitCSV uses a csv format to process and send a complaint, one complaint per file.
         /// This format was created to help law firms easily create a file to use with this application instead
         /// of using the xml format which has been more complicated to implement for most law firms.
+        /// eCourts never let me finish testing this method. :-(
         /// </summary>
         /// <returns></returns>
         public bool FileSuitCSV()
@@ -660,8 +687,8 @@ namespace CivilFilingClient
             byte[] bytes = File.ReadAllBytes(filePath);     // REQ
             if (filePath.Length < 1)
             {
-                Responses.Add("No attachement found: " + filePath);
-                _logger.Info("No attachement found: " + filePath);
+                Responses.Add("No attachment found: " + filePath);
+                _logger.Info("No attachment found: " + filePath);
             }
 
             att.documentCode = "CMPL";                      // REQ - CMPL - Complaint, can it take more?
@@ -790,9 +817,6 @@ namespace CivilFilingClient
             // Create the response outside of the using since instantiation inside of using limits the scope of the variable
             CivilFilingServiceReference.civilFilingResponse filingReponse = null;
 
-            // Wire up the soap logger
-            soapLogger.Info("Sending Soap Request");
-
             using (new OperationContextScope(client.InnerChannel))
             {
                 // Changed the 1st value of SecurityHeader from feinsuch to CivilFilingClient 8/26/2020
@@ -822,8 +846,6 @@ namespace CivilFilingClient
                     throw new System.ArgumentException("eCourts " + Endpoint + " error :", ex.Message); ;
                 }
             }
-            // Wire up the soap logger
-            soapLogger.Info("Got Soap Response");
 
             if (filingReponse.messages != null)
             {
@@ -897,7 +919,6 @@ namespace CivilFilingClient
         {
             var actions = "028,175,032,037,041,033".Split(',');
             var actionList = actions.Cast<string>().ToList();
-            //Responses.Add("CaseActionValidate Codes: " + String.Join(", ", actionList));
             _logger.Info("CaseActionValidate Codes: " + String.Join(", ", actionList));
             return actionList.Contains(value);
         }

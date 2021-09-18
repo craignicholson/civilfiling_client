@@ -2,11 +2,9 @@
 {
     /// <summary>
     /// CourtCaseFiles will maintain a list of all files selected during submission process.
-    /// We will process each of the XML files and search for the corresponding PDF files inside
-    /// of the soapenvelope.  We will use the PDF in the soap envelope to find the file path
-    /// for the PDF.  If the PDF is not found we will assume the XML directory will also have
-    /// the PDF file located in the same directory as the PDF file.
-    /// Version 2.0 will accept csv files.
+    /// We will process each of the XML files and search for the corresponding PDF files found inside
+    /// of the soapenvelope. We will assume the XML directory will have
+    /// the PDF file located in the same directory as the XML file.
     /// </summary>
     public class CourtCaseFiles
     {

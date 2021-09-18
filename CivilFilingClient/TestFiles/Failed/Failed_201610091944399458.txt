@@ -1,7 +1,0 @@
-2016-10-09 19:44:39.9468 | Attachment: C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\CMP2_TESTDAN_addBranchId.XML
-2016-10-09 19:44:39.9468 | Attemping to send  request
-2016-10-09 19:44:39.9468 | Reading File:C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\CMP2_TESTDAN_addBranchId.XML
-2016-10-09 19:44:39.9468 | Reading file: CMP2_TESTDAN_addBranchId.XML
-2016-10-09 19:44:39.9468 | Creating Attachment file: CMP_TESTDAN.pdf
-2016-10-09 19:44:39.9468 | Attempting to send the web request to:http://localhost:8081/soapserver
-2016-10-09 19:44:39.9468 | The server did not provide a meaningful reply; this might be caused by a contract mismatch, a premature session shutdown or an internal server error.

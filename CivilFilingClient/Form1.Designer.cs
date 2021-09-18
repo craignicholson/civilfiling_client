@@ -136,7 +136,6 @@
             this.getStatusToolStripMenuItem.Size = new System.Drawing.Size(324, 38);
             this.getStatusToolStripMenuItem.Text = "Get Status";
             this.getStatusToolStripMenuItem.Visible = false;
-            this.getStatusToolStripMenuItem.Click += new System.EventHandler(this.getStatusToolStripMenuItem_Click);
             // 
             // lblMode
             // 

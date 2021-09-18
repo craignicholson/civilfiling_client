@@ -1,8 +1,0 @@
-2016-10-11 14:35:08.2685 | Reading File:C:\Users\Craig Nicholson\Documents\Visual Studio 2015\Projects\CivilFilingClient\CivilFilingClient\TestFiles\TestIndivid2Individ.xml
-2016-10-11 14:35:08.2685 | Reading file: TestIndivid2Individ.xml
-2016-10-11 14:35:08.2685 | Creating Attachment file: TestIndivid2Individ.pdf
-2016-10-11 14:35:08.2685 | Attempting to send the web request to:https://dptng.njcourts.gov:2045/civilFilingWS_t
-2016-10-11 14:35:08.2685 | eCourts | Code: ECCV500 Description: Filing submitted scuccessfully
-2016-10-11 14:35:08.2685 | eCourts | Efiling Sequence Number :SCP20161007597
-2016-10-11 14:35:08.2685 | eCourts | Docket Number :ATL-DC-005388-16
-2016-10-11 14:35:08.2685 | End of Submission
