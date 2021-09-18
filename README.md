@@ -2,7 +2,7 @@
 
 Version 2.2, C#
 
-Application intetgrates with the New Jersey eCourts system [https://www.njcourts.gov/attorneys/ecourts.html] to file COMPLAINTS.
+Application integrates with the New Jersey eCourts system [https://www.njcourts.gov/attorneys/ecourts.html] to file COMPLAINTS.
 
 > "SubmitCivilFiling: Enables the user to file a new civil case. It accepts CivilFilingRequest as the input and CivilFilingResponse will be the output. On successful filing submission, the web service will return docket number and efiling sequence number. "
 
