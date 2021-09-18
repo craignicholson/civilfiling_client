@@ -379,21 +379,23 @@ Description: Rejected by policy. (from client). -> Username or password is wrong
 </env:Envelope>
 ```
 
-Code: ECCV100 Description: Document Redaction Indicator should be Y
-Code: ECCV110 Description: Attorney's Client Reference number should be a numeric value [0-9]  
-Code: ECCV110 Description: Party name can only contain A-Z, a-z, 0-9, space, period, dash, $, ?, !, (, ), #, %, comma, slash, single quote, &
-Code: ECCV110 Description: Please provide a valid Case Action (3 chars, if 28 make it 028)
-Code: ECCV200 Description: Please provide a valid Firm/ branch ID
-Code: ECCV200 Description: Branch Id cannot be null or empty
-Code: ECCV210 Description: Error Occurred, Pelase contact HelpDesk (Attorney id passed in the input request is incorrect. It must be 9 digits)
-Code: ECCV210 Description: Please provide pdf extension to the document name
-Code: ECCV300	Error Occurred, Pelase contact HelpDesk
-Code: ECCV310	Error Occurred, Pelase contact HelpDesk
-Code: ECCV320	Error Occurred, Pelase contact HelpDesk
-Code: ECCV400	Error Occurred, Pelase contact HelpDesk
-Code: ECCV410	Error Occurred, Pelase contact HelpDesk
-Code: ECCV500 Description: Filing submitted scuccessfully
-Code: ECCV520 Description: An error occurred during the submission of your filing. Please contact the help desk at 609-421-6100.
+List of Errors encountered
+
+- Code: ECCV100 Description: Document Redaction Indicator should be Y
+- Code: ECCV110 Description: Attorney's Client Reference number should be a numeric value [0-9]  
+- Code: ECCV110 Description: Party name can only contain A-Z, a-z, 0-9, space, period, dash, $, ?, !, (, ), #, %, comma, slash, single quote, &
+- Code: ECCV110 Description: Please provide a valid Case Action (3 chars, if 28 make it 028)
+- Code: ECCV200 Description: Please provide a valid Firm/ branch ID
+- Code: ECCV200 Description: Branch Id cannot be null or empty
+- Code: ECCV210 Description: Error Occurred, Pelase contact HelpDesk (Attorney id passed in the input request is incorrect. It must be 9 digits)
+- Code: ECCV210 Description: Please provide pdf extension to the document name
+- Code: ECCV300 Error Occurred, Pelase contact HelpDesk
+- Code: ECCV310 Error Occurred, Pelase contact HelpDesk
+- Code: ECCV320 Error Occurred, Pelase contact HelpDesk
+- Code: ECCV400 Error Occurred, Pelase contact HelpDesk
+- Code: ECCV410 Error Occurred, Pelase contact HelpDesk
+- Code: ECCV500 Description: Filing submitted scuccessfully
+- Code: ECCV520 Description: An error occurred during the submission of your filing. Please contact the help desk at 609-421-6100.
 
 Need an update on ECCV520 description and the resolution.
 
