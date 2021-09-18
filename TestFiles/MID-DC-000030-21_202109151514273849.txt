@@ -1,0 +1,16 @@
+2021-09-15 15:14:27.3908 | Attempting to send request
+2021-09-15 15:14:27.3908 | XML File:C:\Users\craig\source\repos\civilfiling_latest\TestFiles\Complaint_Test.XML
+2021-09-15 15:14:27.3908 | ReadXmlfile.Deserialize file: Complaint_Test.XML
+2021-09-15 15:14:27.3908 | Creating Attachment file: Complaint_Test.pdf
+2021-09-15 15:14:27.3908 | Using the xml file directory and xml documentName for attachment : C:\Users\craig\source\repos\civilfiling_latest\TestFiles\Complaint_Test.pdf
+2021-09-15 15:14:27.3908 | Specified file exists.
+2021-09-15 15:14:27.3908 | Attempting to send the web request to:https://dptng.njcourts.gov:2045/civilFilingWS_t
+2021-09-15 15:14:27.3908 | 
+2021-09-15 15:14:27.3908 | eCourts | Code: ECCV500 Description: Filing submitted scuccessfully
+2021-09-15 15:14:27.3908 | queueFilingProcessed: FALSE
+2021-09-15 15:14:27.3908 | 
+2021-09-15 15:14:27.3908 | eCourts | Efiling Sequence Number :SCP20211000051
+2021-09-15 15:14:27.3908 | eCourts | Docket Number :MID-DC-000030-21
+2021-09-15 15:14:27.3908 | End of Submission
+2021-09-15 15:14:27.3908 | Successful Submission Check Log File : \MID-DC-000030-21_202109151514273849.txt
+2021-09-15 15:14:27.3908 | Writing log file : C:\Users\craig\source\repos\civilfiling_latest\TestFiles\MID-DC-000030-21_202109151514273849.txt

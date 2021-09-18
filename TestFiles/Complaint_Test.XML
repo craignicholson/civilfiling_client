@@ -1,0 +1,85 @@
+<?xml version="1.0"?>
+<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:tns2="http://webservice.civilfiling.ecourts.ito.aoc.nj/">
+  <soapenv:Body>
+    <tns2:submitCivilFiling>
+      <arg0>
+        <bulkFilingPacket>
+          <attachmentList>
+            <contentType>application/pdf</contentType>
+            <docType>pdf</docType>
+            <documentCode>CMPL</documentCode>
+            <documentDescription>Complaint</documentDescription>
+            <documentName>Complaint_Test.pdf</documentName>
+            <extention></extention>
+          </attachmentList>
+          <attorneyFirmId>F88888015</attorneyFirmId>
+          <attorneyId>888888029</attorneyId>
+          <attributes>
+            <name>branchId</name>
+            <value>0001</value>
+          </attributes>
+          <civilCase>
+            <caseAction>028</caseAction>
+            <courtSection>SCP</courtSection>
+            <defendantCaption><![CDATA[TIM MANTILL]]></defendantCaption>
+            <demandAmount>4553.56</demandAmount>
+            <docketDetailsForOtherCourt>str</docketDetailsForOtherCourt>
+            <juryDemand>N</juryDemand>
+            <lawFirmCaseId></lawFirmCaseId>
+            <otherCourtActions>str</otherCourtActions>
+            <plaintiffCaption><![CDATA[E CORP LLC AS CURRENT ASSIGNEE OF SALLIE MAE]]></plaintiffCaption>
+            <serviceMethod>03</serviceMethod>
+            <venue>MID</venue>
+            <venueOfIncident>MID</venueOfIncident>
+          </civilCase>
+	<defendantList>
+	<accommodationType />
+	<adaAccommodationInd>N</adaAccommodationInd>
+	<additionalAccommodationDetails />
+	<address>
+		<addressLine1><![CDATA[1 University Place]]></addressLine1>
+		<addressLine2></addressLine2>
+		<city>Anytown</city>
+		<stateCode>NJ</stateCode>
+		<zipCode>08861</zipCode>
+		<zipCodeExt></zipCodeExt>
+	</address>
+	<corporationName><![CDATA[]]></corporationName>
+	<corporationType></corporationType>
+	<interpreterInd>N</interpreterInd>
+	<language />
+	<name>
+		<firstName><![CDATA[TIM]]></firstName>
+		<lastName><![CDATA[MANTILL]]></lastName>
+		<middleName><![CDATA[]]></middleName>
+	</name>
+	<partyAffiliation />
+	<partyDescription>IND</partyDescription>
+	</defendantList>
+	  <documentRedactionInd>Y</documentRedactionInd>
+          <fee>
+            <accountNumber>143089</accountNumber>
+            <attorneyClientRefNumber></attorneyClientRefNumber>
+            <attorneyFee>0.00</attorneyFee>
+            <feeExempt>N</feeExempt>
+            <paymentType>CG</paymentType>
+          </fee>
+          <plaintiffList>
+            <adaAccommodationInd>N</adaAccommodationInd>
+            <address>
+              <addressLine1><![CDATA[1000 MONEY STREET]]></addressLine1>
+              <city>Colorado Springs</city>
+              <stateCode>CO</stateCode>
+              <zipCode>80911</zipCode>
+            </address>
+            <corporationName><![CDATA[E CORP, LLC]]></corporationName>
+            <corporationType>CO</corporationType>
+            <interpreterInd>N</interpreterInd>
+            <partyAffiliation>ADM</partyAffiliation>
+            <partyDescription>BUS</partyDescription>
+          </plaintiffList>
+        </bulkFilingPacket>
+      </arg0>
+    </tns2:submitCivilFiling>
+  </soapenv:Body>
+</soapenv:Envelope>

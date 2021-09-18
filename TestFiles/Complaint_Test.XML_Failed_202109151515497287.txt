@@ -1,0 +1,10 @@
+2021-09-15 15:15:49.7347 | Attempting to send request
+2021-09-15 15:15:49.7357 | XML File:C:\Users\craig\source\repos\civilfiling_latest\TestFiles\Complaint_Test.XML
+2021-09-15 15:15:49.7357 | ReadXmlfile.Deserialize file: Complaint_Test.XML
+2021-09-15 15:15:49.7357 | Creating Attachment file: Complaint_Test.pdf
+2021-09-15 15:15:49.7357 | Using the xml file directory and xml documentName for attachment : C:\Users\craig\source\repos\civilfiling_latest\TestFiles\Complaint_Test.pdf
+2021-09-15 15:15:49.7357 | Specified file exists.
+2021-09-15 15:15:49.7357 | Attempting to send the web request to:https://dptng.njcourts.gov:2045/civilFilingWS_t
+2021-09-15 15:15:49.7357 | eCourts https://dptng.njcourts.gov:2045/civilFilingWS_t error :Attempting to send the web request to:https://dptng.njcourts.gov:2045/civilFilingWS_t
+2021-09-15 15:15:49.7357 | Failed Submission Check Log File : \Complaint_Test.XML_Failed_202109151515497287.txt
+2021-09-15 15:15:49.7357 | Writing log file : C:\Users\craig\source\repos\civilfiling_latest\TestFiles\Complaint_Test.XML_Failed_202109151515497287.txt
