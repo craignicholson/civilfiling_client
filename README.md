@@ -30,7 +30,7 @@ Hope this helps someone!
 
 - Implements its own Security Header to conform with the older java soap security model. [SecurityHeader.cs]
 - Uses NLog to keep a daily log.txt file for monitoring and review.
-- Logging and Tracing Soap/WCF Messages [https://rashimuddin.wordpress.com/2012/05/11/how-to-log-and-trace-wcf-soap-messages/] using System.ServiceModel.MessageLogging (Capturing soap request and response)
+- Logging and Tracing Soap/WCF Messages [https://rashimuddin.wordpress.com/2012/05/11/how-to-log-and-trace-wcf-soap-messages/] using System.ServiceModel.MessageLogging (Capturing soap request and response) - Zero Code to add in your app. Just add a few references and a block to your app.config.
 - MTOM encoding for file, set a max size <messageEncoding="Mtom" maxBufferSize="999999" maxReceivedMessageSize="999999">
 - XML/Soap Integration
 
